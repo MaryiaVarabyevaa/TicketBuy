@@ -8,7 +8,6 @@ import {Cinema} from "./cinema.entity";
   providers: [CinemaService],
   controllers: [CinemaController],
   imports: [
-    // forFeature используется для регистрации модуля
     SequelizeModule.forFeature([Cinema])
   ]
 })
