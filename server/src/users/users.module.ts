@@ -8,6 +8,7 @@ import {User} from "./users.entity";
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
+      // forFeature используется для регистрации модуля
       SequelizeModule.forFeature([User])
   ]
 })

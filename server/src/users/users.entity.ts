@@ -4,7 +4,8 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 interface UserCreationAttrs {
     email: string;
     password: string;
-    // role: string;
+    name: string;
+    surname: string;
 }
 
 @Table({tableName: 'users'})
