@@ -14,6 +14,7 @@ const config_1 = require("@nestjs/config");
 const users_entity_1 = require("./users/users.entity");
 const cinema_module_1 = require("./cinema/cinema.module");
 const films_module_1 = require("./films/films.module");
+const sessions_module_1 = require("./sessions/sessions.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -35,6 +36,7 @@ AppModule = __decorate([
             users_module_1.UsersModule,
             cinema_module_1.CinemaModule,
             films_module_1.FilmsModule,
+            sessions_module_1.SessionsModule,
         ],
     })
 ], AppModule);
