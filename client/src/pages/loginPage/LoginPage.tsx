@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
+import {useForm, Controller, SubmitHandler, useFormState} from "react-hook-form";
 import {
     Avatar,
     Box,
@@ -14,25 +15,39 @@ import {
     Typography
 } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {emailValidation, firstNameValidation, lastNameValidation, passwordValidation} from "./validation";
+
+interface IForm {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+}
 
 const theme = createTheme();
 
 const LoginPage = () => {
     const [isAuth, setIsAuth] = useState(true);
+    const { handleSubmit, control } = useForm<IForm>({
+        mode: 'onChange',
+        defaultValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+        }
+    });
+    const {errors} = useFormState({
+        control
+    });
 
-    const handleClick = () => {
+    const onSubmit: SubmitHandler<IForm> = data => console.log(data);
+
+    const onClick = () => {
         setIsAuth(!isAuth);
         console.log(isAuth);
     }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -54,53 +69,94 @@ const LoginPage = () => {
                             isAuth? 'Sign in' : 'Sign up'
                         }
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form"  onSubmit={handleSubmit(onSubmit)}  sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             {
                                 !isAuth &&  <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        autoComplete="given-name"
-                                        name="firstName"
-                                        required
-                                        fullWidth
-                                        id="firstName"
-                                        label="First Name"
-                                        autoFocus
+                                    <Controller
+                                        control={ control }
+                                        name='firstName'
+                                        rules={ firstNameValidation }
+                                        render={({
+                                            field: {onChange, value}
+                                        }) => (
+                                            <TextField
+                                                fullWidth
+                                                id="firstName"
+                                                label="First Name"
+                                                autoFocus
+                                                onChange={onChange}
+                                                value={value}
+                                                error={!!errors.firstName?.message}
+                                                helperText={ errors.firstName?.message }
+                                            />
+                                        )}
                                     />
                                 </Grid>
 
                             }
                             {
                                 !isAuth &&  <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="lastName"
-                                        label="Last Name"
-                                        name="lastName"
-                                        autoComplete="family-name"
+                                    <Controller
+                                        control={ control }
+                                        name='lastName'
+                                        rules={ lastNameValidation }
+                                        render={({
+                                             field: {onChange, value}
+                                        }) => (
+                                            <TextField
+                                                fullWidth
+                                                id="lastName"
+                                                label="Last Name"
+                                                onChange={onChange}
+                                                value={value}
+                                                error={!!errors.lastName?.message}
+                                                helperText={ errors.lastName?.message }
+                                            />
+                                        )}
                                     />
                                 </Grid>
                             }
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
+                                <Controller
+                                    control={ control }
+                                    name='email'
+                                    rules={ emailValidation }
+                                    render={({
+                                        field: {onChange, value}
+                                    }) => (
+                                        <TextField
+                                            autoFocus
+                                            fullWidth
+                                            id="email"
+                                            label="Email Address"
+                                            onChange={onChange}
+                                            value={value}
+                                            error={!!errors.email?.message}
+                                            helperText={ errors.email?.message }
+                                        />
+                                    )}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
+                                <Controller
+                                    control={ control }
+                                    name='password'
+                                    rules={ passwordValidation }
+                                    render={({
+                                        field: {onChange, value}
+                                    }) => (
+                                        <TextField
+                                            fullWidth
+                                            label="Password"
+                                            type="password"
+                                            id="password"
+                                            onChange={onChange}
+                                            value={value}
+                                            error={!!errors.password?.message}
+                                            helperText={ errors.password?.message }
+                                        />
+                                    )}
                                 />
                             </Grid>
                         </Grid>
@@ -116,7 +172,7 @@ const LoginPage = () => {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2" onClick={handleClick}>
+                                <Link href="#" variant="body2" onClick={onClick}>
                                     {
                                         isAuth? "Don't have an account? Sign Up": "Already have an account? Sign in"
                                     }
