@@ -6,6 +6,9 @@ import {User} from "./users/users.entity";
 import {CinemaModule} from './cinema/cinema.module';
 import { FilmsModule } from './films/films.module';
 import { SessionsModule } from './sessions/sessions.module';
+import {Session} from "./sessions/sessions.entity";
+import {Film} from "./films/films.entity";
+import {Cinema} from "./cinema/cinema.entity";
 
 @Module({
     imports: [
@@ -19,7 +22,7 @@ import { SessionsModule } from './sessions/sessions.module';
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            models: [User],
+            models: [User, Cinema, Film, Session],
             autoLoadModels: true
         }),
         UsersModule,

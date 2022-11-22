@@ -28,14 +28,14 @@ __decorate([
         allowNull: false
     }),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
+], User.prototype, "firstName", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(50),
         allowNull: false
     }),
     __metadata("design:type", String)
-], User.prototype, "surname", void 0);
+], User.prototype, "lastName", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(50),

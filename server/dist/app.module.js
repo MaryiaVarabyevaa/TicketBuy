@@ -15,6 +15,9 @@ const users_entity_1 = require("./users/users.entity");
 const cinema_module_1 = require("./cinema/cinema.module");
 const films_module_1 = require("./films/films.module");
 const sessions_module_1 = require("./sessions/sessions.module");
+const sessions_entity_1 = require("./sessions/sessions.entity");
+const films_entity_1 = require("./films/films.entity");
+const cinema_entity_1 = require("./cinema/cinema.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -30,7 +33,7 @@ AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
-                models: [users_entity_1.User],
+                models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session],
                 autoLoadModels: true
             }),
             users_module_1.UsersModule,
