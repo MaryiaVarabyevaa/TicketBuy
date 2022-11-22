@@ -4,5 +4,6 @@ export declare class UsersController {
     private userService;
     constructor(userService: UsersService);
     create(userDto: CreateUserDto): Promise<import("./users.entity").User>;
+    login(req: any): Promise<any>;
     getAll(): Promise<import("./users.entity").User[]>;
 }

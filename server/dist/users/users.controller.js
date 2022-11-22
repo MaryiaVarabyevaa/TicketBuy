@@ -16,12 +16,16 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
+const passport_1 = require("@nestjs/passport");
 let UsersController = class UsersController {
     constructor(userService) {
         this.userService = userService;
     }
     create(userDto) {
         return this.userService.createUser(userDto);
+    }
+    async login(req) {
+        return req.user;
     }
     getAll() {
         return this.userService.getAllUsers();
@@ -34,6 +38,14 @@ __decorate([
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "create", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('local')),
+    (0, common_1.Post)('login'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "login", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

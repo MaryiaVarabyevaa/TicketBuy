@@ -10,6 +10,7 @@ import {User} from "./users.entity";
   imports: [
       // forFeature используется для регистрации модуля
       SequelizeModule.forFeature([User])
-  ]
+  ],
+  exports: [UsersService],
 })
 export class UsersModule {}

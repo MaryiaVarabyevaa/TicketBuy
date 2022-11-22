@@ -11,6 +11,11 @@ export class UsersService {
         const user = await this.userRepository.create(dto);
         return user;
     }
+    async findOne(email: string): Promise<User | undefined>  {
+        const users = await this.userRepository.findAll();
+        const user = users.find(user => user.email === email);
+        return user;
+    }
     async getAllUsers() {
         const users = await this.userRepository.findAll();
         return users;
