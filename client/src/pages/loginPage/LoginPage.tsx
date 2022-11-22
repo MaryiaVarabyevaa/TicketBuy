@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {emailValidation, firstNameValidation, lastNameValidation, passwordValidation} from "./validation";
+import {registration} from "../../http/userAPI";
 
 interface IForm {
     firstName: string;
@@ -41,7 +42,17 @@ const LoginPage = () => {
         control
     });
 
-    const onSubmit: SubmitHandler<IForm> = data => console.log(data);
+    const onSubmit: SubmitHandler<IForm> = async (data)=> {
+        const {firstName, lastName, email, password} = data;
+        let response;
+        if(isAuth) {
+
+        }
+        else {
+           response = await registration({firstName, lastName, email, password});
+           console.log(response);
+        }
+    }
 
     const onClick = () => {
         setIsAuth(!isAuth);
