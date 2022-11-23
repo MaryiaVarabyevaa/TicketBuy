@@ -5,7 +5,7 @@ import CinemaFrom from "./pages/adminPanel/CinemaFrom";
 function App()  {
   return (
     <div className="App">
-        <MainPage />
+        <CinemaFrom />
     </div>
   );
 }

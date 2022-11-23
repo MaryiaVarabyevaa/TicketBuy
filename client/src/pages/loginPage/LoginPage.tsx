@@ -56,9 +56,7 @@ const LoginPage = () => {
 
     const onClick = () => {
         setIsAuth(!isAuth);
-        console.log(isAuth);
     }
-
 
     return (
         <ThemeProvider theme={theme}>
