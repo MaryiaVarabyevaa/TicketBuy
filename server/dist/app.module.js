@@ -18,6 +18,7 @@ const sessions_module_1 = require("./sessions/sessions.module");
 const sessions_entity_1 = require("./sessions/sessions.entity");
 const films_entity_1 = require("./films/films.entity");
 const cinema_entity_1 = require("./cinema/cinema.entity");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -40,6 +41,7 @@ AppModule = __decorate([
             cinema_module_1.CinemaModule,
             films_module_1.FilmsModule,
             sessions_module_1.SessionsModule,
+            auth_module_1.AuthModule
         ],
     })
 ], AppModule);

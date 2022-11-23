@@ -9,6 +9,7 @@ import {SessionsModule} from './sessions/sessions.module';
 import {Session} from "./sessions/sessions.entity";
 import {Film} from "./films/films.entity";
 import {Cinema} from "./cinema/cinema.entity";
+import {AuthModule} from "./auth/auth.module";
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import {Cinema} from "./cinema/cinema.entity";
         CinemaModule,
         FilmsModule,
         SessionsModule,
+        AuthModule
     ],
 })
 export class AppModule {}

@@ -15,7 +15,7 @@ export class UsersController {
     @UseGuards(AuthGuard('local'))
     @Post('login')
     async login(@Request() req) {
-        return req.user;
+        return req.user.dataValues;
     }
 
     @Get()

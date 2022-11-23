@@ -25,7 +25,7 @@ let UsersController = class UsersController {
         return this.userService.createUser(userDto);
     }
     async login(req) {
-        return req.user;
+        return req.user.dataValues;
     }
     getAll() {
         return this.userService.getAllUsers();
