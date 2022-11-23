@@ -20,7 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useState} from "react";
-import {Rating} from "@mui/material";
+import {IconButton, Rating} from "@mui/material";
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -53,13 +53,21 @@ const MainPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AppBar position="relative" sx={{alignItems: 'center'}}>
-                <Toolbar>
-                    <Typography variant="h2" color="inherit" noWrap>
+                <Toolbar sx={{ borderBottom: 1, borderColor:  '#1976d2' }}>
+                    <Typography
+                        component="h2"
+                        variant="h5"
+                        color="inherit"
+                        align="center"
+                        noWrap
+                        sx={{ flex: 1, pl: '56px' }}
+                    >
                         TicketBuy
                     </Typography>
+                    <Button variant="outlined" size="small">
+                        Sign up
+                    </Button>
                 </Toolbar>
-            </AppBar>
             <main>
                 {/* Hero unit */}
                 <Box
