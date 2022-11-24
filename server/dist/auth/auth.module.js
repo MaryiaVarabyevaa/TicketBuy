@@ -14,6 +14,7 @@ const passport_1 = require("@nestjs/passport");
 const local_strategy_1 = require("./local.strategy");
 const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("./jwt.strategy");
+require("dotenv").config();
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([

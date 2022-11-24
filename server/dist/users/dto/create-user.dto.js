@@ -14,18 +14,27 @@ const class_validator_1 = require("class-validator");
 class CreateUserDto {
 }
 __decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
     (0, class_validator_1.IsString)({
         message: 'First name must be a string'
     }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "firstName", void 0);
 __decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
     (0, class_validator_1.IsString)({
         message: 'Last name must be a string'
     }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "lastName", void 0);
 __decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
     (0, class_validator_1.IsString)({
         message: 'Email must be a string'
     }),

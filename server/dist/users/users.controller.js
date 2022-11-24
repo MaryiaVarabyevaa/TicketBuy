@@ -35,7 +35,7 @@ let UsersController = class UsersController {
     }
 };
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('registration'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
