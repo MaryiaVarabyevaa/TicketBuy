@@ -3,7 +3,7 @@ import { CreateUserDto } from "./dto/create-user.dto";
 export declare class UsersService {
     private userRepository;
     constructor(userRepository: typeof User);
-    createUser({ firstName, lastName, email, password }: CreateUserDto): Promise<User>;
-    findOne(email: string): Promise<User | undefined>;
+    create(userDto: CreateUserDto): Promise<User>;
+    findOne(email: string, password: string): Promise<User>;
     getAllUsers(): Promise<User[]>;
 }

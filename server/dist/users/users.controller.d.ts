@@ -5,9 +5,11 @@ export declare class UsersController {
     private userService;
     private authService;
     constructor(userService: UsersService, authService: AuthService);
-    create(userDto: CreateUserDto): Promise<import("./users.entity").User>;
+    create(userDto: CreateUserDto): Promise<{
+        token: string;
+    }>;
     login(req: any): Promise<{
-        access_token: string;
+        token: string;
     }>;
     getProfile(req: any): any;
 }

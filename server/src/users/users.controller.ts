@@ -15,13 +15,13 @@ export class UsersController {
 
     @Post('registration')
     create(@Body() userDto: CreateUserDto) {
-        return this.userService.createUser(userDto);
+        return this.authService.registration(userDto); ;
     }
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
-        return this.authService.login(req.user.dataValues);
+        return this.authService.login(req.user);
     }
 
     @UseGuards(JwtAuthGuard)

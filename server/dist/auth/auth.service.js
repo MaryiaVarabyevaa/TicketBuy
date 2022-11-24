@@ -24,15 +24,29 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
+const bcrypt = require("bcrypt");
 let AuthService = class AuthService {
     constructor(usersService, jwtService) {
         this.usersService = usersService;
         this.jwtService = jwtService;
     }
     async validateUser(email, pass) {
-        const user = await this.usersService.findOne(email);
-        if (user && user.password === pass) {
-            const { password } = user, result = __rest(user, ["password"]);
+        const user = await this.usersService.findOne(email, pass);
+        if (!user.dataValues) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.UNAUTHORIZED,
+                error: 'User with this email does not exist',
+            }, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        let comparedPassword = bcrypt.compareSync(pass, user.dataValues.password);
+        if (!comparedPassword) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.UNAUTHORIZED,
+                error: 'Invalid email or password',
+            }, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        if (user && comparedPassword) {
+            const _a = user.dataValues, { password } = _a, result = __rest(_a, ["password"]);
             return result;
         }
         return null;
@@ -40,8 +54,27 @@ let AuthService = class AuthService {
     async login(user) {
         const payload = { email: user.email, sub: user.id };
         return {
-            access_token: this.jwtService.sign(payload),
+            token: this.jwtService.sign(payload),
         };
+    }
+    async registration(newUser) {
+        const { firstName, lastName, email, password } = newUser;
+        const user = await this.usersService.findOne(email, password);
+        if (user) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.UNAUTHORIZED,
+                error: 'User with such email already exists',
+            }, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        const hashPassword = await bcrypt.hash(password, 5);
+        const savedUser = await this.usersService.create({
+            firstName,
+            lastName,
+            email,
+            password: hashPassword
+        });
+        const token = await this.login(savedUser.dataValues);
+        return token;
     }
 };
 AuthService = __decorate([

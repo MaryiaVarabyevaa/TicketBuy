@@ -1,5 +1,6 @@
 // объекты dto необходимы для обмена данными между подсистемами (клиент -сервре)
-import {IsEmail, IsNotEmpty, IsString, MinLength} from 'class-validator';
+import {IsNotEmpty, IsString} from 'class-validator';
+
 export class CreateCinemaDto {
     @IsNotEmpty({
         message: 'Required to fill in'

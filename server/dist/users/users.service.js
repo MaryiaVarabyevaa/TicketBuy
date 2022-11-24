@@ -13,7 +13,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
-const bcrypt = require("bcrypt");
 const common_1 = require("@nestjs/common");
 const users_entity_1 = require("./users.entity");
 const sequelize_1 = require("@nestjs/sequelize");
@@ -21,19 +20,12 @@ let UsersService = class UsersService {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
-    async createUser({ firstName, lastName, email, password }) {
-        const hashPassword = await bcrypt.hash(password, 5);
-        const user = await this.userRepository.create({
-            firstName,
-            lastName,
-            email,
-            password: hashPassword
-        });
+    async create(userDto) {
+        const user = await this.userRepository.create(userDto);
         return user;
     }
-    async findOne(email) {
-        const users = await this.userRepository.findAll();
-        const user = users.find(user => user.email === email);
+    async findOne(email, password) {
+        const user = await this.userRepository.findOne({ where: { email } });
         return user;
     }
     async getAllUsers() {

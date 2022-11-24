@@ -25,10 +25,11 @@ let UsersController = class UsersController {
         this.authService = authService;
     }
     create(userDto) {
-        return this.userService.createUser(userDto);
+        return this.authService.registration(userDto);
+        ;
     }
     async login(req) {
-        return this.authService.login(req.user.dataValues);
+        return this.authService.login(req.user);
     }
     getProfile(req) {
         return req.user;

@@ -1,19 +1,39 @@
-import {forwardRef, Inject, Injectable} from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {UsersService} from '../users/users.service';
+import {JwtService} from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import {CreateUserDto} from "../users/dto/create-user.dto";
 
 @Injectable()
 export class AuthService {
     constructor(
-        // @Inject(forwardRef(() => UsersService))
         private usersService: UsersService,
         private jwtService: JwtService
     ) {}
 
     async validateUser(email: string, pass: string): Promise<any> {
-        const user = await this.usersService.findOne(email);
-        if (user && user.password === pass) {
-            const { password, ...result } = user;
+        const user = await this.usersService.findOne(email, pass);
+        if (!user.dataValues) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.UNAUTHORIZED,
+                    error: 'User with this email does not exist',
+                },
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+        let comparedPassword = bcrypt.compareSync(pass, user.dataValues.password);
+        if (!comparedPassword) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.UNAUTHORIZED,
+                    error: 'Invalid email or password',
+                },
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+        if (user && comparedPassword) {
+            const { password, ...result } = user.dataValues;
             return result;
         }
         return null;
@@ -22,8 +42,32 @@ export class AuthService {
     async login(user: any) {
         const payload = { email: user.email, sub: user.id };
         return {
-            access_token: this.jwtService.sign(payload),
+            token: this.jwtService.sign(payload),
         };
     }
 
+    async registration(newUser: CreateUserDto) {
+        const {firstName, lastName ,email, password } = newUser;
+        const user = await this.usersService.findOne(email,password);
+        if (user) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.UNAUTHORIZED,
+                    error: 'User with such email already exists',
+                },
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+
+        const hashPassword = await bcrypt.hash(password, 5);
+        const savedUser = await this.usersService.create({
+            firstName,
+            lastName,
+            email,
+            password: hashPassword
+        });
+
+        const token = await this.login(savedUser.dataValues);
+        return token;
+    }
 }
