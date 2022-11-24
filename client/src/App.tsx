@@ -1,11 +1,13 @@
 import React from 'react';
-import MainPage from "./pages/mainPage/MainPage";
-import CinemaFrom from "./pages/adminPanel/CinemaFrom";
+import {BrowserRouter} from "react-router-dom";
+import {AppRouter} from "./components/AppRouter";
 
 function App()  {
   return (
     <div className="App">
-        <CinemaFrom />
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
     </div>
   );
 }
