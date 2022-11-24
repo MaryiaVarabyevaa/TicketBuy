@@ -12,7 +12,7 @@ export class AuthService {
     ) {}
 
     async validateUser(email: string, pass: string): Promise<any> {
-        const user = await this.usersService.findOne(email, pass);
+        const user = await this.usersService.findOne(email);
         if (!user.dataValues) {
             throw new HttpException(
                 {
@@ -48,7 +48,7 @@ export class AuthService {
 
     async registration(newUser: CreateUserDto) {
         const {firstName, lastName ,email, password } = newUser;
-        const user = await this.usersService.findOne(email,password);
+        const user = await this.usersService.findOne(email);
         if (user) {
             throw new HttpException(
                 {

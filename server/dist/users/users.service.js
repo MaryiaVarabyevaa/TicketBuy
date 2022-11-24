@@ -24,7 +24,7 @@ let UsersService = class UsersService {
         const user = await this.userRepository.create(userDto);
         return user;
     }
-    async findOne(email, password) {
+    async findOne(email) {
         const user = await this.userRepository.findOne({ where: { email } });
         return user;
     }

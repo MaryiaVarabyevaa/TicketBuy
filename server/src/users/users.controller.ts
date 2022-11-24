@@ -6,7 +6,7 @@ import {LocalAuthGuard} from "../auth/local-auth.guard";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 
-@Controller('users')
+@Controller('user')
 export class UsersController {
     constructor(
         private userService: UsersService,

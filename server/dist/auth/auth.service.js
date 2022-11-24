@@ -31,7 +31,7 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async validateUser(email, pass) {
-        const user = await this.usersService.findOne(email, pass);
+        const user = await this.usersService.findOne(email);
         if (!user.dataValues) {
             throw new common_1.HttpException({
                 status: common_1.HttpStatus.UNAUTHORIZED,
@@ -59,7 +59,7 @@ let AuthService = class AuthService {
     }
     async registration(newUser) {
         const { firstName, lastName, email, password } = newUser;
-        const user = await this.usersService.findOne(email, password);
+        const user = await this.usersService.findOne(email);
         if (user) {
             throw new common_1.HttpException({
                 status: common_1.HttpStatus.UNAUTHORIZED,
