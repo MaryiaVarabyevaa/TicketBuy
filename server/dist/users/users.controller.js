@@ -34,6 +34,9 @@ let UsersController = class UsersController {
     getProfile(req) {
         return req.user;
     }
+    getAll() {
+        return this.userService.getAllUsers();
+    }
 };
 __decorate([
     (0, common_1.Post)('registration'),
@@ -58,6 +61,12 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getProfile", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "getAll", null);
 UsersController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [users_service_1.UsersService,

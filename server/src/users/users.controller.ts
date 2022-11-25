@@ -30,8 +30,8 @@ export class UsersController {
         return req.user;
     }
 
-    // @Get()
-    // getAll() {
-    //     return this.userService.getAllUsers();
-    // }
+    @Get()
+    getAll() {
+        return this.userService.getAllUsers();
+    }
 }

@@ -1,15 +1,12 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {useState} from "react";
-import {SelectChangeEvent} from "@mui/material/Select";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
-import {registration} from "../../http/userAPI";
-import {firstNameValidation} from "../loginPage/validation";
 import {cinemaNameValidation, hallsNumberValidation} from "./validation";
 
 interface IForm {

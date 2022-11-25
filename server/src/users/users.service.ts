@@ -20,7 +20,16 @@ export class UsersService {
     }
 
     async getAllUsers() {
-        const users = await this.userRepository.findAll();
-        return users;
+        const users = await this.userRepository.findAll({
+            attributes: ['email', 'id']
+        });
+        const arrOfUsers = [];
+
+        users.map(user => {
+            const {dataValues} = user;
+            arrOfUsers.push(dataValues);
+        })
+
+        return arrOfUsers;
     }
 }

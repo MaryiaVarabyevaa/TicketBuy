@@ -29,8 +29,15 @@ let UsersService = class UsersService {
         return user;
     }
     async getAllUsers() {
-        const users = await this.userRepository.findAll();
-        return users;
+        const users = await this.userRepository.findAll({
+            attributes: ['email', 'id']
+        });
+        const arrOfUsers = [];
+        users.map(user => {
+            const { dataValues } = user;
+            arrOfUsers.push(dataValues);
+        });
+        return arrOfUsers;
     }
 };
 UsersService = __decorate([

@@ -1,22 +1,21 @@
 import {$host} from "./service";
 import jwt_decode from 'jwt-decode';
+import {IUser} from "../types/user";
 
-interface IRegistration {
-    firstName?: string;
-    lastName?: string;
-    email: string;
-    password: string;
-}
 
-export const registration = async (user: IRegistration) => {
+export const registration = async (user: IUser) => {
     const { data } = await $host.post('user/registration', user);
     localStorage.setItem('token', data.token);
     return jwt_decode(data.token);
 }
 
-export const login = async (user: IRegistration) => {
-    const { email, password } = user;
-    const { data } = await $host.post('user/login', {email, password});
+export const login = async (user: IUser) => {
+    const { data } = await $host.post('user/login', {email: user.email, password: user.password});
     localStorage.setItem('token', data.token);
     return jwt_decode(data.token);
+}
+
+export const getAllUsers = async () => {
+    const {data} = await $host.get('user');
+    return data;
 }

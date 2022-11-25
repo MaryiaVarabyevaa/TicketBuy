@@ -17,6 +17,8 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {emailValidation, firstNameValidation, lastNameValidation, passwordValidation} from "./validation";
 import {login, registration} from "../../http/userAPI";
+import {useDispatch} from "react-redux";
+import {addUserAction} from "../../store/reducers/userReducer";
 
 interface IForm {
     firstName: string;
@@ -41,16 +43,18 @@ const LoginPage = () => {
     const {errors} = useFormState({
         control
     });
+    const dispatch = useDispatch();
 
     const onSubmit: SubmitHandler<IForm> = async (data)=> {
-        console.log('before')
         let response;
         if(isAuth) {
             response = await login(data);
         }
         else {
            response = await registration(data);
+           dispatch(addUserAction(data));
         }
+
     }
 
     const onClick = () => {

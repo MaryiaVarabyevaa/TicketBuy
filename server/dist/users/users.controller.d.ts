@@ -12,4 +12,5 @@ export declare class UsersController {
         token: string;
     }>;
     getProfile(req: any): any;
+    getAll(): Promise<any[]>;
 }
