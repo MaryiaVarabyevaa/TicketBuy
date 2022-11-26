@@ -24,3 +24,13 @@ export interface IUser {
     email: string;
     password: string;
 }
+
+export interface IUserField {
+    id: number;
+    label: string;
+}
+
+export interface IUserEmails {
+    id: number;
+    email: string;
+}

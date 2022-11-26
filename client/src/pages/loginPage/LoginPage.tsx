@@ -19,19 +19,14 @@ import {emailValidation, firstNameValidation, lastNameValidation, passwordValida
 import {login, registration} from "../../http/userAPI";
 import {useDispatch} from "react-redux";
 import {addUserAction} from "../../store/reducers/userReducer";
+import {ILoginForm} from "../../types/form";
 
-interface IForm {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-}
 
 const theme = createTheme();
 
 const LoginPage = () => {
     const [isAuth, setIsAuth] = useState(true);
-    const { handleSubmit, control } = useForm<IForm>({
+    const { handleSubmit, control } = useForm<ILoginForm>({
         mode: 'onChange',
         defaultValues: {
             firstName: '',
@@ -45,7 +40,7 @@ const LoginPage = () => {
     });
     const dispatch = useDispatch();
 
-    const onSubmit: SubmitHandler<IForm> = async (data)=> {
+    const onSubmit: SubmitHandler<ILoginForm> = async (data)=> {
         let response;
         if(isAuth) {
             response = await login(data);

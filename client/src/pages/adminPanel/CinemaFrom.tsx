@@ -8,17 +8,14 @@ import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {cinemaNameValidation, hallsNumberValidation} from "./validation";
+import {ICinemaForm} from "../../types/form";
 
-interface IForm {
-    cinemaName: string;
-    hallsNumber: string;
-}
 
 const theme = createTheme();
 
 const CinemaFrom = () => {
     const [isOpenForm, setIsOpenForm] = useState(false);
-    const { handleSubmit, control } = useForm<IForm>({
+    const { handleSubmit, control } = useForm<ICinemaForm>({
         mode: 'onChange',
         defaultValues: {
            cinemaName: '',
@@ -29,7 +26,7 @@ const CinemaFrom = () => {
         control
     });
 
-    const onSubmit: SubmitHandler<IForm> = async (data)=> {
+    const onSubmit: SubmitHandler<ICinemaForm> = async (data)=> {
         console.log(data);
     }
 
