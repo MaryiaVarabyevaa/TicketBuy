@@ -16,7 +16,6 @@ type User  = {
 }
 
 const AdminPanel = () => {
-
     const [value, setValue] = useState<Skill | null>(null)
     const [users, setUsers] = useState<Skill[]>();
 
@@ -40,6 +39,7 @@ const AdminPanel = () => {
         getUsers();
     }, [])
 
+
     return (
         <div>
             {
@@ -49,7 +49,7 @@ const AdminPanel = () => {
                     sx={{ width: 300 }}
                     id="auto-highlight"
                     autoHighlight
-                    renderInput={params => <TextField {...params} label='Skills' />}
+                    renderInput={params => <TextField {...params} label='Users' />}
                     value={value}
                     onChange={(_event: any, newValue: Skill | null) => {
                         setValue(newValue)
