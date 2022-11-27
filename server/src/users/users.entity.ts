@@ -48,4 +48,10 @@ export class User extends Model<User, UserCreationAttrs> {
         defaultValue: 'user'
     })
      role: string;
+
+    @Column({
+        type: DataType.BOOLEAN,
+        defaultValue: false
+    })
+    isBlocked: boolean;
 }

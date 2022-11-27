@@ -16,6 +16,21 @@ export const login = async (user: IUser) => {
 }
 
 export const getAllUsers = async () => {
-    const {data} = await $host.get('user');
+    const { data } = await $host.get('user');
+    return data;
+}
+
+export const blockUser = async (id: number) => {
+    const { data } = await $host.post('user/block', {id});
+    return data;
+}
+
+export const changeRole = async (id: number) => {
+    const { data } = await $host.post('user/changeRole', {id});
+    return data;
+}
+//
+export const updateUserInfo = async (id: number, firstName: string, lastName: string, email: string) => {
+    const { data } = await $host.post('user/updateInfo', {id, firstName, lastName, email});
     return data;
 }

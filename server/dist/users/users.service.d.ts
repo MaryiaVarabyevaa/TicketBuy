@@ -6,4 +6,7 @@ export declare class UsersService {
     create(userDto: CreateUserDto): Promise<User>;
     findOne(email: string): Promise<User>;
     getAllUsers(): Promise<any[]>;
+    blockUser(id: number): Promise<boolean>;
+    changeRole(id: number): Promise<void>;
+    updateUserInfo(id: number, firstName: string, lastName: string, email: string): Promise<void>;
 }

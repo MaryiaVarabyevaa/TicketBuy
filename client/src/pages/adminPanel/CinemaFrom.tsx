@@ -32,90 +32,76 @@ const CinemaFrom = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Button variant="text" onClick={() => setIsOpenForm(!isOpenForm)}>
-                        {
-                            isOpenForm? 'Hide the form' :' Add cinema to the list'
-                        }
-                    </Button>
+            <Container
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+                maxWidth="xs"
+            >
+                <Button variant="text" onClick={() => setIsOpenForm(!isOpenForm)}>
                     {
-                        isOpenForm &&  <Box component="form" onSubmit={handleSubmit(onSubmit)}  noValidate sx={{ mt: 1 }}>
-                            <Controller
-                                control={ control }
-                                name='cinemaName'
-                                rules={ cinemaNameValidation }
-                                render={({
-                                             field: {onChange, value}
-                                         }) => (
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        id="cinema"
-                                        label="Cinema name"
-                                        autoComplete="cinema"
-                                        autoFocus
-                                        onChange={onChange}
-                                        value={value}
-                                        error={!!errors.cinemaName?.message}
-                                        helperText={ errors.cinemaName?.message }
-                                    />
-                                )}
-                            />
-                            <Controller
-                                control={ control }
-                                name='hallsNumber'
-                                rules={ hallsNumberValidation }
-                                render={({
-                                             field: {onChange, value}
-                                         }) => (
-                                    <TextField
-                                        margin="normal"
-                                        required
-                                        fullWidth
-                                        id="cinema"
-                                        label="Cinema name"
-                                        autoComplete="cinema"
-                                        autoFocus
-                                        onChange={onChange}
-                                        value={value}
-                                        error={!!errors.hallsNumber?.message}
-                                        helperText={ errors.hallsNumber?.message }
-                                    />
-                                )}
-                            />
-
-                            {/*<TextField*/}
-                            {/*    margin="normal"*/}
-                            {/*    required*/}
-                            {/*    fullWidth*/}
-                            {/*    id="number-halls"*/}
-                            {/*    label="Number of halls"*/}
-                            {/*    onChange={onChange}*/}
-                            {/*    value={value}*/}
-                            {/*    error={!!errors.hallsNumber?.message}*/}
-                            {/*    helperText={ errors.hallsNumber?.message }*/}
-                            {/*/>*/}
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                Add
-                            </Button>
-                        </Box>
+                        isOpenForm? 'Hide the form for adding cinemas' :' Show the form for adding cinemas'
                     }
-                </Box>
+                </Button>
+                {
+                    isOpenForm &&  <Box component="form" onSubmit={handleSubmit(onSubmit)}  noValidate sx={{ mt: 1 }}>
+                        <Controller
+                            control={ control }
+                            name='cinemaName'
+                            rules={ cinemaNameValidation }
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="cinema"
+                                    label="Cinema name"
+                                    autoComplete="cinema"
+                                    autoFocus
+                                    onChange={onChange}
+                                    value={value}
+                                    error={!!errors.cinemaName?.message}
+                                    helperText={ errors.cinemaName?.message }
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={ control }
+                            name='hallsNumber'
+                            rules={ hallsNumberValidation }
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="cinema"
+                                    label="Cinema name"
+                                    autoComplete="cinema"
+                                    autoFocus
+                                    onChange={onChange}
+                                    value={value}
+                                    error={!!errors.hallsNumber?.message}
+                                    helperText={ errors.hallsNumber?.message }
+                                />
+                            )}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Add cinema
+                        </Button>
+                    </Box>
+                }
             </Container>
         </ThemeProvider>
     );

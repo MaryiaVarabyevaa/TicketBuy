@@ -24,6 +24,22 @@ export class UsersController {
         return this.authService.login(req.user);
     }
 
+    @Post('block')
+    async block(@Request() req) {
+        return this.userService.blockUser(req.body.id);
+    }
+
+    @Post('changeRole')
+    async changeRole(@Request() req) {
+        return this.userService.changeRole(req.body.id);
+    }
+
+    @Post('updateInfo')
+    async updateUserInfo(@Request() req) {
+        const { id, firstName, lastName, email } = req.body;
+        return this.userService.updateUserInfo(id, firstName, lastName, email);
+    }
+
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     getProfile(@Request() req) {

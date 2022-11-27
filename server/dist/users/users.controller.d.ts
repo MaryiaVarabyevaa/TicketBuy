@@ -11,6 +11,9 @@ export declare class UsersController {
     login(req: any): Promise<{
         token: string;
     }>;
+    block(req: any): Promise<boolean>;
+    changeRole(req: any): Promise<void>;
+    updateUserInfo(req: any): Promise<void>;
     getProfile(req: any): any;
     getAll(): Promise<any[]>;
 }

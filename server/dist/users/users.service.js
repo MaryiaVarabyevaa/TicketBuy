@@ -30,7 +30,7 @@ let UsersService = class UsersService {
     }
     async getAllUsers() {
         const users = await this.userRepository.findAll({
-            attributes: ['email', 'id']
+            attributes: ['email', 'id', "firstName", "lastName", "role", "isBlocked"]
         });
         const arrOfUsers = [];
         users.map(user => {
@@ -38,6 +38,36 @@ let UsersService = class UsersService {
             arrOfUsers.push(dataValues);
         });
         return arrOfUsers;
+    }
+    async blockUser(id) {
+        const { isBlocked } = await this.userRepository.findOne({
+            where: { id },
+            attributes: ['isBlocked']
+        });
+        const blockedUser = await this.userRepository.update({ isBlocked: isBlocked ? false : true }, {
+            where: {
+                id
+            }
+        });
+        return isBlocked;
+    }
+    async changeRole(id) {
+        const { role } = await this.userRepository.findOne({
+            where: { id },
+            attributes: ['role']
+        });
+        const blockedUser = await this.userRepository.update({ role: role === 'user' ? 'moderator' : 'user' }, {
+            where: {
+                id
+            }
+        });
+    }
+    async updateUserInfo(id, firstName, lastName, email) {
+        const blockedUser = await this.userRepository.update({ firstName, lastName, email }, {
+            where: {
+                id
+            }
+        });
     }
 };
 UsersService = __decorate([

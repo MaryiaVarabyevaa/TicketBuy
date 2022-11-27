@@ -31,6 +31,16 @@ let UsersController = class UsersController {
     async login(req) {
         return this.authService.login(req.user);
     }
+    async block(req) {
+        return this.userService.blockUser(req.body.id);
+    }
+    async changeRole(req) {
+        return this.userService.changeRole(req.body.id);
+    }
+    async updateUserInfo(req) {
+        const { id, firstName, lastName, email } = req.body;
+        return this.userService.updateUserInfo(id, firstName, lastName, email);
+    }
     getProfile(req) {
         return req.user;
     }
@@ -53,6 +63,27 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('block'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "block", null);
+__decorate([
+    (0, common_1.Post)('changeRole'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "changeRole", null);
+__decorate([
+    (0, common_1.Post)('updateInfo'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateUserInfo", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('profile'),

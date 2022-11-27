@@ -12,5 +12,6 @@ export declare class User extends Model<User, UserCreationAttrs> {
     email: string;
     password: string;
     role: string;
+    isBlocked: boolean;
 }
 export {};
