@@ -1,5 +1,5 @@
 // объекты dto необходимы для обмена данными между подсистемами (клиент -сервре)
-import {IsEmail, IsNotEmpty, IsString, MinLength} from 'class-validator';
+import {IsEmail, IsNotEmpty, IsString, Matches, MinLength} from 'class-validator';
 
 export class CreateUserDto {
     @IsNotEmpty({
@@ -8,6 +8,9 @@ export class CreateUserDto {
     @IsString({
         message: 'First name must be a string'
     })
+    @Matches(/^[a-zA-Z]+$/, {
+        message: 'First name can contain latin alphabet'
+    })
     readonly firstName: string;
 
     @IsNotEmpty({
@@ -15,6 +18,9 @@ export class CreateUserDto {
     })
     @IsString({
         message: 'Last name must be a string'
+    })
+    @Matches(/^[a-zA-Z]+$/, {
+        message: 'Last name can contain latin alphabet'
     })
     readonly lastName: string;
 
@@ -34,6 +40,9 @@ export class CreateUserDto {
     })
     @IsNotEmpty({
         message: 'Required to fill in'
+    })
+    @Matches(/^[a-zA-Z0-9]+$/, {
+        message: 'Password can contain latin alphabet and numbers'
     })
     @MinLength(6, {
         message: 'Password must contain at least 6 characters',

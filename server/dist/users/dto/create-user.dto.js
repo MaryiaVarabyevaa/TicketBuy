@@ -20,6 +20,9 @@ __decorate([
     (0, class_validator_1.IsString)({
         message: 'First name must be a string'
     }),
+    (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
+        message: 'First name can contain latin alphabet'
+    }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "firstName", void 0);
 __decorate([
@@ -28,6 +31,9 @@ __decorate([
     }),
     (0, class_validator_1.IsString)({
         message: 'Last name must be a string'
+    }),
+    (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
+        message: 'Last name can contain latin alphabet'
     }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "lastName", void 0);
@@ -49,6 +55,9 @@ __decorate([
     }),
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'
+    }),
+    (0, class_validator_1.Matches)(/^[a-zA-Z0-9]+$/, {
+        message: 'Password can contain latin alphabet and numbers'
     }),
     (0, class_validator_1.MinLength)(6, {
         message: 'Password must contain at least 6 characters',
