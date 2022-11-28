@@ -1,32 +1,101 @@
 import * as React from "react";
 import {SyntheticEvent, useEffect, useState} from "react";
 import {
+    DataGrid,
     GridActionsCellItem,
+    GridColumns,
+    GridEditInputCell,
     GridEventListener,
+    GridPreProcessEditCellProps,
+    GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
     GridRowParams,
     MuiEvent
-} from "@mui/x-data-grid-pro";
+} from "@mui/x-data-grid";
 import {blockUser, changeRole, getAllUsers, updateUserInfo} from "../../http/userAPI";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import {DataGrid} from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
-import {columns} from "./columns";
 import BlockIcon from '@mui/icons-material/Block';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
 import {Typography} from "@mui/material";
+import {StyledTooltip} from './StyledTooltip';
 
 const UserDataTable = () => {
     const [rows, setRows] = useState([]);
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
+
+    const validateEmail = (email: string, id: number) => {
+        // @ts-ignore
+        const editedUser = rows.find((user) => user.id === id);
+        // @ts-ignore
+        const existingUsers = rows.map((row) => row.email.toLowerCase());
+        const exists = existingUsers.includes(email.toLowerCase());
+        // @ts-ignore
+        if (exists && email !== editedUser.email) {
+            return `This email is already taken.`
+        }
+        if (email.length === 0) {
+            return 'Required to fill in';
+        }
+        const re =
+                /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const res = re.test(String(email));
+        if (!res) {
+            return 'Enter the correct value';
+        }
+    }
+
+    const emailPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateEmail(params.props.value!.toString(), +params.id);
+        return { ...params.props, error: errorMessage };
+    };
+
+    function EmailEditInputCell(props: GridRenderEditCellParams) {
+        const { error } = props;
+
+        return (
+            <StyledTooltip open={!!error} title={error}>
+                <GridEditInputCell {...props} />
+            </ StyledTooltip >
+        );
+    }
+
+    function renderEditEmail(params: GridRenderEditCellParams) {
+        return <EmailEditInputCell {...params} />;
+    }
+
+    const validateFirstName = (firstName: string, value: string) => {
+        const valueField = value === 'firstName' ? 'First name' : 'Last name';
+        if (firstName.length === 0) {
+            return 'Required to fill in';
+        }
+        if (firstName.match(/[а-яА-Я]/)) {
+            return `${valueField} cannot contain Cyrillic letters`;
+        }
+        if (firstName.match(/\d/)) {
+            return `${valueField} cannot contain numbers`;
+        }
+
+    }
+    const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateFirstName(params.props.value!.toString(), 'firstName');
+        return { ...params.props, error: errorMessage };
+    };
+
+    const lastNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateFirstName(params.props.value!.toString(), 'lastName');
+        return { ...params.props, error: errorMessage };
+    };
+
+
 
     const getUsers = async () => {
         const users = await getAllUsers();
@@ -80,7 +149,46 @@ const UserDataTable = () => {
         console.log(updatedRow)
         return updatedRow;
     };
-    const action =  {
+
+    const columns: GridColumns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        {
+            field: 'firstName',
+            headerName: 'First name',
+            width: 130,
+            editable: true,
+            preProcessEditCellProps: firstNamePreProcessEditCellProps,
+            renderEditCell: renderEditEmail,
+        },
+        {
+            field: 'lastName',
+            headerName: 'Last name',
+            width: 130,
+            editable: true,
+            preProcessEditCellProps: lastNamePreProcessEditCellProps,
+            renderEditCell: renderEditEmail,
+        },
+        {
+            field: 'email',
+            headerName: 'Email',
+            width: 250,
+            editable: true,
+            preProcessEditCellProps: emailPreProcessEditCellProps,
+            renderEditCell: renderEditEmail,
+        },
+        {
+            field: 'role',
+            headerName: 'Role',
+            sortable: false,
+            width: 130,
+        },
+        {
+            field: 'isBlocked',
+            headerName: 'Block',
+            sortable: false,
+            width: 130,
+        },
+        {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
@@ -132,6 +240,7 @@ const UserDataTable = () => {
                 ];
             },
         }
+    ];
 
     return (
         <>
@@ -157,7 +266,7 @@ const UserDataTable = () => {
                 {
                     rows && <DataGrid
                         rows={rows}
-                        columns={columns.concat(action)}
+                        columns={columns}
                         editMode="row"
                         processRowUpdate={processRowUpdate}
                         rowModesModel={rowModesModel}
