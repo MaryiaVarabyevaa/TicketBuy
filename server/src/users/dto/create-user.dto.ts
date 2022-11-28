@@ -9,7 +9,7 @@ export class CreateUserDto {
         message: 'First name must be a string'
     })
     @Matches(/^[a-zA-Z]+$/, {
-        message: 'First name can contain latin alphabet'
+        message: 'First name can contain only latin alphabet'
     })
     readonly firstName: string;
 
@@ -20,7 +20,7 @@ export class CreateUserDto {
         message: 'Last name must be a string'
     })
     @Matches(/^[a-zA-Z]+$/, {
-        message: 'Last name can contain latin alphabet'
+        message: 'Last name can contain only latin alphabet'
     })
     readonly lastName: string;
 

@@ -78,21 +78,18 @@ const UserDataTable = () => {
         if (firstName.length === 0) {
             return 'Required to fill in';
         }
-        if (firstName.match(/[а-яА-Я]/)) {
-            return `${valueField} cannot contain Cyrillic letters`;
-        }
-        if (firstName.match(/\d/)) {
-            return `${valueField} cannot contain numbers`;
+        if(!firstName.match(/^[a-zA-Z]+$/)) {
+            return `${value} can contain only latin alphabet`;
         }
 
     }
     const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateFirstName(params.props.value!.toString(), 'firstName');
+        const errorMessage = validateFirstName(params.props.value!.toString(), 'First name');
         return { ...params.props, error: errorMessage };
     };
 
     const lastNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateFirstName(params.props.value!.toString(), 'lastName');
+        const errorMessage = validateFirstName(params.props.value!.toString(), 'Last name');
         return { ...params.props, error: errorMessage };
     };
 

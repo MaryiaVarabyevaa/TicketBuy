@@ -4,7 +4,7 @@ export const firstNameValidation = {
     required: REQUIRED_FIELD,
     validate: (value: string) => {
         if(!value.match(/^[a-zA-Z]+$/)) {
-            return 'First name can contain latin alphabet';
+            return 'First name can contain only latin alphabet';
         }
 
         return true;
@@ -15,7 +15,7 @@ export const lastNameValidation = {
     required: REQUIRED_FIELD,
     validate: (value: string) => {
         if(!value.match(/^[a-zA-Z]+$/)) {
-            return 'Last name can contain latin alphabet';
+            return 'Last name can contain only latin alphabet';
         }
 
         return true;

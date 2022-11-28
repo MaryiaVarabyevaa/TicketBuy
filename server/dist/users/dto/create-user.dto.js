@@ -21,7 +21,7 @@ __decorate([
         message: 'First name must be a string'
     }),
     (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
-        message: 'First name can contain latin alphabet'
+        message: 'First name can contain only latin alphabet'
     }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "firstName", void 0);
@@ -33,7 +33,7 @@ __decorate([
         message: 'Last name must be a string'
     }),
     (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
-        message: 'Last name can contain latin alphabet'
+        message: 'Last name can contain only latin alphabet'
     }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "lastName", void 0);

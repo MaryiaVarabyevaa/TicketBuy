@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, IsNumber, IsString, MinLength} from 'class-validator';
+import {IsEmail, IsNotEmpty, IsNumber, IsString, Matches, MinLength} from 'class-validator';
 
 export class UpdateUserDto {
     @IsNotEmpty({
@@ -15,6 +15,9 @@ export class UpdateUserDto {
     @IsString({
         message: 'First name must be a string'
     })
+    @Matches(/^[a-zA-Z]+$/, {
+        message: 'First name can contain only latin alphabet'
+    })
     readonly firstName: string;
 
     @IsNotEmpty({
@@ -22,6 +25,9 @@ export class UpdateUserDto {
     })
     @IsString({
         message: 'Last name must be a string'
+    })
+    @Matches(/^[a-zA-Z]+$/, {
+        message: 'Last name can contain only latin alphabet'
     })
     readonly lastName: string;
 
