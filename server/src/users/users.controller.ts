@@ -4,6 +4,7 @@ import {UsersService} from "./users.service";
 import {AuthService} from "../auth/auth.service";
 import {LocalAuthGuard} from "../auth/local-auth.guard";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {UpdateUserDto} from "./dto/update-user.dto";
 
 
 @Controller('user')
@@ -35,9 +36,8 @@ export class UsersController {
     }
 
     @Post('updateInfo')
-    async updateUserInfo(@Request() req) {
-        const { id, firstName, lastName, email } = req.body;
-        return this.userService.updateUserInfo(id, firstName, lastName, email);
+    async updateUserInfo(@Body() userDto: UpdateUserDto) {
+        return this.userService.updateUserInfo(userDto);
     }
 
     @UseGuards(JwtAuthGuard)

@@ -25,12 +25,9 @@ export interface IUser {
     password: string;
 }
 
-export interface IUserField {
+export interface IUpdateUserInfo {
     id: number;
-    label: string;
-}
-
-export interface IUserEmails {
-    id: number;
+    firstName: string;
+    lastName: string;
     email: string;
 }

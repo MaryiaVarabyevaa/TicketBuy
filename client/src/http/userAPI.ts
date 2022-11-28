@@ -1,6 +1,6 @@
 import {$host} from "./service";
 import jwt_decode from 'jwt-decode';
-import {IUser} from "../types/user";
+import {IUpdateUserInfo, IUser} from "../types/user";
 
 
 export const registration = async (user: IUser) => {
@@ -29,8 +29,8 @@ export const changeRole = async (id: number) => {
     const { data } = await $host.post('user/changeRole', {id});
     return data;
 }
-//
-export const updateUserInfo = async (id: number, firstName: string, lastName: string, email: string) => {
-    const { data } = await $host.post('user/updateInfo', {id, firstName, lastName, email});
+
+export const updateUserInfo = async (user: IUpdateUserInfo) => {
+    const { data } = await $host.post('user/updateInfo', user);
     return data;
 }

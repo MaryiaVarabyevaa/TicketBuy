@@ -19,6 +19,7 @@ const users_service_1 = require("./users.service");
 const auth_service_1 = require("../auth/auth.service");
 const local_auth_guard_1 = require("../auth/local-auth.guard");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const update_user_dto_1 = require("./dto/update-user.dto");
 let UsersController = class UsersController {
     constructor(userService, authService) {
         this.userService = userService;
@@ -37,9 +38,8 @@ let UsersController = class UsersController {
     async changeRole(req) {
         return this.userService.changeRole(req.body.id);
     }
-    async updateUserInfo(req) {
-        const { id, firstName, lastName, email } = req.body;
-        return this.userService.updateUserInfo(id, firstName, lastName, email);
+    async updateUserInfo(userDto) {
+        return this.userService.updateUserInfo(userDto);
     }
     getProfile(req) {
         return req.user;
@@ -79,9 +79,9 @@ __decorate([
 ], UsersController.prototype, "changeRole", null);
 __decorate([
     (0, common_1.Post)('updateInfo'),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [update_user_dto_1.UpdateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUserInfo", null);
 __decorate([

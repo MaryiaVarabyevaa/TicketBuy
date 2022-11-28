@@ -4,6 +4,7 @@ import {User} from "./users.entity";
 import {InjectModel} from "@nestjs/sequelize";
 import {CreateUserDto} from "./dto/create-user.dto";
 import {AuthService} from "../auth/auth.service";
+import {UpdateUserDto} from "./dto/update-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -59,10 +60,11 @@ export class UsersService {
         });
     }
 
-    async updateUserInfo(id: number, firstName: string, lastName: string, email: string) {
+    async updateUserInfo(userDto: UpdateUserDto) {
+        const { id, firstName, lastName, email} = userDto;
         const blockedUser = await this.userRepository.update({firstName, lastName, email}, {
             where: {
-                id
+               id
             }
         });
     }

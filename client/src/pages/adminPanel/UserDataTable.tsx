@@ -25,6 +25,7 @@ import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
 import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
+import {IUpdateUserInfo} from "../../types/user";
 
 const UserDataTable = () => {
     const [rows, setRows] = useState([]);
@@ -145,8 +146,8 @@ const UserDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        await updateUserInfo(updatedRow.id, updatedRow.firstName, updatedRow.lastName, updatedRow.email);
-        console.log(updatedRow)
+        const { id, firstName, lastName, email }  = updatedRow;
+        await updateUserInfo({ id, firstName, lastName, email });
         return updatedRow;
     };
 

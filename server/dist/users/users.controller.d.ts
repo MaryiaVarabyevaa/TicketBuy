@@ -1,6 +1,7 @@
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
 import { AuthService } from "../auth/auth.service";
+import { UpdateUserDto } from "./dto/update-user.dto";
 export declare class UsersController {
     private userService;
     private authService;
@@ -13,7 +14,7 @@ export declare class UsersController {
     }>;
     block(req: any): Promise<boolean>;
     changeRole(req: any): Promise<void>;
-    updateUserInfo(req: any): Promise<void>;
+    updateUserInfo(userDto: UpdateUserDto): Promise<void>;
     getProfile(req: any): any;
     getAll(): Promise<any[]>;
 }

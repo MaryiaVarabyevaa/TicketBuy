@@ -62,7 +62,8 @@ let UsersService = class UsersService {
             }
         });
     }
-    async updateUserInfo(id, firstName, lastName, email) {
+    async updateUserInfo(userDto) {
+        const { id, firstName, lastName, email } = userDto;
         const blockedUser = await this.userRepository.update({ firstName, lastName, email }, {
             where: {
                 id
