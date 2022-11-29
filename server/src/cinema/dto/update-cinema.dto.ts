@@ -1,6 +1,15 @@
 import {IsNotEmpty, IsNumber, IsString, Matches} from 'class-validator';
 
-export class CreateCinemaDto {
+export class UpdateCinemaDto {
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsNumber( {}, {
+        message: 'Id must be a number'
+    })
+    readonly id: number;
+
     @IsNotEmpty({
         message: 'Required to fill in'
     })

@@ -29,8 +29,26 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Cinema.prototype, "name", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        allowNull: false
+    }),
+    __metadata("design:type", Number)
+], Cinema.prototype, "hallsNumber", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: false,
+    }),
+    __metadata("design:type", String)
+], Cinema.prototype, "hallsType", void 0);
 Cinema = __decorate([
-    (0, sequelize_typescript_1.Table)({ tableName: 'cinema' })
+    (0, sequelize_typescript_1.Table)({
+        tableName: 'cinema',
+        timestamps: true,
+        paranoid: true,
+    })
 ], Cinema);
 exports.Cinema = Cinema;
 //# sourceMappingURL=cinema.entity.js.map

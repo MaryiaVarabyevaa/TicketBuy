@@ -24,7 +24,11 @@ import {AuthModule} from "./auth/auth.module";
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
             models: [User, Cinema, Film, Session],
-            autoLoadModels: true
+            autoLoadModels: true,
+            synchronize: true,
+            // define: {
+            //     timestamps: false
+            // },
         }),
         UsersModule,
         CinemaModule,

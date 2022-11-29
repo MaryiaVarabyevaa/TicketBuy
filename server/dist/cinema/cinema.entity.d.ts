@@ -8,5 +8,7 @@ interface CinemaCreationAttrs {
 export declare class Cinema extends Model<Cinema, CinemaCreationAttrs> {
     id: number;
     name: string;
+    hallsNumber: number;
+    hallsType: string;
 }
 export {};

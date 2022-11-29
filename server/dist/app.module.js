@@ -35,7 +35,8 @@ AppModule = __decorate([
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
                 models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session],
-                autoLoadModels: true
+                autoLoadModels: true,
+                synchronize: true,
             }),
             users_module_1.UsersModule,
             cinema_module_1.CinemaModule,

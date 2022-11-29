@@ -1,10 +1,10 @@
 import * as React from 'react';
-import UserDataTable from "./UserDataTable";
+import Cinema1DataTable from "./CinemaDataTable";
 
 const AdminPanel = () => {
     return (
         <div>
-            <UserDataTable />
+            <Cinema1DataTable/>
         </div>
     )
 

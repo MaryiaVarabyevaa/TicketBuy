@@ -15,66 +15,39 @@ import {
     GridRowParams,
     MuiEvent
 } from "@mui/x-data-grid";
-import {blockUser, changeRole, getAllUsers, updateUserInfo} from "../../http/userAPI";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import BlockIcon from '@mui/icons-material/Block';
-import AddModeratorIcon from '@mui/icons-material/AddModerator';
-import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
 import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
+import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../http/cinemaAPI";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import {EditToolbar} from "./EditToolbar";
+import {ICinema, INewCinema} from "../../types/cinema";
 
-interface IUserDate {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    isBlocked: boolean;
-}
 
-const UserDataTable = () => {
-    const [rows, setRows] = useState<IUserDate[]>([]);
+const CinemaDataTable = () => {
+    const [rows, setRows] = useState<ICinema[]>([]);
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
 
-    const getUsers = async () => {
-        const users = await getAllUsers();
-        setRows(users);
+    const getCinema = async () => {
+        const cinema = await getAllCinema();
+        cinema.map((cin: ICinema, cinIndex: number) => {
+            cin.number = cinIndex + 1;
+        })
+        localStorage.setItem('rowsLength', `${cinema.length}`)
+        setRows(cinema);
     }
+
     useEffect(() => {
-        getUsers();
+        getCinema();
 
     }, [isClicked])
 
-
-    const validateEmail = (email: string, id: number)=> {
-        const editedUser = rows.find((user) => user.id === id) as IUserDate;
-        const existingUsers = rows!.map((row) => row.email.toLowerCase());
-        const exists = existingUsers.includes(email.toLowerCase());
-        if (exists && email !== editedUser.email) {
-            return `This email is already taken.`
-        }
-        if (email.length === 0) {
-            return 'Required to fill in';
-        }
-        const re =
-            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        const res = re.test(String(email));
-        if (!res) {
-            return 'Enter the correct value';
-        }
-    }
-
-    const emailPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateEmail(params.props.value!.toString(), +params.id);
-        return { ...params.props, error: errorMessage };
-    };
-
-    function EmailEditInputCell(props: GridRenderEditCellParams) {
+    function EditInputCell(props: GridRenderEditCellParams) {
         const { error } = props;
 
         return (
@@ -84,11 +57,11 @@ const UserDataTable = () => {
         );
     }
 
-    function renderEditEmail(params: GridRenderEditCellParams) {
-        return <EmailEditInputCell {...params} />;
+    function renderEditCell(params: GridRenderEditCellParams) {
+        return <EditInputCell {...params} />;
     }
 
-    const validateFirstName = (firstName: string, value: string) => {
+    const validateName = (firstName: string, value: string) => {
         const valueField = value === 'firstName' ? 'First name' : 'Last name';
         if (firstName.length === 0) {
             return 'Required to fill in';
@@ -99,16 +72,27 @@ const UserDataTable = () => {
 
     }
     const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateFirstName(params.props.value!.toString(), 'First name');
+        const errorMessage = validateName(params.props.value!.toString(), 'Name');
         return { ...params.props, error: errorMessage };
     };
 
-    const lastNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateFirstName(params.props.value!.toString(), 'Last name');
+    const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
         return { ...params.props, error: errorMessage };
     };
 
-
+    const validateHallsNumber = (hallsNumber: string) => {
+        if (hallsNumber.length === 0) {
+            return 'Required to fill in';
+        }
+        if (!hallsNumber.match(/^[0-9]+$/)) {
+            return 'Number of halls can contain only numbers'
+        }
+    }
+    const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateHallsNumber(params.props.value!.toString());
+        return { ...params.props, error: errorMessage };
+    };
     const handleRowEditStart = (
         params: GridRowParams,
         event: MuiEvent<SyntheticEvent>,
@@ -126,72 +110,64 @@ const UserDataTable = () => {
 
     const handleSaveClick = (id: GridRowId) => async () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View }});
-        //todo: заменить на setIsClicked
         setClick(!click);
     };
 
-    const handleBlockClick = (id: GridRowId) => async () => {
-        setIsClicked(!isClicked)
-        await blockUser(+id);
+    const handleDeleteClick = (id: GridRowId) => async () => {
+       setIsClicked(!isClicked);
+       await deleteCinema(id);
     };
 
-    const handleChangeRole = (id: GridRowId) => async () => {
-        setIsClicked(!isClicked);
-        await changeRole(+id);
-    };
 
     const handleCancelClick = (id: GridRowId) => () => {
         setRowModesModel({
             ...rowModesModel,
-            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+            [id]: {mode: GridRowModes.View, ignoreModifications: true},
         });
-    };
+        const editedRow = rows.find((row) => row.id === id) as INewCinema;
+        if ("isNew" in editedRow) {
+            setRows(rows.filter((row) => row.id !== id));
+        }
+    }
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const { id, firstName, lastName, email }  = updatedRow;
-        await updateUserInfo({ id, firstName, lastName, email });
+        const {  id, name, hallsType, hallsNumber }  = updatedRow;
+
+        if ('isNew' in updatedRow) {
+            await addCinema({name, hallsNumber, hallsType});
+        } else {
+            await updateCinemaInfo({ id, name, hallsNumber, hallsType });
+        }
+        setIsClicked(!isClicked);
         return updatedRow;
     };
 
     const columns: GridColumns = [
-        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'number', headerName: 'Sequence number', width: 70 },
         {
-            field: 'firstName',
-            headerName: 'First name',
+            field: 'name',
+            headerName: 'Name',
             width: 130,
             editable: true,
             preProcessEditCellProps: firstNamePreProcessEditCellProps,
-            renderEditCell: renderEditEmail,
+            renderEditCell: renderEditCell,
         },
         {
-            field: 'lastName',
-            headerName: 'Last name',
+            field: 'hallsNumber',
+            headerName: 'Number of halls',
             width: 130,
             editable: true,
-            preProcessEditCellProps: lastNamePreProcessEditCellProps,
-            renderEditCell: renderEditEmail,
+            preProcessEditCellProps: numberPreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
-            field: 'email',
-            headerName: 'Email',
+            field: 'hallsType',
+            headerName: 'Type of halls',
             width: 250,
             editable: true,
-            preProcessEditCellProps: emailPreProcessEditCellProps,
-            renderEditCell: renderEditEmail,
-        },
-        {
-            field: 'role',
-            headerName: 'Role',
-            sortable: false,
-            width: 130,
-        },
-        {
-            field: 'isBlocked',
-            headerName: 'Block',
-            type: 'boolean',
-            sortable: false,
-            width: 130,
+            preProcessEditCellProps: typePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'actions',
@@ -228,18 +204,9 @@ const UserDataTable = () => {
                         color="inherit"
                     />,
                     <GridActionsCellItem
-                        icon={
-                            params.row.role === 'user'? <AddModeratorIcon /> : <RemoveModeratorIcon />
-                        }
-                        label="Moderator"
-                        className="textPrimary"
-                        onClick={handleChangeRole(params.row.id)}
-                        color="inherit"
-                    />,
-                    <GridActionsCellItem
-                        icon={<BlockIcon />}
+                        icon={<DeleteOutlineIcon />}
                         label="Block"
-                        onClick={handleBlockClick(params.row.id)}
+                        onClick={handleDeleteClick(params.row.id)}
                         color="inherit"
                     />,
                 ];
@@ -266,7 +233,7 @@ const UserDataTable = () => {
                     component="h3"
                     sx={{ textAlign: 'center', mt: 3, mb: 3 }}
                 >
-                    Manage Users
+                    Manage Cinema
                 </Typography>
                 {
                     rows && <DataGrid
@@ -282,6 +249,9 @@ const UserDataTable = () => {
                         componentsProps={{
                             toolbar: { setRows, setRowModesModel },
                         }}
+                        components={{
+                            Toolbar: EditToolbar,
+                        }}
                         experimentalFeatures={{ newEditingApi: true }}
                         initialState={{
                             sorting: {
@@ -290,9 +260,9 @@ const UserDataTable = () => {
                         }}
                     />
                 }
-                </Box>
+            </Box>
         </>
     )
 }
 
-export default UserDataTable;
+export default CinemaDataTable;

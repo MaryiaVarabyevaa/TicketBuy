@@ -2,6 +2,7 @@
 import {IsEmail, IsNotEmpty, IsString, Matches, MinLength} from 'class-validator';
 
 export class CreateUserDto {
+
     @IsNotEmpty({
         message: 'Required to fill in'
     })

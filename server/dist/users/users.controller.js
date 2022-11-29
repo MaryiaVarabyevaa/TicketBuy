@@ -78,7 +78,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "changeRole", null);
 __decorate([
-    (0, common_1.Post)('updateInfo'),
+    (0, common_1.Post)('update'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [update_user_dto_1.UpdateUserDto]),

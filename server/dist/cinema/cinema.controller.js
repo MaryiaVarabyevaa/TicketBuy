@@ -16,6 +16,7 @@ exports.CinemaController = void 0;
 const common_1 = require("@nestjs/common");
 const cinema_service_1 = require("./cinema.service");
 const create_cinema_dto_1 = require("./dto/create-cinema.dto");
+const update_cinema_dto_1 = require("./dto/update-cinema.dto");
 let CinemaController = class CinemaController {
     constructor(cinemaService) {
         this.cinemaService = cinemaService;
@@ -26,9 +27,15 @@ let CinemaController = class CinemaController {
     getAll() {
         return this.cinemaService.getAllCinema();
     }
+    deleteCinema(req) {
+        return this.cinemaService.deleteCinema(req.body.id);
+    }
+    async updateUserInfo(cinemaDto) {
+        return this.cinemaService.updateCinemaInfo(cinemaDto);
+    }
 };
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_cinema_dto_1.CreateCinemaDto]),
@@ -40,6 +47,20 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CinemaController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Post)('delete'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], CinemaController.prototype, "deleteCinema", null);
+__decorate([
+    (0, common_1.Post)('update'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_cinema_dto_1.UpdateCinemaDto]),
+    __metadata("design:returntype", Promise)
+], CinemaController.prototype, "updateUserInfo", null);
 CinemaController = __decorate([
     (0, common_1.Controller)('cinema'),
     __metadata("design:paramtypes", [cinema_service_1.CinemaService])

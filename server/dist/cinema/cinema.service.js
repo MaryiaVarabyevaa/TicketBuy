@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CinemaService = void 0;
 const common_1 = require("@nestjs/common");
@@ -20,13 +31,40 @@ let CinemaService = class CinemaService {
     constructor(cinemaRepository) {
         this.cinemaRepository = cinemaRepository;
     }
-    async addCinema(dto) {
-        const cinema = await this.cinemaRepository.create(dto);
+    async addCinema(cinemaDto) {
+        const cinema = await this.cinemaRepository.create(cinemaDto);
         return cinema;
     }
     async getAllCinema() {
-        const cinema = await this.cinemaRepository.findAll();
+        const cinema = await this.cinemaRepository.findAll({
+            attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] }
+        });
         return cinema;
+    }
+    async deleteCinema(id) {
+        const cinema = await this.cinemaRepository.findOne({ where: { id } });
+        if (cinema) {
+            const deletedCinema = await this.cinemaRepository.destroy({
+                where: {
+                    id,
+                }
+            });
+        }
+        else {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'There is no cinema with this name in the system',
+            }, common_1.HttpStatus.OK);
+        }
+    }
+    async updateCinemaInfo(cinemaDto) {
+        const { id } = cinemaDto, others = __rest(cinemaDto, ["id"]);
+        const updateCinemaInfo = await this.cinemaRepository.update(Object.assign({}, others), {
+            where: {
+                id
+            }
+        });
+        return updateCinemaInfo;
     }
 };
 CinemaService = __decorate([

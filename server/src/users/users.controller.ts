@@ -35,7 +35,7 @@ export class UsersController {
         return this.userService.changeRole(req.body.id);
     }
 
-    @Post('updateInfo')
+    @Post('update')
     async updateUserInfo(@Body() userDto: UpdateUserDto) {
         return this.userService.updateUserInfo(userDto);
     }

@@ -31,6 +31,7 @@ export const changeRole = async (id: number) => {
 }
 
 export const updateUserInfo = async (user: IUpdateUserInfo) => {
-    const { data } = await $host.post('user/updateInfo', user);
+    const { data } = await $host.post('user/update', user);
     return data;
 }
+
