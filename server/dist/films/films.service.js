@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FilmsService = void 0;
 const common_1 = require("@nestjs/common");
@@ -20,13 +31,47 @@ let FilmsService = class FilmsService {
     constructor(filmRepository) {
         this.filmRepository = filmRepository;
     }
-    async addFilm(dto) {
-        const film = await this.filmRepository.create(dto);
-        return film;
+    async addFilm(filmDto) {
+        const film = await this.filmRepository.findOne({ where: { title: filmDto.title } });
+        if (film) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'The film with this name already exists',
+            }, common_1.HttpStatus.OK);
+        }
+        const newFilm = await this.filmRepository.create(filmDto);
+        return newFilm;
     }
     async getAllFilms() {
-        const films = await this.filmRepository.findAll();
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url']
+        });
         return films;
+    }
+    async deleteFilm(id) {
+        const film = await this.filmRepository.findOne({ where: { id } });
+        if (film) {
+            const deletedFilm = await this.filmRepository.destroy({
+                where: {
+                    id,
+                }
+            });
+        }
+        else {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'There is no film with this name in the system',
+            }, common_1.HttpStatus.OK);
+        }
+    }
+    async updateFilmInfo(filmDto) {
+        const { id } = filmDto, others = __rest(filmDto, ["id"]);
+        const updateCinemaInfo = await this.filmRepository.update(Object.assign({}, others), {
+            where: {
+                id
+            }
+        });
+        return updateCinemaInfo;
     }
 };
 FilmsService = __decorate([

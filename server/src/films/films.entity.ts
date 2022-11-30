@@ -2,13 +2,16 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 // todo: закончить объект для создания
 interface FilmCreationAttrs {
-    email: string;
-    password: string;
-    name: string;
-    surname: string;
+    title: string;
+    description: string;
+    url: string;
 }
 
-@Table({tableName: 'films'})
+@Table({
+    tableName: 'films',
+    timestamps: true,
+    paranoid: true,
+})
 export class Film extends Model<Film, FilmCreationAttrs> {
     @Column({
         type: DataType.INTEGER,
@@ -19,14 +22,14 @@ export class Film extends Model<Film, FilmCreationAttrs> {
     id: number;
 
     @Column({
-        type: DataType.STRING(50),
+        type: DataType.STRING,
         unique: true,
         allowNull: false
     })
     title: string;
 
     @Column({
-        type: DataType.STRING(50),
+        type: DataType.STRING(1000),
         allowNull: false
     })
     description: string;
@@ -39,13 +42,11 @@ export class Film extends Model<Film, FilmCreationAttrs> {
 
     @Column({
         type: DataType.INTEGER,
-        allowNull: false,
     })
     rating: number;
 
     @Column({
         type: DataType.STRING,
-        defaultValue: ''
     })
     reviews: string;
 }

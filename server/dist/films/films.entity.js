@@ -24,7 +24,7 @@ __decorate([
 ], Film.prototype, "id", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(50),
+        type: sequelize_typescript_1.DataType.STRING,
         unique: true,
         allowNull: false
     }),
@@ -32,7 +32,7 @@ __decorate([
 ], Film.prototype, "title", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(50),
+        type: sequelize_typescript_1.DataType.STRING(1000),
         allowNull: false
     }),
     __metadata("design:type", String)
@@ -47,19 +47,21 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: false,
     }),
     __metadata("design:type", Number)
 ], Film.prototype, "rating", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
-        defaultValue: ''
     }),
     __metadata("design:type", String)
 ], Film.prototype, "reviews", void 0);
 Film = __decorate([
-    (0, sequelize_typescript_1.Table)({ tableName: 'films' })
+    (0, sequelize_typescript_1.Table)({
+        tableName: 'films',
+        timestamps: true,
+        paranoid: true,
+    })
 ], Film);
 exports.Film = Film;
 //# sourceMappingURL=films.entity.js.map

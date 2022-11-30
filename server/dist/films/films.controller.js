@@ -16,6 +16,7 @@ exports.FilmsController = void 0;
 const common_1 = require("@nestjs/common");
 const films_service_1 = require("./films.service");
 const create_films_dto_1 = require("./dto/create-films.dto");
+const update_films_dto_1 = require("./dto/update-films.dto");
 let FilmsController = class FilmsController {
     constructor(filmService) {
         this.filmService = filmService;
@@ -23,17 +24,37 @@ let FilmsController = class FilmsController {
     create(filmDto) {
         return this.filmService.addFilm(filmDto);
     }
+    deleteCinema(req) {
+        return this.filmService.deleteFilm(req.body.id);
+    }
+    async updateUserInfo(cinemaDto) {
+        return this.filmService.updateFilmInfo(cinemaDto);
+    }
     getAll() {
         return this.filmService.getAllFilms();
     }
 };
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_films_dto_1.CreateFilmsDto]),
     __metadata("design:returntype", void 0)
 ], FilmsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('delete'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], FilmsController.prototype, "deleteCinema", null);
+__decorate([
+    (0, common_1.Post)('update'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_films_dto_1.UpdateFilmDto]),
+    __metadata("design:returntype", Promise)
+], FilmsController.prototype, "updateUserInfo", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
@@ -41,7 +62,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], FilmsController.prototype, "getAll", null);
 FilmsController = __decorate([
-    (0, common_1.Controller)('films'),
+    (0, common_1.Controller)('film'),
     __metadata("design:paramtypes", [films_service_1.FilmsService])
 ], FilmsController);
 exports.FilmsController = FilmsController;

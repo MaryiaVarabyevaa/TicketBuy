@@ -21,20 +21,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
-import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
-import {ICinema, INewCinema} from "../../types/cinema";
+import {ICinema} from "../../types/cinema";
+import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../http/filmAPI";
+import {IFilm, INewFilm} from "../../types/film";
 
 
 const FilmDataTable = () => {
-    const [rows, setRows] = useState<ICinema[]>([]);
+    const [rows, setRows] = useState<IFilm[]>([]);
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
 
-    const getCinema = async () => {
-        const cinema = await getAllCinema();
+    const getFilms = async () => {
+        const cinema = await getAllFilms();
         cinema.map((cin: ICinema, cinIndex: number) => {
             cin.number = cinIndex + 1;
         })
@@ -43,7 +44,7 @@ const FilmDataTable = () => {
     }
 
     useEffect(() => {
-        getCinema();
+        getFilms()
 
     }, [isClicked])
 
@@ -61,36 +62,38 @@ const FilmDataTable = () => {
         return <EditInputCell {...params} />;
     }
 
-    const validateName = (firstName: string, value: string) => {
-        const valueField = value === 'firstName' ? 'First name' : 'Last name';
-        if (firstName.length === 0) {
+    const validateTitle = (title: string) => {
+        if (title.length === 0) {
             return 'Required to fill in';
         }
-        if(!firstName.match(/^[a-zA-Z]+$/)) {
-            return `${value} can contain only latin alphabet`;
+        if(!title.match(/^[a-zA-Z0-9 :,]+$/)) {
+            return `Title can contain only latin alphabet`;
         }
 
     }
-    const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Name');
-        return { ...params.props, error: errorMessage };
+    const titlePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateTitle(params.props.value!.toString());
+        return { ...params.props, error: errorMessage }
     };
 
-    const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
+    const validateDescription= (title: string) => {
+        if (title.length === 0) {
+            return 'Required to fill in';
+        }
+    }
+
+    const descriptionPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateDescription(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
-
-    const validateHallsNumber = (hallsNumber: string) => {
+    //
+    const validateHallsUrl = (hallsNumber: string) => {
         if (hallsNumber.length === 0) {
             return 'Required to fill in';
         }
-        if (!hallsNumber.match(/^[0-9]+$/)) {
-            return 'Number of halls can contain only numbers'
-        }
     }
-    const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateHallsNumber(params.props.value!.toString());
+    const urlPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateHallsUrl(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
     const handleRowEditStart = (
@@ -103,7 +106,7 @@ const FilmDataTable = () => {
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         event.defaultMuiPrevented = true;
     };
-
+    //
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
@@ -115,16 +118,15 @@ const FilmDataTable = () => {
 
     const handleDeleteClick = (id: GridRowId) => async () => {
         setIsClicked(!isClicked);
-        await deleteCinema(id);
+        await deleteFilm(id);
     };
-
 
     const handleCancelClick = (id: GridRowId) => () => {
         setRowModesModel({
             ...rowModesModel,
             [id]: {mode: GridRowModes.View, ignoreModifications: true},
         });
-        const editedRow = rows.find((row) => row.id === id) as INewCinema;
+        const editedRow = rows.find((row) => row.id === id) as unknown as INewFilm;
         if ("isNew" in editedRow) {
             setRows(rows.filter((row) => row.id !== id));
         }
@@ -132,12 +134,12 @@ const FilmDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const {  id, name, hallsType, hallsNumber }  = updatedRow;
+        const {  id, title, description, url }  = updatedRow;
 
         if ('isNew' in updatedRow) {
-            await addCinema({name, hallsNumber, hallsType});
+            await addFilm({title, description, url });
         } else {
-            await updateCinemaInfo({ id, name, hallsNumber, hallsType });
+            await updateFilmInfo({ id, title, description, url });
         }
         setIsClicked(!isClicked);
         return updatedRow;
@@ -146,27 +148,27 @@ const FilmDataTable = () => {
     const columns: GridColumns = [
         { field: 'number', headerName: 'Sequence number', width: 70 },
         {
-            field: 'name',
-            headerName: 'Name',
-            width: 130,
+            field: 'title',
+            headerName: 'Title',
+            width: 300,
             editable: true,
-            preProcessEditCellProps: firstNamePreProcessEditCellProps,
+            preProcessEditCellProps: titlePreProcessEditCellProps,
             renderEditCell: renderEditCell,
         },
         {
-            field: 'hallsNumber',
-            headerName: 'Number of halls',
-            width: 130,
+            field: 'description',
+            headerName: 'Description',
+            width: 500,
             editable: true,
-            preProcessEditCellProps: numberPreProcessEditCellProps,
+            preProcessEditCellProps: descriptionPreProcessEditCellProps,
             renderEditCell: renderEditCell,
         },
         {
-            field: 'hallsType',
-            headerName: 'Type of halls',
-            width: 250,
+            field: 'url',
+            headerName: 'Url',
+            width: 300,
             editable: true,
-            preProcessEditCellProps: typePreProcessEditCellProps,
+            preProcessEditCellProps: urlPreProcessEditCellProps,
             renderEditCell: renderEditCell,
         },
         {

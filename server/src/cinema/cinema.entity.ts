@@ -2,16 +2,14 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 // todo: закончить объект для создания
 interface CinemaCreationAttrs {
-    email: string;
-    password: string;
     name: string;
-    surname: string;
+    hallsNumber: number;
+    hallsType: string;
 }
 
 @Table({
     tableName: 'cinema',
     timestamps: true,
-    // // schema: dbConfiguration.dbSchema,
     paranoid: true,
 })
 export class Cinema extends Model<Cinema, CinemaCreationAttrs> {

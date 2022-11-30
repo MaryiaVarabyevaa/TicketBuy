@@ -1,8 +1,11 @@
 import { FilmsService } from "./films.service";
 import { CreateFilmsDto } from "./dto/create-films.dto";
+import { UpdateFilmDto } from "./dto/update-films.dto";
 export declare class FilmsController {
     private filmService;
     constructor(filmService: FilmsService);
     create(filmDto: CreateFilmsDto): Promise<import("./films.entity").Film>;
+    deleteCinema(req: any): Promise<void>;
+    updateUserInfo(cinemaDto: UpdateFilmDto): Promise<[affectedCount: number]>;
     getAll(): Promise<import("./films.entity").Film[]>;
 }

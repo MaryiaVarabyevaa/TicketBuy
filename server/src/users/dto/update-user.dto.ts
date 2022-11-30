@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, IsNumber, IsString, Matches, MinLength} from 'class-validator';
+import {IsEmail, IsNotEmpty, IsNumber, IsString, Matches} from 'class-validator';
 
 export class UpdateUserDto {
     @IsNotEmpty({

@@ -1,7 +1,6 @@
 import {Body, Controller, Get, Post, Request} from '@nestjs/common';
 import {CinemaService} from "./cinema.service";
 import {CreateCinemaDto} from "./dto/create-cinema.dto";
-import {UpdateUserDto} from "../users/dto/update-user.dto";
 import {UpdateCinemaDto} from "./dto/update-cinema.dto";
 
 @Controller('cinema')

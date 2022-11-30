@@ -20,7 +20,7 @@ __decorate([
     (0, class_validator_1.IsString)({
         message: 'Title must be a string'
     }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z0-9]+$/, {
+    (0, class_validator_1.Matches)(/^[a-zA-Z0-9 :,.]+$/, {
         message: 'Title can contain only latin alphabet and numbers'
     }),
     __metadata("design:type", String)
@@ -32,9 +32,6 @@ __decorate([
     (0, class_validator_1.IsString)({
         message: 'Description must be a string'
     }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z0-9]+$/, {
-        message: 'Description can contain only latin alphabet and numbers'
-    }),
     __metadata("design:type", String)
 ], CreateFilmsDto.prototype, "description", void 0);
 __decorate([
@@ -44,31 +41,7 @@ __decorate([
     (0, class_validator_1.IsString)({
         message: 'Description must be a string'
     }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z0-9]+$/, {
-        message: 'Description can contain only latin alphabet and numbers'
-    }),
     __metadata("design:type", String)
 ], CreateFilmsDto.prototype, "url", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({
-        message: 'Required to fill in'
-    }),
-    (0, class_validator_1.IsNumber)({}, {
-        message: 'Rating must be a number'
-    }),
-    __metadata("design:type", Number)
-], CreateFilmsDto.prototype, "rating", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({
-        message: 'Required to fill in'
-    }),
-    (0, class_validator_1.IsString)({
-        message: 'Description must be a string'
-    }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z0-9]+$/, {
-        message: 'Description can contain only latin alphabet and numbers'
-    }),
-    __metadata("design:type", String)
-], CreateFilmsDto.prototype, "reviews", void 0);
 exports.CreateFilmsDto = CreateFilmsDto;
 //# sourceMappingURL=create-films.dto.js.map
