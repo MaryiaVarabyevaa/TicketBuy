@@ -1,19 +1,17 @@
 import * as React from "react";
-import {SyntheticEvent, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
     GridEditInputCell,
-    GridEventListener,
     GridPreProcessEditCellProps,
     GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams,
-    MuiEvent
+    GridRowParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
@@ -23,9 +21,11 @@ import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
-import {ICinema} from "../../types/cinema";
-import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../http/filmAPI";
-import {IFilm, INewFilm} from "../../types/film";
+import {ICinema} from "../../../types/cinema";
+import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/filmAPI";
+import {IFilm, INewFilm} from "../../../types/film";
+import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
+import {validateDescription, validateHallsUrl} from "./validation";
 
 
 const FilmDataTable = () => {
@@ -76,37 +76,17 @@ const FilmDataTable = () => {
         return { ...params.props, error: errorMessage }
     };
 
-    const validateDescription= (title: string) => {
-        if (title.length === 0) {
-            return 'Required to fill in';
-        }
-    }
 
     const descriptionPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateDescription(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
-    //
-    const validateHallsUrl = (hallsNumber: string) => {
-        if (hallsNumber.length === 0) {
-            return 'Required to fill in';
-        }
-    }
+
     const urlPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateHallsUrl(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
-    const handleRowEditStart = (
-        params: GridRowParams,
-        event: MuiEvent<SyntheticEvent>,
-    ) => {
-        event.defaultMuiPrevented = true;
-    };
 
-    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-        event.defaultMuiPrevented = true;
-    };
-    //
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };

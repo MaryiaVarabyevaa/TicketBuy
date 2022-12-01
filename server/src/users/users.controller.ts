@@ -50,4 +50,9 @@ export class UsersController {
     getAll() {
         return this.userService.getAllUsers();
     }
+
+    @Post('getUser')
+    getOneUser(@Request() req) {
+        return this.userService.getUser(req.body.email);
+    }
 }

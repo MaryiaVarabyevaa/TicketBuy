@@ -15,7 +15,7 @@ export class CinemaService {
 
     async getAllCinema() {
         const cinema = await this.cinemaRepository.findAll({
-            attributes: { exclude: ['created_at', 'updated_at', 'deleted_at'] }
+            attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] }
         });
         return cinema;
     }

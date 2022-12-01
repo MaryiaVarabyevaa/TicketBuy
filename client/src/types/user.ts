@@ -1,10 +1,13 @@
 export enum UserActionTypes {
     ADD_USER= 'ADD_USER',
     RESTORE_FROM_STORAGE='RESTORE_FROM_STORAGE',
+    ADD_CURRENT_USER = 'ADD_CURRENT_USER',
+    LOG_OUT = 'LOG_OUT'
 }
 
 export interface IUserState {
     isAuth: boolean;
+    currentUser: any[];
     users: any[];
 }
 

@@ -39,6 +39,15 @@ let UsersService = class UsersService {
         });
         return arrOfUsers;
     }
+    async getUser(email) {
+        const user = await this.userRepository.findOne({
+            attributes: ['email', "firstName", "lastName", "role"],
+            where: {
+                email
+            }
+        });
+        return user;
+    }
     async blockUser(id) {
         const { isBlocked } = await this.userRepository.findOne({
             where: { id },

@@ -34,6 +34,16 @@ export class UsersService {
         return arrOfUsers;
     }
 
+    async getUser(email: string) {
+        const user = await this.userRepository.findOne({
+            attributes: ['email', "firstName", "lastName", "role"],
+            where: {
+                email
+            }
+        })
+        return user;
+    }
+
     async blockUser(id: number) {
         const { isBlocked } =  await this.userRepository.findOne({
             where: {id},

@@ -1,30 +1,28 @@
 import * as React from "react";
-import {SyntheticEvent, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridEditInputCell,
-    GridEventListener,
     GridPreProcessEditCellProps,
-    GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams,
-    MuiEvent
+    GridRowParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
-import {StyledTooltip} from './StyledTooltip';
-import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../http/cinemaAPI";
+import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
-import {ICinema, INewCinema} from "../../types/cinema";
+import {ICinema, INewCinema} from "../../../types/cinema";
+import {renderEditCell} from "./CellEditInputCell";
+import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
+import {validate, validateHallsNumber} from "./validation";
 
 
 const CinemaDataTable = () => {
@@ -47,61 +45,20 @@ const CinemaDataTable = () => {
 
     }, [isClicked])
 
-    function EditInputCell(props: GridRenderEditCellParams) {
-        const { error } = props;
 
-        return (
-            <StyledTooltip open={!!error} title={error}>
-                <GridEditInputCell {...props} />
-            </ StyledTooltip >
-        );
-    }
-
-    function renderEditCell(params: GridRenderEditCellParams) {
-        return <EditInputCell {...params} />;
-    }
-
-    const validateName = (firstName: string, value: string) => {
-        const valueField = value === 'firstName' ? 'First name' : 'Last name';
-        if (firstName.length === 0) {
-            return 'Required to fill in';
-        }
-        if(!firstName.match(/^[a-zA-Z]+$/)) {
-            return `${value} can contain only latin alphabet`;
-        }
-
-    }
     const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Name');
+        const errorMessage = validate(params.props.value!.toString(), 'Name');
         return { ...params.props, error: errorMessage };
     };
 
     const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
+        const errorMessage = validate(params.props.value!.toString(), 'Type of halls');
         return { ...params.props, error: errorMessage };
     };
 
-    const validateHallsNumber = (hallsNumber: string) => {
-        if (hallsNumber.length === 0) {
-            return 'Required to fill in';
-        }
-        if (!hallsNumber.match(/^[0-9]+$/)) {
-            return 'Number of halls can contain only numbers'
-        }
-    }
     const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateHallsNumber(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
-    };
-    const handleRowEditStart = (
-        params: GridRowParams,
-        event: MuiEvent<SyntheticEvent>,
-    ) => {
-        event.defaultMuiPrevented = true;
-    };
-
-    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-        event.defaultMuiPrevented = true;
     };
 
     const handleEditClick = (id: GridRowId) => () => {
@@ -144,7 +101,7 @@ const CinemaDataTable = () => {
     };
 
     const columns: GridColumns = [
-        { field: 'number', headerName: 'Sequence number', width: 70 },
+        { field: 'number', headerName: 'ID', width: 70 },
         {
             field: 'name',
             headerName: 'Name',

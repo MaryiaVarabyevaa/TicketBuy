@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, BelongsToMany} from 'sequelize-typescript';
 import {CreateSessionDto} from "./dto/create-session.dto";
 
 // todo: закончить объект для создания
@@ -24,4 +24,5 @@ export class Session extends Model<Session, CreateSessionDto > {
         allowNull: false
     })
     session_time: number;
+
 }

@@ -17,4 +17,5 @@ export declare class UsersController {
     updateUserInfo(userDto: UpdateUserDto): Promise<void>;
     getProfile(req: any): any;
     getAll(): Promise<any[]>;
+    getOneUser(req: any): Promise<import("./users.entity").User>;
 }

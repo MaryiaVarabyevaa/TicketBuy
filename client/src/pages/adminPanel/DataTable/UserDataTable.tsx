@@ -1,21 +1,18 @@
 import * as React from "react";
-import {SyntheticEvent, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     DataGrid,
     GridActionsCellItem,
+    gridClasses,
     GridColumns,
-    GridEditInputCell,
-    GridEventListener,
     GridPreProcessEditCellProps,
-    GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams,
-    MuiEvent
+    GridRowParams
 } from "@mui/x-data-grid";
-import {blockUser, changeRole, getAllUsers, updateUserInfo} from "../../http/userAPI";
+import {blockUser, changeRole, getAllUsers, updateUserInfo} from "../../../http/userAPI";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
@@ -24,9 +21,12 @@ import BlockIcon from '@mui/icons-material/Block';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
 import {Typography} from "@mui/material";
-import {StyledTooltip} from './StyledTooltip';
+import {grey} from "@mui/material/colors";
+import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
+import {renderEditCell} from "./CellEditInputCell";
+import {validateEmail, validateName} from "./validation";
 
-interface IUserDate {
+export interface IUserDate {
     id: number;
     firstName: string;
     lastName: string;
@@ -41,6 +41,8 @@ const UserDataTable = () => {
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
 
+    const [pageSize, setPageSize] = useState(5);
+
     const getUsers = async () => {
         const users = await getAllUsers();
         setRows(users);
@@ -51,74 +53,22 @@ const UserDataTable = () => {
     }, [isClicked])
 
 
-    const validateEmail = (email: string, id: number)=> {
-        const editedUser = rows.find((user) => user.id === id) as IUserDate;
-        const existingUsers = rows!.map((row) => row.email.toLowerCase());
-        const exists = existingUsers.includes(email.toLowerCase());
-        if (exists && email !== editedUser.email) {
-            return `This email is already taken.`
-        }
-        if (email.length === 0) {
-            return 'Required to fill in';
-        }
-        const re =
-            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        const res = re.test(String(email));
-        if (!res) {
-            return 'Enter the correct value';
-        }
-    }
-
     const emailPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateEmail(params.props.value!.toString(), +params.id);
+        const errorMessage = validateEmail(rows ,params.props.value!.toString(), +params.id);
         return { ...params.props, error: errorMessage };
     };
 
-    function EmailEditInputCell(props: GridRenderEditCellParams) {
-        const { error } = props;
 
-        return (
-            <StyledTooltip open={!!error} title={error}>
-                <GridEditInputCell {...props} />
-            </ StyledTooltip >
-        );
-    }
-
-    function renderEditEmail(params: GridRenderEditCellParams) {
-        return <EmailEditInputCell {...params} />;
-    }
-
-    const validateFirstName = (firstName: string, value: string) => {
-        const valueField = value === 'firstName' ? 'First name' : 'Last name';
-        if (firstName.length === 0) {
-            return 'Required to fill in';
-        }
-        if(!firstName.match(/^[a-zA-Z]+$/)) {
-            return `${value} can contain only latin alphabet`;
-        }
-
-    }
     const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateFirstName(params.props.value!.toString(), 'First name');
+        const errorMessage = validateName(params.props.value!.toString(), 'First name');
         return { ...params.props, error: errorMessage };
     };
 
     const lastNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateFirstName(params.props.value!.toString(), 'Last name');
+        const errorMessage = validateName(params.props.value!.toString(), 'Last name');
         return { ...params.props, error: errorMessage };
     };
 
-
-    const handleRowEditStart = (
-        params: GridRowParams,
-        event: MuiEvent<SyntheticEvent>,
-    ) => {
-        event.defaultMuiPrevented = true;
-    };
-
-    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-        event.defaultMuiPrevented = true;
-    };
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -126,7 +76,6 @@ const UserDataTable = () => {
 
     const handleSaveClick = (id: GridRowId) => async () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View }});
-        //todo: заменить на setIsClicked
         setClick(!click);
     };
 
@@ -155,22 +104,22 @@ const UserDataTable = () => {
     };
 
     const columns: GridColumns = [
-        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'id', headerName: 'ID', width: 90 },
         {
             field: 'firstName',
             headerName: 'First name',
-            width: 130,
+            width: 210,
             editable: true,
             preProcessEditCellProps: firstNamePreProcessEditCellProps,
-            renderEditCell: renderEditEmail,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'lastName',
             headerName: 'Last name',
-            width: 130,
+            width: 210,
             editable: true,
             preProcessEditCellProps: lastNamePreProcessEditCellProps,
-            renderEditCell: renderEditEmail,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'email',
@@ -178,7 +127,7 @@ const UserDataTable = () => {
             width: 250,
             editable: true,
             preProcessEditCellProps: emailPreProcessEditCellProps,
-            renderEditCell: renderEditEmail,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'role',
@@ -197,7 +146,7 @@ const UserDataTable = () => {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
-            width: 110,
+            width: 130,
             cellClassName: 'actions',
             getActions: (params: GridRowParams) => {
                 const isInEditMode = rowModesModel[params.row.id]?.mode === GridRowModes.Edit;
@@ -287,6 +236,19 @@ const UserDataTable = () => {
                             sorting: {
                                 sortModel: [{ field: 'id', sort: 'asc' }],
                             },
+                        }}
+                        getRowSpacing={params => ({
+                            top: params.isFirstVisible ? 0 : 5,
+                            bottom: params.isLastVisible ? 0 : 5,
+
+                        })}
+                        rowsPerPageOptions={[5, 10, 15]}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        sx={{
+                            [`& .${gridClasses.row}`] : {
+                                bgcolor: theme=>theme.palette.mode === 'light'? grey[200] : grey[900]
+                            }
                         }}
                     />
                 }

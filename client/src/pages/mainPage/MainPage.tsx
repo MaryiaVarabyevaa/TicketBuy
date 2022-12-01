@@ -22,6 +22,10 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {LOGIN_ROUTE} from "../../constants/routes";
+import NavBar from "../../components/NavBar";
 
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -31,29 +35,20 @@ const theme = createTheme();
 const MainPage = () => {
     const [sortValue, setSortValue] = useState('');
     const [ratingValue, setRatingValue] = useState<number | null>(2);
+    const navigate = useNavigate();
 
     const handleChange = (event: SelectChangeEvent) => {
         setSortValue(event.target.value);
     };
 
+    const handleClick = () => {
+        navigate(LOGIN_ROUTE);
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-                <Toolbar sx={{ borderBottom: 1, borderColor:  '#1976d2' }}>
-                    <Typography
-                        component="h2"
-                        variant="h5"
-                        color="inherit"
-                        align="center"
-                        noWrap
-                        sx={{ flex: 1, pl: '56px' }}
-                    >
-                        TicketBuy
-                    </Typography>
-                    <Button variant="outlined" size="small">
-                        Sign up
-                    </Button>
-                </Toolbar>
+              <NavBar/>
             <main>
                 {/* Hero unit */}
                 <Box

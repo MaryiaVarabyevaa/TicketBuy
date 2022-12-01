@@ -35,3 +35,8 @@ export const updateUserInfo = async (user: IUpdateUserInfo) => {
     return data;
 }
 
+export const getUser = async (email: string) => {
+    const { data } = await $host.post('user/getUser', {email});
+    return data;
+}
+

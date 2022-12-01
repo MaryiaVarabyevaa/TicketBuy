@@ -1,3 +1,5 @@
 export class CreateSessionDto {
-    readonly session_time: number;
+    readonly sessionTime: number;
+
+    readonly price: number;
 }

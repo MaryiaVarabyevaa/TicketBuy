@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {useForm, Controller, SubmitHandler, useFormState} from "react-hook-form";
+import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {
     Avatar,
     Box,
@@ -16,16 +16,21 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {emailValidation, firstNameValidation, lastNameValidation, passwordValidation} from "./validation";
-import {login, registration} from "../../http/userAPI";
+import {getUser, login, registration} from "../../http/userAPI";
 import {useDispatch} from "react-redux";
-import {addUserAction} from "../../store/reducers/userReducer";
+import {addCurrentUserStorageAction, addUserAction} from "../../store/reducers/userReducer";
 import {ILoginForm} from "../../types/form";
+import {useNavigate} from "react-router-dom";
+import {MAIN_ROUTE} from "../../constants/routes";
 
 
 const theme = createTheme();
 
 const LoginPage = () => {
     const [isAuth, setIsAuth] = useState(true);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { handleSubmit, control } = useForm<ILoginForm>({
         mode: 'onChange',
         defaultValues: {
@@ -38,17 +43,19 @@ const LoginPage = () => {
     const {errors} = useFormState({
         control
     });
-    const dispatch = useDispatch();
 
     const onSubmit: SubmitHandler<ILoginForm> = async (data)=> {
         let response;
         if(isAuth) {
             response = await login(data);
+            const user = await getUser(data.email);
+            dispatch(addCurrentUserStorageAction(user))
         }
         else {
            response = await registration(data);
            dispatch(addUserAction(data));
         }
+        navigate(MAIN_ROUTE);
 
     }
 
@@ -62,7 +69,10 @@ const LoginPage = () => {
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                        paddingLeft: 2,
+                        paddingRight: 2,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
