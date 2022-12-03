@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post} from '@nestjs/common';
 import {SessionsService} from "./sessions.service";
 import {CreateSessionDto} from "./dto/create-session.dto";
 
@@ -9,5 +9,10 @@ export class SessionsController {
     @Post()
     create(@Body() sessionDto: CreateSessionDto) {
         return this.sessionService.addSession(sessionDto);
+    }
+
+    @Get()
+    getAll() {
+        return this.sessionService.getAllSessions();
     }
 }

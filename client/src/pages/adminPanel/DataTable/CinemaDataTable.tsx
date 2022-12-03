@@ -89,42 +89,66 @@ const CinemaDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const {  id, name, hallsType, hallsNumber }  = updatedRow;
+        const {  id, name, hallsType, hallsNumber, city, street, buildingNumber }  = updatedRow;
 
         if ('isNew' in updatedRow) {
-            await addCinema({name, hallsNumber, hallsType});
+            await addCinema({name, hallsNumber, hallsType, city, street, buildingNumber});
         } else {
-            await updateCinemaInfo({ id, name, hallsNumber, hallsType });
+            await updateCinemaInfo({ id, name, hallsNumber, hallsType, city, street, buildingNumber });
         }
         setIsClicked(!isClicked);
         return updatedRow;
     };
 
     const columns: GridColumns = [
-        { field: 'number', headerName: 'ID', width: 70 },
+        // { field: 'number', headerName: 'ID', width: 70 },
         {
             field: 'name',
             headerName: 'Name',
             width: 130,
             editable: true,
-            preProcessEditCellProps: firstNamePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
+            // preProcessEditCellProps: firstNamePreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
         },
         {
             field: 'hallsNumber',
             headerName: 'Number of halls',
             width: 130,
             editable: true,
-            preProcessEditCellProps: numberPreProcessEditCellProps,
-            renderEditCell: renderEditCell,
+            // preProcessEditCellProps: numberPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
         },
         {
             field: 'hallsType',
             headerName: 'Type of halls',
             width: 250,
             editable: true,
-            preProcessEditCellProps: typePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
+            // preProcessEditCellProps: numberPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'city',
+            headerName: 'City',
+            width: 200,
+            editable: true,
+            // preProcessEditCellProps: typePreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'street',
+            headerName: 'Street',
+            width: 250,
+            editable: true,
+            // preProcessEditCellProps: numberPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'buildingNumber',
+            headerName: 'Number building',
+            width: 150,
+            editable: true,
+            // preProcessEditCellProps: typePreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
         },
         {
             field: 'actions',

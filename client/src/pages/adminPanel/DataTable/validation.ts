@@ -59,3 +59,13 @@ export const validateName = (firstName: string, value: string) => {
         return `${value} can contain only latin alphabet`;
     }
 }
+
+export const validateTitle = (title: string) => {
+    if (title.length === 0) {
+        return 'Required to fill in';
+    }
+    if(!title.match(/^[a-zA-Z0-9 :,]+$/)) {
+        return `Title can contain only latin alphabet`;
+    }
+
+}

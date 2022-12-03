@@ -1,10 +1,14 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, HasMany} from 'sequelize-typescript';
+import {Session} from "../sessions/sessions.entity";
 
 // todo: закончить объект для создания
 interface CinemaCreationAttrs {
     name: string;
     hallsNumber: number;
     hallsType: string;
+    city: string;
+    street: string;
+    buildingNumber: number;
 }
 
 @Table({
@@ -28,6 +32,24 @@ export class Cinema extends Model<Cinema, CinemaCreationAttrs> {
     name: string;
 
     @Column({
+        type: DataType.STRING(50),
+        allowNull: false
+    })
+    city: string;
+
+    @Column({
+        type: DataType.STRING(50),
+        allowNull: false
+    })
+    street: string;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    buildingNumber: number;
+
+    @Column({
         type: DataType.INTEGER,
         allowNull: false
     })
@@ -38,4 +60,7 @@ export class Cinema extends Model<Cinema, CinemaCreationAttrs> {
         allowNull: false,
     })
     hallsType: string;
+
+    @HasMany(() => Session)
+    session: Session[]
 }

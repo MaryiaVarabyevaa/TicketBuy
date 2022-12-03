@@ -23,6 +23,9 @@ let SessionsController = class SessionsController {
     create(sessionDto) {
         return this.sessionService.addSession(sessionDto);
     }
+    getAll() {
+        return this.sessionService.getAllSessions();
+    }
 };
 __decorate([
     (0, common_1.Post)(),
@@ -31,6 +34,12 @@ __decorate([
     __metadata("design:paramtypes", [create_session_dto_1.CreateSessionDto]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getAll", null);
 SessionsController = __decorate([
     (0, common_1.Controller)('sessions'),
     __metadata("design:paramtypes", [sessions_service_1.SessionsService])

@@ -32,8 +32,22 @@ let CinemaService = class CinemaService {
         this.cinemaRepository = cinemaRepository;
     }
     async addCinema(cinemaDto) {
-        const cinema = await this.cinemaRepository.create(cinemaDto);
-        return cinema;
+        const cinema = await this.cinemaRepository.findOne({
+            where: {
+                name: cinemaDto.name,
+                city: cinemaDto.city,
+                street: cinemaDto.street,
+                buildingNumber: cinemaDto.buildingNumber
+            }
+        });
+        if (cinema) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'Cinema with this name already exists',
+            }, common_1.HttpStatus.OK);
+        }
+        const newCinema = await this.cinemaRepository.create(cinemaDto);
+        return newCinema;
     }
     async getAllCinema() {
         const cinema = await this.cinemaRepository.findAll({

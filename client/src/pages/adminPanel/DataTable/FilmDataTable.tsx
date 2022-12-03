@@ -25,7 +25,7 @@ import {ICinema} from "../../../types/cinema";
 import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/filmAPI";
 import {IFilm, INewFilm} from "../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validateDescription, validateHallsUrl} from "./validation";
+import {validateDescription, validateHallsUrl, validateTitle} from "./validation";
 
 
 const FilmDataTable = () => {
@@ -62,15 +62,6 @@ const FilmDataTable = () => {
         return <EditInputCell {...params} />;
     }
 
-    const validateTitle = (title: string) => {
-        if (title.length === 0) {
-            return 'Required to fill in';
-        }
-        if(!title.match(/^[a-zA-Z0-9 :,]+$/)) {
-            return `Title can contain only latin alphabet`;
-        }
-
-    }
     const titlePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateTitle(params.props.value!.toString());
         return { ...params.props, error: errorMessage }
@@ -215,7 +206,7 @@ const FilmDataTable = () => {
                     component="h3"
                     sx={{ textAlign: 'center', mt: 3, mb: 3 }}
                 >
-                    Film Cinema
+                    Manage films
                 </Typography>
                 {
                     rows && <DataGrid

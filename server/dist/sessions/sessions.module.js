@@ -12,6 +12,7 @@ const sessions_service_1 = require("./sessions.service");
 const sessions_controller_1 = require("./sessions.controller");
 const sequelize_1 = require("@nestjs/sequelize");
 const sessions_entity_1 = require("./sessions.entity");
+const cinema_entity_1 = require("../cinema/cinema.entity");
 let SessionsModule = class SessionsModule {
 };
 SessionsModule = __decorate([
@@ -19,7 +20,7 @@ SessionsModule = __decorate([
         providers: [sessions_service_1.SessionsService],
         controllers: [sessions_controller_1.SessionsController],
         imports: [
-            sequelize_1.SequelizeModule.forFeature([sessions_entity_1.Session])
+            sequelize_1.SequelizeModule.forFeature([sessions_entity_1.Session, cinema_entity_1.Cinema])
         ]
     })
 ], SessionsModule);

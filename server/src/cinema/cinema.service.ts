@@ -9,8 +9,28 @@ export class CinemaService {
     constructor(@InjectModel(Cinema) private cinemaRepository: typeof Cinema) {}
 
     async addCinema(cinemaDto: CreateCinemaDto){
-        const cinema = await this.cinemaRepository.create(cinemaDto);
-        return cinema;
+        const cinema = await this.cinemaRepository.findOne({
+            where: {
+                name: cinemaDto.name,
+                city: cinemaDto.city,
+                street: cinemaDto.street,
+                buildingNumber: cinemaDto.buildingNumber
+            }
+        })
+
+        if (cinema) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'Cinema with this name already exists',
+                },
+                HttpStatus.OK,
+            );
+        }
+
+
+        const newCinema = await this.cinemaRepository.create(cinemaDto);
+        return newCinema;
     }
 
     async getAllCinema() {

@@ -246,7 +246,7 @@ export default function DashBoard() {
                     isAuth &&  <Box sx={{textAlign: 'center'}}>
 
                         {
-                            open && <Stack spacing={1}>
+                           (isAuth && open) && <Stack spacing={1}>
                                 <Typography>
                                     {
                                         `${currentUser[0].firstName} ${currentUser[0].lastName}`

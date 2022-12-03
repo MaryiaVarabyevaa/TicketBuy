@@ -39,4 +39,31 @@ export class UpdateCinemaDto {
         message: 'Type of halls can contain only latin alphabet'
     })
     readonly hallsType: string;
+
+    @IsString({
+        message: 'City field must be a string'
+    })
+    @Matches(/^[a-zA-Z]+$/, {
+        message: 'City field can contain only latin alphabet'
+    })
+    readonly city: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Street field must be a string'
+    })
+    @Matches(/^[a-zA-Z .]+$/, {
+        message: 'Street field can contain only latin alphabet'
+    })
+    readonly street: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsNumber({}, {
+        message: 'Number of building must be a string'
+    })
+    readonly buildingNumber: number;
 }

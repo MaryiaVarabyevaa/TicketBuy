@@ -3,12 +3,13 @@ import {CinemaService} from './cinema.service';
 import {CinemaController} from './cinema.controller';
 import {SequelizeModule} from "@nestjs/sequelize";
 import {Cinema} from "./cinema.entity";
+import {Session} from "../sessions/sessions.entity";
 
 @Module({
   providers: [CinemaService],
   controllers: [CinemaController],
   imports: [
-    SequelizeModule.forFeature([Cinema])
+    SequelizeModule.forFeature([Cinema, Session])
   ]
 })
 export class CinemaModule {}

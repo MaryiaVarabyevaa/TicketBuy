@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
-import {User} from "../users/users.entity";
-import {CreateUserDto} from "../users/dto/create-user.dto";
 import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 

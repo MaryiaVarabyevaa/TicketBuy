@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Cinema = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const sessions_entity_1 = require("../sessions/sessions.entity");
 let Cinema = class Cinema extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -31,6 +32,27 @@ __decorate([
 ], Cinema.prototype, "name", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: false
+    }),
+    __metadata("design:type", String)
+], Cinema.prototype, "city", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: false
+    }),
+    __metadata("design:type", String)
+], Cinema.prototype, "street", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        allowNull: false
+    }),
+    __metadata("design:type", Number)
+], Cinema.prototype, "buildingNumber", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
         allowNull: false
     }),
@@ -43,6 +65,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Cinema.prototype, "hallsType", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => sessions_entity_1.Session),
+    __metadata("design:type", Array)
+], Cinema.prototype, "session", void 0);
 Cinema = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'cinema',

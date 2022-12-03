@@ -46,5 +46,38 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateCinemaDto.prototype, "hallsType", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsString)({
+        message: 'City field must be a string'
+    }),
+    (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
+        message: 'City field can contain only latin alphabet'
+    }),
+    __metadata("design:type", String)
+], CreateCinemaDto.prototype, "city", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsString)({
+        message: 'Street field must be a string'
+    }),
+    (0, class_validator_1.Matches)(/^[a-zA-Z .,]+$/, {
+        message: 'Street field can contain only latin alphabet'
+    }),
+    __metadata("design:type", String)
+], CreateCinemaDto.prototype, "street", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsNumber)({}, {
+        message: 'Number of building must be a string'
+    }),
+    __metadata("design:type", Number)
+], CreateCinemaDto.prototype, "buildingNumber", void 0);
 exports.CreateCinemaDto = CreateCinemaDto;
 //# sourceMappingURL=create-cinema.dto.js.map

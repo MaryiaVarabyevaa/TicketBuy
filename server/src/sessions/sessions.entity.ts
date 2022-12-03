@@ -1,5 +1,7 @@
-import {Table, Column, Model, DataType, BelongsToMany} from 'sequelize-typescript';
+import {Table, Column, Model, DataType, BelongsToMany, BelongsTo, ForeignKey} from 'sequelize-typescript';
 import {CreateSessionDto} from "./dto/create-session.dto";
+import {Cinema} from "../cinema/cinema.entity";
+import {Film} from "../films/films.entity";
 
 // todo: закончить объект для создания
 interface sessionCreationAttrs {
@@ -20,9 +22,38 @@ export class Session extends Model<Session, CreateSessionDto > {
     id: number;
 
     @Column({
+        type: DataType.DATEONLY,
+        allowNull: false
+    })
+    date: string;
+
+    @Column({
+        type: DataType.TIME,
+        allowNull: false
+    })
+    time: string;
+
+    @Column({
         type: DataType.INTEGER,
         allowNull: false
     })
-    session_time: number;
+    price: number;
 
+    @ForeignKey(() => Film)
+    @Column({
+        type: DataType.INTEGER,
+    })
+    filmId: number
+
+    @BelongsTo(() => Film)
+    filmTitle: Film
+
+    @ForeignKey(() => Cinema)
+    @Column({
+        type: DataType.INTEGER,
+    })
+    cinemaId: number
+
+    @BelongsTo(() => Cinema)
+    cinemaName: Cinema
 }
