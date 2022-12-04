@@ -68,7 +68,11 @@ __decorate([
     __metadata("design:type", cinema_entity_1.Cinema)
 ], Session.prototype, "cinemaName", void 0);
 Session = __decorate([
-    (0, sequelize_typescript_1.Table)({ tableName: 'session' })
+    (0, sequelize_typescript_1.Table)({
+        tableName: 'session',
+        timestamps: true,
+        paranoid: true,
+    })
 ], Session);
 exports.Session = Session;
 //# sourceMappingURL=sessions.entity.js.map

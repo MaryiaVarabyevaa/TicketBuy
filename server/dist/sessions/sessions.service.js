@@ -11,6 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionsService = void 0;
 const common_1 = require("@nestjs/common");
@@ -27,6 +38,31 @@ let SessionsService = class SessionsService {
     async getAllSessions() {
         const sessions = await this.sessionRepository.findAll();
         return sessions;
+    }
+    async updateSessionInfo(sessionDto) {
+        const { id } = sessionDto, others = __rest(sessionDto, ["id"]);
+        const updateCSessionInfo = await this.sessionRepository.update(Object.assign({}, others), {
+            where: {
+                id
+            }
+        });
+        return updateCSessionInfo;
+    }
+    async deleteSession(id) {
+        const session = await this.sessionRepository.findOne({ where: { id } });
+        if (session) {
+            const deletedSession = await this.sessionRepository.destroy({
+                where: {
+                    id,
+                }
+            });
+        }
+        else {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'There is no such session',
+            }, common_1.HttpStatus.OK);
+        }
     }
 };
 SessionsService = __decorate([

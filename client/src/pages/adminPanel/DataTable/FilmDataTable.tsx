@@ -2,22 +2,22 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {
     DataGrid,
-    GridActionsCellItem,
+    GridActionsCellItem, GridColDef,
     GridColumns,
     GridEditInputCell,
-    GridPreProcessEditCellProps,
+    GridPreProcessEditCellProps, GridRenderCellParams,
     GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams
+    GridRowParams, useGridApiContext
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import {Typography} from "@mui/material";
+import {Select, Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
@@ -26,6 +26,10 @@ import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/fi
 import {IFilm, INewFilm} from "../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
 import {validateDescription, validateHallsUrl, validateTitle} from "./validation";
+import {SelectChangeEvent} from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
 
 
 const FilmDataTable = () => {

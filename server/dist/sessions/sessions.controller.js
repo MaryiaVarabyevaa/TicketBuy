@@ -16,6 +16,7 @@ exports.SessionsController = void 0;
 const common_1 = require("@nestjs/common");
 const sessions_service_1 = require("./sessions.service");
 const create_session_dto_1 = require("./dto/create-session.dto");
+const update_session_dto_1 = require("./dto/update-session.dto");
 let SessionsController = class SessionsController {
     constructor(sessionService) {
         this.sessionService = sessionService;
@@ -23,17 +24,37 @@ let SessionsController = class SessionsController {
     create(sessionDto) {
         return this.sessionService.addSession(sessionDto);
     }
+    async updateSessionInfo(sessionDto) {
+        return this.sessionService.updateSessionInfo(sessionDto);
+    }
+    deleteCinema(req) {
+        return this.sessionService.deleteSession(req.body.id);
+    }
     getAll() {
         return this.sessionService.getAllSessions();
     }
 };
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_session_dto_1.CreateSessionDto]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('update'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_session_dto_1.UpdateSessionDto]),
+    __metadata("design:returntype", Promise)
+], SessionsController.prototype, "updateSessionInfo", null);
+__decorate([
+    (0, common_1.Post)('delete'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "deleteCinema", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

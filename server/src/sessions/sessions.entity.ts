@@ -11,7 +11,11 @@ interface sessionCreationAttrs {
     surname: string;
 }
 
-@Table({tableName: 'session'})
+@Table({
+    tableName: 'session',
+    timestamps: true,
+    paranoid: true,
+})
 export class Session extends Model<Session, CreateSessionDto > {
     @Column({
         type: DataType.INTEGER,
@@ -43,7 +47,7 @@ export class Session extends Model<Session, CreateSessionDto > {
     @Column({
         type: DataType.INTEGER,
     })
-    filmId: number
+    filmId: number;
 
     @BelongsTo(() => Film)
     filmTitle: Film
@@ -52,7 +56,7 @@ export class Session extends Model<Session, CreateSessionDto > {
     @Column({
         type: DataType.INTEGER,
     })
-    cinemaId: number
+    cinemaId: number;
 
     @BelongsTo(() => Cinema)
     cinemaName: Cinema

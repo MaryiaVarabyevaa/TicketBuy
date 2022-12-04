@@ -1,16 +1,26 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post, Request} from '@nestjs/common';
 import {SessionsService} from "./sessions.service";
 import {CreateSessionDto} from "./dto/create-session.dto";
+import {UpdateSessionDto} from "./dto/update-session.dto";
 
 @Controller('sessions')
 export class SessionsController {
     constructor(private sessionService: SessionsService) {}
 
-    @Post()
+    @Post('create')
     create(@Body() sessionDto: CreateSessionDto) {
         return this.sessionService.addSession(sessionDto);
     }
 
+    @Post('update')
+    async updateSessionInfo(@Body() sessionDto: UpdateSessionDto) {
+        return this.sessionService.updateSessionInfo(sessionDto);
+    }
+
+    @Post('delete')
+    deleteCinema(@Request() req) {
+        return this.sessionService.deleteSession(req.body.id);
+    }
     @Get()
     getAll() {
         return this.sessionService.getAllSessions();

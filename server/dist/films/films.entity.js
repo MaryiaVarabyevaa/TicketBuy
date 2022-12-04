@@ -48,12 +48,14 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
+        defaultValue: 0
     }),
     __metadata("design:type", Number)
 ], Film.prototype, "rating", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING,
+        defaultValue: ''
     }),
     __metadata("design:type", String)
 ], Film.prototype, "reviews", void 0);
