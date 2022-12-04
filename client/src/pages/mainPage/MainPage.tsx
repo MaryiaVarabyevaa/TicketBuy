@@ -48,7 +48,7 @@ const MainPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-              <NavBar/>
+              <NavBar dashboard={false}/>
             <main>
                 {/* Hero unit */}
                 <Box

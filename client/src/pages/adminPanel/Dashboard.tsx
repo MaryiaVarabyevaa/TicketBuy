@@ -38,6 +38,8 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import NavBar from "../../components/NavBar";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface IRootState {
     currentUser: any[];
@@ -46,7 +48,7 @@ interface IRootState {
 
 const drawerWidth = 240;
 
-const openedMixin = (theme: Theme): CSSObject => ({
+export const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
@@ -55,7 +57,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     overflowX: 'hidden',
 });
 
-const closedMixin = (theme: Theme): CSSObject => ({
+export const closedMixin = (theme: Theme): CSSObject => ({
     transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -67,7 +69,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+export const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -170,7 +172,7 @@ export default function DashBoard() {
     };
 
     const handleDrawerClose = () => {
-        setOpen(false);
+        setOpen(!open);
     };
 
     const handleProfileClick = () => {
@@ -192,65 +194,15 @@ export default function DashBoard() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' }} >
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
-                <Toolbar sx={{justifyContent: 'space-between'}}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{
-                            marginRight: 5,
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Dashboard
-                    </Typography>
-                    <Box>
-                        <Tooltip title='Open settings'>
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleMenu}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '35px'}}
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
-                            <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
-                            <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
-                        </Menu>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
+            <NavBar dashboard={true} />
+            <Drawer variant="permanent" open={open} >
+                <DrawerHeader >
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        {
+                            open? <ChevronLeftIcon /> : <ChevronRightIcon />
+                        }
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
@@ -260,7 +212,7 @@ export default function DashBoard() {
                             <ListItemButton
                                 sx={{
                                     minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
+                                    justifyContent: 'center',
                                     px: 2.5,
                                 }}
                                 onClick={() => {
@@ -297,5 +249,3 @@ export default function DashBoard() {
         </Box>
     );
 }
-
-// localStorage.clear()

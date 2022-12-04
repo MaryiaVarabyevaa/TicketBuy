@@ -12,12 +12,18 @@ import {ADMIN_PANEL_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../cons
 import {useNavigate} from "react-router-dom";
 import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
+import {useState} from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 
 interface IRootState {
     isAuth: boolean;
 }
 
-const NavBar = () => {
+interface IProps {
+    dashboard: boolean
+}
+
+const NavBar = ({dashboard} : IProps) => {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isAuth = useSelector((state: IRootState)=> state.isAuth);
@@ -55,8 +61,13 @@ const NavBar = () => {
         navigate(LOGIN_ROUTE);
     }
 
+    const handleNavigateToMainPage = () => {
+        navigate(MAIN_ROUTE)
+        setAnchorEl(null);
+    };
+
     return (
-        <AppBar position="static">
+        <AppBar position={`${dashboard? "fixed" : "static"}`}>
             <Toolbar>
                 <Typography variant="h5" component="h3" sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
                     TicketBuy
@@ -92,8 +103,13 @@ const NavBar = () => {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
+                                {
+                                    !dashboard &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
+                                }
+                                {
+                                    dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
+                                }
                                 <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
-                                <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
                                 <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
                             </Menu>
                         </div>
