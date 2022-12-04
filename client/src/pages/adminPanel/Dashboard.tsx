@@ -22,7 +22,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import {Route, Routes, useNavigate} from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import {Dashboard, Home, Logout} from "@mui/icons-material";
-import { MAIN_ROUTE, PROFILE_ROUTE} from "../../constants/routes";
+import {ADMIN_PANEL_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {logOutAction} from "../../store/reducers/userReducer";
@@ -35,6 +35,9 @@ import MovieIcon from '@mui/icons-material/Movie';
 import CameraOutdoorIcon from '@mui/icons-material/CameraOutdoor';
 import SessionDataTable from "./DataTable/SessionDataTable";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 interface IRootState {
     currentUser: any[];
@@ -123,7 +126,14 @@ export default function DashBoard() {
     const [isClickedCinema, setIsClickedCinema] = useState(false);
     const [isClickedFilms, setIsClickedFilms] = useState(false);
     const [isClickedSession, setIsClickedSession] = useState(false);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
     const setIsClicked = (user: boolean, cinema: boolean, films: boolean, session: boolean) => {
         setIsClickedUsers(user);
@@ -162,20 +172,30 @@ export default function DashBoard() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    const handleLogOut = () => {
-        navigate(MAIN_ROUTE);
-        dispatch(logOutAction());
-    }
 
     const handleProfileClick = () => {
         navigate(PROFILE_ROUTE);
-    }
+    };
+
+    const handleCloseLogOut = () => {
+        dispatch(logOutAction());
+        navigate(MAIN_ROUTE);
+        setAnchorEl(null);
+    };
+    const handleCloseProfile = () => {
+        navigate(PROFILE_ROUTE);
+    };
+
+    const handleNavigateToMainPage = () => {
+        navigate(MAIN_ROUTE)
+        setAnchorEl(null);
+    };
 
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
-                <Toolbar>
+                <Toolbar sx={{justifyContent: 'space-between'}}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -188,14 +208,43 @@ export default function DashBoard() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Tooltip title='Go back to home page'>
-                        <IconButton sx={{mr: 1}} onClick={() => navigate(MAIN_ROUTE)}>
-                            <Home />
-                        </IconButton>
-                    </Tooltip>
                     <Typography variant="h6" noWrap component="div">
                         Dashboard
                     </Typography>
+                    <Box>
+                        <Tooltip title='Open settings'>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenu}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '35px'}}
+                            id="menu-appbar"
+                            anchorEl={anchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
+                            <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
+                            <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
+                        </Menu>
+                    </Box>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
@@ -237,40 +286,6 @@ export default function DashBoard() {
                     ))}
                 </List>
                 <Divider />
-                {
-                    isAuth &&  <Box sx={{mx: "auto", mt: 3, mb: 1}}>
-                        <AccountCircleIcon sx={{ fontSize: 30 }}  color="primary"/>
-                    </Box>
-                }
-                {
-                    isAuth &&  <Box sx={{textAlign: 'center'}}>
-
-                        {
-                           (isAuth && open) && <Stack spacing={1}>
-                                <Typography>
-                                    {
-                                        `${currentUser[0].firstName} ${currentUser[0].lastName}`
-                                    }
-                                </Typography>
-                                <Typography variant='body2'>
-                                    {
-                                        currentUser[0].role
-                                    }
-                                </Typography>
-                                <Typography variant='body2'>
-                                    {
-                                        currentUser[0].email
-                                    }
-                                </Typography>
-                            </Stack>
-                        }
-                        <Tooltip title='Logout' sx={{mt: 1}}>
-                            <IconButton onClick={handleLogOut}>
-                                <Logout sx={{ fontSize: 30 }}  />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
-                }
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
