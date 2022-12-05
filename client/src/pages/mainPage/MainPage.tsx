@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {useState} from 'react';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -8,7 +7,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
@@ -22,7 +20,6 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
@@ -50,7 +47,6 @@ const MainPage = () => {
             <CssBaseline />
               <NavBar dashboard={false}/>
             <main>
-                {/* Hero unit */}
                 <Box
                     sx={{
                         bgcolor: 'background.paper',

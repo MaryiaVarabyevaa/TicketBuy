@@ -34,11 +34,10 @@ export const validateEmail = (rows: IUserDate[], email: string, id: number)=> {
 }
 
 export const validateName = (firstName: string, value: string) => {
-    const valueField = value === 'firstName' ? 'First name' : 'Last name';
     if (firstName.length === 0) {
         return 'Required to fill in';
     }
-    if(!firstName.match(/^[a-zA-Z]+$/)) {
+    if(!firstName.match(/^[a-zA-Z ]+$/)) {
         return `${value} can contain only latin alphabet`;
     }
 }
@@ -51,6 +50,15 @@ export const validateTitle = (title: string) => {
         return `Title can contain only latin alphabet`;
     }
 
+}
+
+export const validateStreet = (street: string) => {
+    if (street.length === 0) {
+        return 'Required to fill in';
+    }
+    if(!street.match(/^[a-zA-Z0-9\s ,.]+$/)) {
+        return `Street field can contain only latin alphabet`;
+    }
 }
 
 export const validateTime = (time: string) => {

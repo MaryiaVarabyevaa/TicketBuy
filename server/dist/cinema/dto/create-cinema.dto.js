@@ -20,7 +20,7 @@ __decorate([
     (0, class_validator_1.IsString)({
         message: 'Cinema name must be a string'
     }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
+    (0, class_validator_1.Matches)(/^[a-zA-Z ]+$/, {
         message: 'Cinema name can contain only latin alphabet'
     }),
     __metadata("design:type", String)
@@ -32,7 +32,7 @@ __decorate([
     (0, class_validator_1.IsString)({
         message: 'City field must be a string'
     }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
+    (0, class_validator_1.Matches)(/^[a-zA-Z ]+$/, {
         message: 'City field can contain only latin alphabet'
     }),
     __metadata("design:type", String)

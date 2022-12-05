@@ -6,6 +6,7 @@ export declare class CinemaService {
     constructor(cinemaRepository: typeof Cinema);
     addCinema(cinemaDto: CreateCinemaDto): Promise<Cinema>;
     getAllCinema(): Promise<Cinema[]>;
+    getId(): Promise<number>;
     deleteCinema(id: number): Promise<void>;
     updateCinemaInfo(cinemaDto: UpdateCinemaDto): Promise<[affectedCount: number]>;
 }

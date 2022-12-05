@@ -16,13 +16,13 @@ import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
-import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../../http/cinemaAPI";
+import {addCinema, deleteCinema, getAllCinema, getLastCinemaId, updateCinemaInfo} from "../../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
 import {ICinema, INewCinema} from "../../../types/cinema";
 import {renderEditCell} from "./CellEditInputCell";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import { validateHallsNumber} from "./validation";
+import {validateHallsNumber, validateName, validateStreet} from "./validation";
 import {addHalls, getAllHalls, updateHallInfo} from "../../../http/hallsAPI";
 import {IHalls} from "../../../types/halls";
 
@@ -32,10 +32,17 @@ const CinemaDataTable = () => {
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
+    const [cinemaId, setCinemaId] = useState<number>(1);
 
     const getCinema = async () => {
         const cinema = await getAllCinema();
         const halls = await getAllHalls();
+
+        if (cinema.length > 0) {
+            const cinemaId = await getLastCinemaId();
+            setCinemaId(cinemaId + 1);
+        }
+
         halls.map((hall: IHalls) => {
             cinema.map((item: ICinema) => {
                 if (item.id === hall.cinemaId) {
@@ -44,25 +51,31 @@ const CinemaDataTable = () => {
                 }
             })
         })
-        console.log(cinema);
+
         setRows(cinema);
     }
+
+    console.log(cinemaId);
 
     useEffect(() => {
         getCinema();
 
     }, [isClicked])
 
-
-    // const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-    //     const errorMessage = validate(params.props.value!.toString(), 'Name');
-    //     return { ...params.props, error: errorMessage };
-    // };
+    const namePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateName(params.props.value!.toString(), 'Cinema name');
+        return { ...params.props, error: errorMessage };
+    };
     //
-    // const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-    //     const errorMessage = validate(params.props.value!.toString(), 'Type of halls');
-    //     return { ...params.props, error: errorMessage };
-    // };
+    const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
+        return { ...params.props, error: errorMessage };
+    };
+
+    const streetPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateStreet(params.props.value!.toString());
+        return { ...params.props, error: errorMessage };
+    };
 
     const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateHallsNumber(params.props.value!.toString());
@@ -102,7 +115,7 @@ const CinemaDataTable = () => {
 
         if ('isNew' in updatedRow) {
             await addCinema({ name, city, street, buildingNumber: +buildingNumber });
-            await addHalls({number, type, cinemaId: 2})
+            await addHalls({number, type, cinemaId })
         } else {
             await updateCinemaInfo({ id, name, city, street, buildingNumber: +buildingNumber });
             await updateHallInfo({cinemaId : id, number: +number, type});
@@ -117,48 +130,48 @@ const CinemaDataTable = () => {
             headerName: 'Name',
             width: 130,
             editable: true,
-            // preProcessEditCellProps: firstNamePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: namePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'number',
             headerName: 'Number of halls',
             width: 130,
             editable: true,
-            // preProcessEditCellProps: numberPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: numberPreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'type',
             headerName: 'Type of halls',
             width: 250,
             editable: true,
-            // preProcessEditCellProps: numberPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: typePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'city',
             headerName: 'City',
             width: 200,
             editable: true,
-            // preProcessEditCellProps: typePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: typePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'street',
             headerName: 'Street',
             width: 250,
             editable: true,
-            // preProcessEditCellProps: numberPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: streetPreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'buildingNumber',
             headerName: 'Number building',
             width: 150,
             editable: true,
-            // preProcessEditCellProps: typePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: numberPreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'actions',

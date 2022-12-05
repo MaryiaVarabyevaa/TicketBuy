@@ -31,6 +31,10 @@ import AddIcon from "@mui/icons-material/Add";
 import {ISession} from "../../../types/session";
 import {renderEditCell} from "./CellEditInputCell";
 import {validateTime, validateDate, validatePrice} from "./validation";
+import {ICinema} from "../../../types/cinema";
+import {IFilm} from "../../../types/film";
+import {getAllHalls} from "../../../http/hallsAPI";
+import {IHalls} from "../../../types/halls";
 
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -74,35 +78,39 @@ const SessionDataTable = () => {
     const [films, setFilms] = useState<any[]>([]);
     const [cinema, setCinema] = useState<any[]>([]);
 
-    // @ts-ignore
     const getData = async () => {
         const films = await getAllFilms();
         const cinema = await getAllCinema();
         const sessions = await getAllSessions();
+        const halls = await getAllHalls();
         const cinemaName: string[] = [];
         const filmsTitle: string[] = [];
-        // @ts-ignore
-        sessions.map((session) => {
-            const lenValue = cinema.length > films.length ? cinema : films;
-            for (let i = 0; i < lenValue.length; i++) {
-               if (i < films.length) {
-                   if (session.filmId === films[i].id) {
-                       session['filmTitle'] = films[i].title;
-                   }
-               }
-               if (i < cinema.length) {
-                   if (session.cinemaId === cinema[i].id) {
-                       session['cinemaName'] = `${cinema[i].name} (${cinema[i].city}, ${cinema[i].street}, ${cinema[i].buildingNumber})`;
-                   }
-               }
-            }
+
+
+        sessions.map((session: ISession) => {
+            films.map((film: IFilm) => {
+                if (session.filmId === film.id) {
+                    session['filmTitle'] = film.title;
+                }
+            })
+
+            cinema.map((item: ICinema) => {
+                if (session.cinemaId === item.id) {
+                    session['cinemaName'] = `${item.name} (${item.city}, ${item.street}, ${item.buildingNumber})`;
+                }
+            })
+
+            halls.map((hall: IHalls) => {
+                if (session.cinemaId === hall.cinemaId) {
+                    session['hallNumber'] = hall.number;
+                }
+            })
         })
-        // @ts-ignore
-        cinema.map((cinemaInfo) => {
+
+        cinema.map((cinemaInfo: ICinema) => {
             cinemaName.push(`${cinemaInfo.name} (${cinemaInfo.city}, ${cinemaInfo.street}, ${cinemaInfo.buildingNumber})`);
         })
-        // @ts-ignore
-        films.map((film) => {
+        films.map((film: IFilm) => {
             filmsTitle.push(film.title);
         })
         setRows(sessions);
@@ -117,7 +125,7 @@ const SessionDataTable = () => {
         getData();
     }, [isClicked])
 
-
+console.log(rows);
     const datePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateDate(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
@@ -224,6 +232,14 @@ const SessionDataTable = () => {
             editable: true,
             preProcessEditCellProps: datePreProcessEditCellProps,
             renderEditCell: renderEditCell,
+        },
+        {
+            field: 'hallNumber',
+            headerName: 'Number of hall',
+            width: 170,
+            editable: true,
+            // preProcessEditCellProps: datePreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
         },
         {
             field: 'actions',

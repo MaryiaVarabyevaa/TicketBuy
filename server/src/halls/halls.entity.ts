@@ -36,6 +36,7 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
     @ForeignKey(() => Cinema)
     @Column({
         type: DataType.INTEGER,
+        unique: true,
     })
     cinemaId: number;
 

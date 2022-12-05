@@ -16,7 +16,7 @@ export class UpdateCinemaDto {
     @IsString({
         message: 'Cinema name must be a string'
     })
-    @Matches(/^[a-zA-Z]+$/, {
+    @Matches(/^[a-zA-Z ]+$/, {
         message: 'Cinema name can contain only latin alphabet'
     })
     readonly name: string;
@@ -24,7 +24,7 @@ export class UpdateCinemaDto {
     @IsString({
         message: 'City field must be a string'
     })
-    @Matches(/^[a-zA-Z]+$/, {
+    @Matches(/^[a-zA-Z ]+$/, {
         message: 'City field can contain only latin alphabet'
     })
     readonly city: string;
