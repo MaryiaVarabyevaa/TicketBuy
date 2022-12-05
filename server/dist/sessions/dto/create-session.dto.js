@@ -26,8 +26,8 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'
     }),
-    (0, class_validator_1.Matches)(/^[0-9:]+$/, {
-        message: 'Time field can contain only numbers and colon'
+    (0, class_validator_1.MaxLength)(8, {
+        message: 'Enter the correct value',
     }),
     __metadata("design:type", String)
 ], CreateSessionDto.prototype, "time", void 0);
@@ -35,10 +35,10 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'
     }),
-    (0, class_validator_1.IsNumber)({}, {
-        message: 'Id must be a number'
+    (0, class_validator_1.MaxLength)(5, {
+        message: 'Enter the correct value',
     }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], CreateSessionDto.prototype, "price", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({

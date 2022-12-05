@@ -38,10 +38,10 @@ export class Session extends Model<Session, CreateSessionDto > {
     time: string;
 
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.STRING,
         allowNull: false
     })
-    price: number;
+    price: string;
 
     @ForeignKey(() => Film)
     @Column({

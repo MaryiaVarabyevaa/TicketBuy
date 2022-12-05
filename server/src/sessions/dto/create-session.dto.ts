@@ -1,4 +1,4 @@
-import {IsDateString, IsNotEmpty, IsNumber, Matches} from "class-validator";
+import {IsDateString, IsNotEmpty, IsNumber, Matches, MaxLength} from "class-validator";
 
 export class CreateSessionDto {
     @IsNotEmpty({
@@ -12,18 +12,24 @@ export class CreateSessionDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @Matches(/^[0-9:]+$/, {
-        message: 'Time field can contain only numbers and colon'
+    // @Matches(/\d\d:\d\d:\d\d/g, {
+    //     message: 'Enter the correct value',
+    // })
+    @MaxLength(8, {
+        message: 'Enter the correct value',
     })
     readonly time: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @IsNumber( {}, {
-        message: 'Id must be a number'
+    // @Matches(/\d\d.\d\d/g, {
+    //     message: 'Enter the correct value'
+    // })
+    @MaxLength(5, {
+        message: 'Enter the correct value',
     })
-    readonly price: number;
+    readonly price: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'

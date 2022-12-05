@@ -2,9 +2,9 @@ export interface ISession{
     id: number;
     filmId: number;
     cinemaId: number;
-    city: string;
-    street: string;
-    buildingNumber: number;
+    price: string;
+    date: string;
+    time: string;
 }
 
 export interface INewSession extends ISession{

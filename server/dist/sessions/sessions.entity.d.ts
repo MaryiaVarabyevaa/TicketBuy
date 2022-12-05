@@ -6,7 +6,7 @@ export declare class Session extends Model<Session, CreateSessionDto> {
     id: number;
     date: string;
     time: string;
-    price: number;
+    price: string;
     filmId: number;
     filmTitle: Film;
     cinemaId: number;

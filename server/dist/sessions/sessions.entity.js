@@ -40,10 +40,10 @@ __decorate([
 ], Session.prototype, "time", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.INTEGER,
+        type: sequelize_typescript_1.DataType.STRING,
         allowNull: false
     }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Session.prototype, "price", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => films_entity_1.Film),

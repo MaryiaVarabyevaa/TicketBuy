@@ -30,7 +30,7 @@ import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import {ISession} from "../../../types/session";
 import {renderEditCell} from "./CellEditInputCell";
-import {validateTime, validateDate} from "./validation";
+import {validateTime, validateDate, validatePrice} from "./validation";
 
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -126,6 +126,10 @@ const SessionDataTable = () => {
         const errorMessage = validateTime(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
+    const pricePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validatePrice(params.props.value!.toString());
+        return { ...params.props, error: errorMessage };
+    };
 
 
     const handleEditClick = (id: GridRowId) => () => {
@@ -202,8 +206,8 @@ const SessionDataTable = () => {
             headerName: 'Price',
             width: 100,
             editable: true,
-            // preProcessEditCellProps: pricePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: pricePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'time',

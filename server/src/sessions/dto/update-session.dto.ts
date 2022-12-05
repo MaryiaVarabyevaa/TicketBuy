@@ -29,10 +29,10 @@ export class UpdateSessionDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @IsNumber( {}, {
-        message: 'Id must be a number'
-    })
-    readonly price: number;
+    // @IsNumber( {}, {
+    //     message: 'Id must be a number'
+    // })
+    readonly price: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'
