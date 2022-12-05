@@ -26,7 +26,7 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'
     }),
-    (0, class_validator_1.MaxLength)(8, {
+    (0, class_validator_1.Matches)(/^\d\d:\d\d:\d\d+$/g, {
         message: 'Enter the correct value',
     }),
     __metadata("design:type", String)
@@ -35,8 +35,8 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'
     }),
-    (0, class_validator_1.MaxLength)(5, {
-        message: 'Enter the correct value',
+    (0, class_validator_1.Matches)(/^\d\d.\d\d+$/g, {
+        message: 'Enter the correct value'
     }),
     __metadata("design:type", String)
 ], CreateSessionDto.prototype, "price", void 0);

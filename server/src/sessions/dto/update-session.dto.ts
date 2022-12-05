@@ -21,17 +21,17 @@ export class UpdateSessionDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @Matches(/^[0-9:]+$/, {
-        message: 'Time field can contain only numbers and colon'
+    @Matches(/^\d\d:\d\d:\d\d+$/g, {
+        message: 'Enter the correct value',
     })
     readonly time: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    // @IsNumber( {}, {
-    //     message: 'Id must be a number'
-    // })
+    @Matches(/^\d\d.\d\d+$/g, {
+        message: 'Enter the correct value'
+    })
     readonly price: string;
 
     @IsNotEmpty({

@@ -176,9 +176,9 @@ const SessionDataTable = () => {
         })
 
         if ('isNew' in updatedRow) {
-            await addSession({ filmId, cinemaId, price: +price, date, time });
+            await addSession({ filmId, cinemaId, price, date, time });
         } else {
-            await updateSessionInfo({id, filmId, cinemaId, date, time, price: +price});
+            await updateSessionInfo({id, filmId, cinemaId, date, time, price});
         }
         setIsClicked(!isClicked);
         return updatedRow;

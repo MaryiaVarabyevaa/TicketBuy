@@ -57,7 +57,7 @@ export const validateTime = (time: string) => {
     if (time.length === 0) {
         return 'Required to fill in';
     }
-    if (!time.match(/\d\d[:]\d\d[:]\d\d/g)) {
+    if (!time.match(/^\d\d:\d\d:\d\d+$/g)) {
         return 'Enter the correct value';
     }
     if (+time.substring(0, 2) > 24) {
@@ -69,9 +69,6 @@ export const validateTime = (time: string) => {
     if (+time.substring(6, 8) > 60) {
         return 'Enter the correct value of seconds';
     }
-    if (time.length > 8) {
-        return 'Enter the correct value';
-    }
 }
 
 export const validateDate = (date: string) => {
@@ -79,7 +76,7 @@ export const validateDate = (date: string) => {
     if (date.length === 0) {
         return 'Required to fill in';
     }
-    if (!date.match(/\d\d\d\d[-]\d\d[-]\d\d/g)) {
+    if (!date.match(/^\d\d\d\d-\d\d-\d\d+$/g)) {
         return 'Enter the correct value';
     }
     if (+date.substring(0, 4) > currentYear + 1) {
@@ -91,20 +88,14 @@ export const validateDate = (date: string) => {
     if (+date.substring(8, 10) > 31) {
         return 'Enter the correct value of days';
     }
-    if (date.length > 10) {
-        return 'Enter the correct value';
-    }
+
 }
 
 export const validatePrice = (price: string) => {
     if (price.length === 0) {
         return 'Required to fill in';
     }
-    if (!price.match(/\d\d[.]\d\d/g)) {
-        return 'Enter the correct value';
-    }
-
-    if (price.length > 5) {
+    if (!price.match(/^\d\d.\d\d+$/g)) {
         return 'Enter the correct value';
     }
 }
