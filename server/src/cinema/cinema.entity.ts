@@ -1,5 +1,6 @@
 import {Table, Column, Model, DataType, HasMany} from 'sequelize-typescript';
 import {Session} from "../sessions/sessions.entity";
+import {Halls} from "../halls/halls.entity";
 
 // todo: закончить объект для создания
 interface CinemaCreationAttrs {
@@ -63,4 +64,7 @@ export class Cinema extends Model<Cinema, CinemaCreationAttrs> {
 
     @HasMany(() => Session)
     session: Session[]
+
+    @HasMany(() => Halls)
+    halls: Halls[]
 }

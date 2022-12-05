@@ -1,5 +1,6 @@
 import { Model } from 'sequelize-typescript';
 import { Session } from "../sessions/sessions.entity";
+import { Halls } from "../halls/halls.entity";
 interface CinemaCreationAttrs {
     name: string;
     hallsNumber: number;
@@ -17,5 +18,6 @@ export declare class Cinema extends Model<Cinema, CinemaCreationAttrs> {
     hallsNumber: number;
     hallsType: string;
     session: Session[];
+    halls: Halls[];
 }
 export {};

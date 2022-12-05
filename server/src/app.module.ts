@@ -10,6 +10,8 @@ import {Session} from "./sessions/sessions.entity";
 import {Film} from "./films/films.entity";
 import {Cinema} from "./cinema/cinema.entity";
 import {AuthModule} from "./auth/auth.module";
+import { HallsModule } from './halls/halls.module';
+import {Halls} from "./halls/halls.entity";
 
 @Module({
     imports: [
@@ -23,18 +25,16 @@ import {AuthModule} from "./auth/auth.module";
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            models: [User, Cinema, Film, Session],
+            models: [User, Cinema, Film, Session, Halls],
             autoLoadModels: true,
             synchronize: true,
-            // define: {
-            //     timestamps: false
-            // },
         }),
         UsersModule,
         CinemaModule,
         FilmsModule,
         SessionsModule,
-        AuthModule
+        AuthModule,
+        HallsModule
     ],
 })
 export class AppModule {}
