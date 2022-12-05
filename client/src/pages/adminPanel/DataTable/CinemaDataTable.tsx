@@ -22,7 +22,7 @@ import {EditToolbar} from "./EditToolbar";
 import {ICinema, INewCinema} from "../../../types/cinema";
 import {renderEditCell} from "./CellEditInputCell";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validate, validateHallsNumber} from "./validation";
+import { validateHallsNumber} from "./validation";
 
 
 const CinemaDataTable = () => {
@@ -46,15 +46,15 @@ const CinemaDataTable = () => {
     }, [isClicked])
 
 
-    const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validate(params.props.value!.toString(), 'Name');
-        return { ...params.props, error: errorMessage };
-    };
-
-    const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validate(params.props.value!.toString(), 'Type of halls');
-        return { ...params.props, error: errorMessage };
-    };
+    // const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+    //     const errorMessage = validate(params.props.value!.toString(), 'Name');
+    //     return { ...params.props, error: errorMessage };
+    // };
+    //
+    // const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+    //     const errorMessage = validate(params.props.value!.toString(), 'Type of halls');
+    //     return { ...params.props, error: errorMessage };
+    // };
 
     const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateHallsNumber(params.props.value!.toString());

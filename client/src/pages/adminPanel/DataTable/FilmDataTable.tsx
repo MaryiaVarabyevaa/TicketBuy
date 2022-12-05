@@ -2,22 +2,22 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {
     DataGrid,
-    GridActionsCellItem, GridColDef,
+    GridActionsCellItem,
     GridColumns,
     GridEditInputCell,
-    GridPreProcessEditCellProps, GridRenderCellParams,
+    GridPreProcessEditCellProps,
     GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams, useGridApiContext
+    GridRowParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import {Select, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
@@ -25,11 +25,7 @@ import {ICinema} from "../../../types/cinema";
 import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/filmAPI";
 import {IFilm, INewFilm} from "../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validateDescription, validateHallsUrl, validateTitle} from "./validation";
-import {SelectChangeEvent} from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
+import {validateLength, validateTitle} from "./validation";
 
 
 const FilmDataTable = () => {
@@ -73,12 +69,12 @@ const FilmDataTable = () => {
 
 
     const descriptionPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateDescription(params.props.value!.toString());
+        const errorMessage = validateLength(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
 
     const urlPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateHallsUrl(params.props.value!.toString());
+        const errorMessage = validateLength(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
 

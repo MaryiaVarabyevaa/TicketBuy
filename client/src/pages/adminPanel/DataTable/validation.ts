@@ -1,12 +1,8 @@
 import {IUserDate} from "./UserDataTable";
 
-export   const validate = (firstName: string, value: string) => {
-    const valueField = value === 'firstName' ? 'First name' : 'Last name';
-    if (firstName.length === 0) {
+export const validateLength = (value: string) => {
+    if (value.length === 0) {
         return 'Required to fill in';
-    }
-    if(!firstName.match(/^[a-zA-Z]+$/)) {
-        return `${value} can contain only latin alphabet`;
     }
 }
 
@@ -18,19 +14,6 @@ export const validateHallsNumber = (hallsNumber: string) => {
         return 'Number of halls can contain only numbers'
     }
 }
-
-export const validateDescription= (title: string) => {
-    if (title.length === 0) {
-        return 'Required to fill in';
-    }
-}
-
-export const validateHallsUrl = (hallsNumber: string) => {
-    if (hallsNumber.length === 0) {
-        return 'Required to fill in';
-    }
-}
-
 
 export const validateEmail = (rows: IUserDate[], email: string, id: number)=> {
     const editedUser = rows.find((user) => user.id === id) as IUserDate;
@@ -64,8 +47,44 @@ export const validateTitle = (title: string) => {
     if (title.length === 0) {
         return 'Required to fill in';
     }
-    if(!title.match(/^[a-zA-Z0-9 :,]+$/)) {
+    if(!title.match(/^[a-zA-Z0-9\s:,.]+$/)) {
         return `Title can contain only latin alphabet`;
     }
 
+}
+
+export const validateTime = (time: string) => {
+    if (time.length === 0) {
+        return 'Required to fill in';
+    }
+    if (!time.match(/\d\d:\d\d:\d\d/g)) {
+        return 'Enter the correct value';
+    }
+    if (+time.substring(0, 2) > 24) {
+        return 'Enter the correct value of hours';
+    }
+    if (+time.substring(3, 5) > 60) {
+        return 'Enter the correct value of minutes';
+    }
+    if (+time.substring(6, 8) > 60) {
+        return 'Enter the correct value of seconds';
+    }
+}
+
+export const validateDate = (date: string) => {
+    if (date.length === 0) {
+        return 'Required to fill in';
+    }
+    if (!date.match(/\d\d\d\d-\d\d-\d\d/g)) {
+        return 'Enter the correct value';
+    }
+    if (+date.substring(0, 4) > 2023) {
+        return 'Enter the correct value of years';
+    }
+    if (+date.substring(5, 7) > 12) {
+        return 'Enter the correct value of months';
+    }
+    if (+date.substring(8, 10) > 31) {
+        return 'Enter the correct value of days';
+    }
 }

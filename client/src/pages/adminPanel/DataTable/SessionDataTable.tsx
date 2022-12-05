@@ -4,8 +4,7 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridEditInputCell,
-    GridPreProcessEditCellProps,
+    GridEditInputCell, GridPreProcessEditCellProps,
     GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
@@ -23,15 +22,15 @@ import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {getAllFilms} from "../../../http/filmAPI";
-import {IFilm, INewFilm} from "../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validateDescription, validateHallsUrl, validateTitle} from "./validation";
 import {getAllCinema} from "../../../http/cinemaAPI";
 import {addSession, deleteSession, getAllSessions, updateSessionInfo} from "../../../http/sessionAPI";
 import {randomId} from "@mui/x-data-grid-generator";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import {INewSession, ISession} from "../../../types/session";
+import {ISession} from "../../../types/session";
+import {renderEditCell} from "./CellEditInputCell";
+import {validateTime, validateDate} from "./validation";
 
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -118,35 +117,16 @@ const SessionDataTable = () => {
         getData();
     }, [isClicked])
 
-    function EditInputCell(props: GridRenderEditCellParams) {
-        const { error } = props;
 
-        return (
-            <StyledTooltip open={!!error} title={error}>
-                <GridEditInputCell {...props} />
-            </ StyledTooltip >
-        );
-    }
-
-    function renderEditCell(params: GridRenderEditCellParams) {
-        return <EditInputCell {...params} />;
-    }
-
-    const titlePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateTitle(params.props.value!.toString());
-        return { ...params.props, error: errorMessage }
+    const datePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateDate(params.props.value!.toString());
+        return { ...params.props, error: errorMessage };
     };
-
-
-    const descriptionPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateDescription(params.props.value!.toString());
+    const timePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateTime(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
 
-    const urlPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateHallsUrl(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -209,10 +189,38 @@ const SessionDataTable = () => {
             type: 'singleSelect',
             valueOptions: cinemaName,
         },
-        { field: 'filmTitle', headerName: 'Film', width: 170, editable: true, type: 'singleSelect', valueOptions: filmsTitle },
-        { field: 'price', headerName: 'Price', width: 100, editable: true },
-        { field: 'time', headerName: 'Time', width: 170, editable: true },
-        { field: 'date', headerName: 'Date', width: 170, editable: true },
+        {
+            field: 'filmTitle',
+            headerName: 'Film',
+            width: 170,
+            editable: true,
+            type: 'singleSelect',
+            valueOptions: filmsTitle,
+        },
+        {
+            field: 'price',
+            headerName: 'Price',
+            width: 100,
+            editable: true,
+            // preProcessEditCellProps: pricePreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'time',
+            headerName: 'Time',
+            width: 170,
+            editable: true,
+            preProcessEditCellProps: timePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
+        },
+        {
+            field: 'date',
+            headerName: 'Date',
+            width: 170,
+            editable: true,
+            preProcessEditCellProps: datePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
+        },
         {
             field: 'actions',
             type: 'actions',
