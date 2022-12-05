@@ -1,6 +1,6 @@
 import {$host} from "./service";
 import {GridRowId} from "@mui/x-data-grid";
-import {ICinema, IUpdateCinemaInfo} from "../types/cinema";
+import {ICinema} from "../types/cinema";
 
 export const getAllCinema = async () => {
     const { data } = await $host.get('cinema');
@@ -17,7 +17,7 @@ export const updateCinemaInfo = async (cinema: ICinema) => {
     return data;
 }
 
-export const addCinema = async (cinema: IUpdateCinemaInfo) => {
+export const addCinema = async (cinema: ICinema) => {
     const { data } = await $host.post('cinema/create', cinema);
     return data;
 }

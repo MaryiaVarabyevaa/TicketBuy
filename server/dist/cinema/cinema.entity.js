@@ -53,20 +53,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Cinema.prototype, "buildingNumber", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: false
-    }),
-    __metadata("design:type", Number)
-], Cinema.prototype, "hallsNumber", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING(50),
-        allowNull: false,
-    }),
-    __metadata("design:type", String)
-], Cinema.prototype, "hallsType", void 0);
-__decorate([
     (0, sequelize_typescript_1.HasMany)(() => sessions_entity_1.Session),
     __metadata("design:type", Array)
 ], Cinema.prototype, "session", void 0);

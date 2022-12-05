@@ -50,18 +50,6 @@ export class Cinema extends Model<Cinema, CinemaCreationAttrs> {
     })
     buildingNumber: number;
 
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false
-    })
-    hallsNumber: number;
-
-    @Column({
-        type: DataType.STRING(50),
-        allowNull: false,
-    })
-    hallsType: string;
-
     @HasMany(() => Session)
     session: Session[]
 

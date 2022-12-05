@@ -10,7 +10,7 @@ import {Halls} from "../halls/halls.entity";
   providers: [CinemaService],
   controllers: [CinemaController],
   imports: [
-    SequelizeModule.forFeature([Cinema, Session, Halls])
+    SequelizeModule.forFeature([Cinema, Halls, Session])
   ]
 })
 export class CinemaModule {}

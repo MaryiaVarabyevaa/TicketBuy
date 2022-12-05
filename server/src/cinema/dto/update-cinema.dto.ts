@@ -21,25 +21,6 @@ export class UpdateCinemaDto {
     })
     readonly name: string;
 
-    @IsNotEmpty({
-        message: 'Required to fill in'
-    })
-    @IsNumber({}, {
-        message: 'Number of halls must be a number'
-    })
-    readonly hallsNumber: number;
-
-    @IsNotEmpty({
-        message: 'Required to fill in'
-    })
-    @IsString({
-        message: 'Type of halls must be a string'
-    })
-    @Matches(/^[a-zA-Z]+$/, {
-        message: 'Type of halls can contain only latin alphabet'
-    })
-    readonly hallsType: string;
-
     @IsString({
         message: 'City field must be a string'
     })

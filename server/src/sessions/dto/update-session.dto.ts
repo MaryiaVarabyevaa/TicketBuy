@@ -46,7 +46,7 @@ export class UpdateSessionDto {
         message: 'Required to fill in'
     })
     @IsNumber( {}, {
-        message: 'Id must be a number'
+        message: 'Cinema must be a number'
     })
-    readonly  cinemaId: number;
+    readonly cinemaId: number;
 }

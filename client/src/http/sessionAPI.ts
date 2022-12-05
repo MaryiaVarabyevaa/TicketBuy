@@ -1,5 +1,4 @@
 import {$host} from "./service";
-import {IFilm, IUpdateFilmInfo} from "../types/film";
 import {GridRowId} from "@mui/x-data-grid";
 
 interface ISessionUpdate {

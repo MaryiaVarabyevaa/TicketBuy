@@ -21,7 +21,7 @@ CinemaModule = __decorate([
         providers: [cinema_service_1.CinemaService],
         controllers: [cinema_controller_1.CinemaController],
         imports: [
-            sequelize_1.SequelizeModule.forFeature([cinema_entity_1.Cinema, sessions_entity_1.Session, halls_entity_1.Halls])
+            sequelize_1.SequelizeModule.forFeature([cinema_entity_1.Cinema, halls_entity_1.Halls, sessions_entity_1.Session])
         ]
     })
 ], CinemaModule);

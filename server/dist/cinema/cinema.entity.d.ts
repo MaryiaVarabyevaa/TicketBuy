@@ -15,8 +15,6 @@ export declare class Cinema extends Model<Cinema, CinemaCreationAttrs> {
     city: string;
     street: string;
     buildingNumber: number;
-    hallsNumber: number;
-    hallsType: string;
     session: Session[];
     halls: Halls[];
 }

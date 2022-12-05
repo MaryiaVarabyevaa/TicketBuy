@@ -10,6 +10,7 @@ interface HallsCreationAttrs {
 @Table({
     tableName: 'halls',
     timestamps: true,
+    paranoid: true,
 })
 export class Halls extends Model<Halls, HallsCreationAttrs> {
     @Column({
@@ -39,5 +40,5 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
     cinemaId: number;
 
     @BelongsTo(() => Cinema)
-    cinemaName: Cinema
+    cinemaName: Cinema;
 }

@@ -29,27 +29,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'
     }),
-    (0, class_validator_1.IsNumber)({}, {
-        message: 'Number of halls must be a number'
-    }),
-    __metadata("design:type", Number)
-], CreateCinemaDto.prototype, "hallsNumber", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({
-        message: 'Required to fill in'
-    }),
-    (0, class_validator_1.IsString)({
-        message: 'Type of halls must be a string'
-    }),
-    (0, class_validator_1.Matches)(/^[a-zA-Z]+$/, {
-        message: 'Type of halls can contain only latin alphabet'
-    }),
-    __metadata("design:type", String)
-], CreateCinemaDto.prototype, "hallsType", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({
-        message: 'Required to fill in'
-    }),
     (0, class_validator_1.IsString)({
         message: 'City field must be a string'
     }),

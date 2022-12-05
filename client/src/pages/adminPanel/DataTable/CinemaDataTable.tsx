@@ -23,6 +23,8 @@ import {ICinema, INewCinema} from "../../../types/cinema";
 import {renderEditCell} from "./CellEditInputCell";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
 import { validateHallsNumber} from "./validation";
+import {addHalls, getAllHalls, updateHallInfo} from "../../../http/hallsAPI";
+import {IHalls} from "../../../types/halls";
 
 
 const CinemaDataTable = () => {
@@ -33,10 +35,16 @@ const CinemaDataTable = () => {
 
     const getCinema = async () => {
         const cinema = await getAllCinema();
-        cinema.map((cin: ICinema, cinIndex: number) => {
-            cin.number = cinIndex + 1;
+        const halls = await getAllHalls();
+        halls.map((hall: IHalls) => {
+            cinema.map((item: ICinema) => {
+                if (item.id === hall.cinemaId) {
+                    item['number'] = hall.number;
+                    item['type'] = hall.type;
+                }
+            })
         })
-        localStorage.setItem('rowsLength', `${cinema.length}`)
+        console.log(cinema);
         setRows(cinema);
     }
 
@@ -89,19 +97,21 @@ const CinemaDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const {  id, name, hallsType, hallsNumber, city, street, buildingNumber }  = updatedRow;
+        const {  id, name, type, number, city, street, buildingNumber }  = updatedRow;
+        console.log(updatedRow);
 
         if ('isNew' in updatedRow) {
-            await addCinema({name, hallsNumber, hallsType, city, street, buildingNumber});
+            await addCinema({ name, city, street, buildingNumber: +buildingNumber });
+            await addHalls({number, type, cinemaId: 2})
         } else {
-            await updateCinemaInfo({ id, name, hallsNumber, hallsType, city, street, buildingNumber });
+            await updateCinemaInfo({ id, name, city, street, buildingNumber: +buildingNumber });
+            await updateHallInfo({cinemaId : id, number: +number, type});
         }
         setIsClicked(!isClicked);
         return updatedRow;
     };
 
     const columns: GridColumns = [
-        // { field: 'number', headerName: 'ID', width: 70 },
         {
             field: 'name',
             headerName: 'Name',
@@ -111,7 +121,7 @@ const CinemaDataTable = () => {
             // renderEditCell: renderEditCell,
         },
         {
-            field: 'hallsNumber',
+            field: 'number',
             headerName: 'Number of halls',
             width: 130,
             editable: true,
@@ -119,7 +129,7 @@ const CinemaDataTable = () => {
             // renderEditCell: renderEditCell,
         },
         {
-            field: 'hallsType',
+            field: 'type',
             headerName: 'Type of halls',
             width: 250,
             editable: true,
