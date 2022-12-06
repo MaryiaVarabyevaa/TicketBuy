@@ -21,7 +21,6 @@ import {Typography} from "@mui/material";
 import {StyledTooltip} from './StyledTooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
-import {ICinema} from "../../../types/cinema";
 import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/filmAPI";
 import {IFilm, INewFilm} from "../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
@@ -34,14 +33,13 @@ const FilmDataTable = () => {
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
 
+    const [films, setFilms] = useState<any[]>([]);
+
     const getFilms = async () => {
-        const cinema = await getAllFilms();
-        cinema.map((cin: ICinema, cinIndex: number) => {
-            cin.number = cinIndex + 1;
-        })
-        localStorage.setItem('rowsLength', `${cinema.length}`)
-        setRows(cinema);
+        const films = await getAllFilms();
+        setRows(films);
     }
+
 
     useEffect(() => {
         getFilms()
@@ -117,7 +115,6 @@ const FilmDataTable = () => {
     };
 
     const columns: GridColumns = [
-        { field: 'number', headerName: 'Sequence number', width: 70 },
         {
             field: 'title',
             headerName: 'Title',

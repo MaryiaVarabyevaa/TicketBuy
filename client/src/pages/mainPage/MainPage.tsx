@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -21,8 +21,13 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import {useNavigate} from "react-router-dom";
-import {LOGIN_ROUTE} from "../../constants/routes";
+import {LOGIN_ROUTE, MAIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
+import {IFilm} from "../../types/film";
+import {getAllFilms, getFilm} from "../../http/filmAPI";
+import Footer from "../../components/Footer";
+import {useDispatch} from "react-redux";
+import {addFilmAction} from "../../store/reducers/filmReducer";
 
 
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -32,14 +37,29 @@ const theme = createTheme();
 const MainPage = () => {
     const [sortValue, setSortValue] = useState('');
     const [ratingValue, setRatingValue] = useState<number | null>(2);
+    const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+    const getFilms = async() => {
+        const allFilms = await getAllFilms();
+        setFilms(allFilms);
+    };
+
+    useEffect(() => {
+        getFilms();
+    }, [])
     const handleChange = (event: SelectChangeEvent) => {
         setSortValue(event.target.value);
     };
 
     const handleClick = () => {
         navigate(LOGIN_ROUTE);
+    }
+    const handleClickOnFilm = async (id: number) => {
+        const film = await getFilm(id);
+        dispatch(addFilmAction(film));
+        navigate(`/films/${id}`);
     }
 
     return (
@@ -93,23 +113,30 @@ const MainPage = () => {
                 <Container sx={{ py: 8 }} maxWidth="md">
                     {/* End hero unit */}
                     <Grid container spacing={4}>
-                        {cards.map((card) => (
-                            <Grid item key={card} xs={12} sm={6} md={4}>
+                        {films && films.map((film: IFilm) => {
+                            const {id, title, description, url, rating} = film;
+                            return  <Grid
+                                item
+                                key={id}
+                                xs={12}
+                                sm={6}
+                                md={4}
+                                onClick={() => handleClickOnFilm(id as number)}
+                            >
                                 <Card
                                     sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center'  }}
                                 >
                                     <CardMedia
                                         component="img"
                                         sx={{
-                                            // 16:9
                                             pt: '20%',
                                         }}
-                                        image="https://source.unsplash.com/random"
-                                        alt="random"
+                                        image={url}
+                                        alt={title}
                                     />
                                     <CardContent sx={{ flexGrow: 1}}>
                                         <Typography gutterBottom variant="h5" component="h2">
-                                            Heading
+                                            { title }
                                         </Typography>
                                         <Typography>
                                             This is a media card. You can use this section to describe the
@@ -118,24 +145,17 @@ const MainPage = () => {
                                     </CardContent>
                                     <Rating
                                         name="read-only"
-                                        value={ratingValue}
+                                        value={rating}
                                         readOnly
                                         sx={{pb: '20%',}}
                                     />
                                 </Card>
                             </Grid>
-                        ))}
+                        })}
                     </Grid>
                 </Container>
             </main>
-            {/* Footer */}
-            <Box sx={{ bgcolor: 'background.paper', p: 6, display: 'flex', justifyContent: 'center', gap: '3%', borderTop: '1px solid #1976d2'}} component="footer">
-                <Link href="https://www.instagram.com/m_vorobyovaa" target='_blank'><InstagramIcon /></Link>
-                <Link href="https://t.me/m_vorobyovaa" target='_blank'><TelegramIcon /></Link>
-                <Link href="https://github.com/MaryiaVarabyevaa" target='_blank'><GitHubIcon /></Link>
-                <Link href="https://www.linkedin.com/in/maryia-varabyeva-b6612a21b/" target='_blank'><LinkedInIcon /></Link>
-            </Box>
-            {/* End footer */}
+            <Footer />
         </ThemeProvider>
     )
 }

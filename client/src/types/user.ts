@@ -13,7 +13,7 @@ export interface IUserState {
 
 export interface IAddUserAction {
     type: UserActionTypes.ADD_USER;
-    payload: any[];
+    payload: IUser[];
 }
 
 export interface IUserAction {

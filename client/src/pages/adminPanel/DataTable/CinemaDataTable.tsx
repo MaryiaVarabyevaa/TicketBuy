@@ -16,14 +16,14 @@ import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
-import {addCinema, deleteCinema, getAllCinema, getLastCinemaId, updateCinemaInfo} from "../../../http/cinemaAPI";
+import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {EditToolbar} from "./EditToolbar";
 import {ICinema, INewCinema} from "../../../types/cinema";
 import {renderEditCell} from "./CellEditInputCell";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
 import {validateHallsNumber, validateName, validateStreet} from "./validation";
-import {addHalls, getAllHalls, updateHallInfo} from "../../../http/hallsAPI";
+import {addHalls, deleteHall, getAllHalls, updateHallInfo} from "../../../http/hallsAPI";
 import {IHalls} from "../../../types/halls";
 
 
@@ -32,16 +32,10 @@ const CinemaDataTable = () => {
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
-    const [cinemaId, setCinemaId] = useState<number>(1);
 
     const getCinema = async () => {
         const cinema = await getAllCinema();
         const halls = await getAllHalls();
-
-        if (cinema.length > 0) {
-            const cinemaId = await getLastCinemaId();
-            setCinemaId(cinemaId + 1);
-        }
 
         halls.map((hall: IHalls) => {
             cinema.map((item: ICinema) => {
@@ -54,9 +48,6 @@ const CinemaDataTable = () => {
 
         setRows(cinema);
     }
-
-    console.log(cinemaId);
-
     useEffect(() => {
         getCinema();
 
@@ -66,7 +57,7 @@ const CinemaDataTable = () => {
         const errorMessage = validateName(params.props.value!.toString(), 'Cinema name');
         return { ...params.props, error: errorMessage };
     };
-    //
+
     const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
         return { ...params.props, error: errorMessage };
@@ -94,6 +85,7 @@ const CinemaDataTable = () => {
     const handleDeleteClick = (id: GridRowId) => async () => {
        setIsClicked(!isClicked);
        await deleteCinema(id);
+       await deleteHall(id);
     };
 
 
@@ -111,11 +103,10 @@ const CinemaDataTable = () => {
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
         const {  id, name, type, number, city, street, buildingNumber }  = updatedRow;
-        console.log(updatedRow);
 
         if ('isNew' in updatedRow) {
-            await addCinema({ name, city, street, buildingNumber: +buildingNumber });
-            await addHalls({number, type, cinemaId })
+          const cinema = await addCinema({ name, city, street, buildingNumber: +buildingNumber });
+          const halls = await addHalls({number, type, cinemaId: cinema.id })
         } else {
             await updateCinemaInfo({ id, name, city, street, buildingNumber: +buildingNumber });
             await updateHallInfo({cinemaId : id, number: +number, type});

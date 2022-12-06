@@ -21,3 +21,8 @@ export const updateFilmInfo = async (film: IFilm) => {
     const { data } = await $host.post('film/update', film);
     return data;
 }
+
+export const getFilm = async (id: number) => {
+    const { data } = await $host.get('film/' + id);
+    return data;
+}

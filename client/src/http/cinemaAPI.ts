@@ -21,8 +21,3 @@ export const addCinema = async (cinema: ICinema) => {
     const { data } = await $host.post('cinema/create', cinema);
     return data;
 }
-
-export const getLastCinemaId = async () => {
-    const { data } = await $host.get('cinema/get_id');
-    return data;
-};

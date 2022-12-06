@@ -1,32 +1,23 @@
 import * as React from 'react';
-import {useMemo, useState} from 'react';
+import {useState} from 'react';
 import {CSSObject, styled, Theme, useTheme} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import {Route, Routes, useNavigate} from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
-import {Dashboard, Home, Logout} from "@mui/icons-material";
-import {ADMIN_PANEL_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../../constants/routes";
+import {useNavigate} from "react-router-dom";
+import {MAIN_ROUTE, PROFILE_ROUTE} from "../../constants/routes";
 import {useDispatch, useSelector} from "react-redux";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {logOutAction} from "../../store/reducers/userReducer";
-import Stack from "@mui/material/Stack";
 import UserDataTable from "./DataTable/UserDataTable";
 import CinemaDataTable from "./DataTable/CinemaDataTable";
 import FilmDataTable from "./DataTable/FilmDataTable";
@@ -35,15 +26,11 @@ import MovieIcon from '@mui/icons-material/Movie';
 import CameraOutdoorIcon from '@mui/icons-material/CameraOutdoor';
 import SessionDataTable from "./DataTable/SessionDataTable";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import NavBar from "../../components/NavBar";
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {IUserState} from "../../types/user";
 
 interface IRootState {
-    currentUser: any[];
-    isAuth: boolean;
+    user: IUserState
 }
 
 const drawerWidth = 240;
@@ -121,8 +108,8 @@ export default function DashBoard() {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
-    const currentUser = useSelector((state: IRootState) => state.currentUser);
-    const isAuth = useSelector((state: IRootState) => state.isAuth);
+    const currentUser = useSelector((state: IRootState) => state.user.currentUser);
+    const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const dispatch = useDispatch();
     const [isClickedUsers, setIsClickedUsers] = useState(true);
     const [isClickedCinema, setIsClickedCinema] = useState(false);

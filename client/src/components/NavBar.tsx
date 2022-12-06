@@ -12,11 +12,10 @@ import {ADMIN_PANEL_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../cons
 import {useNavigate} from "react-router-dom";
 import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
-import {useState} from "react";
-import MenuIcon from "@mui/icons-material/Menu";
+import {IUserState} from "../types/user";
 
 interface IRootState {
-    isAuth: boolean;
+    user: any
 }
 
 interface IProps {
@@ -26,7 +25,7 @@ interface IProps {
 const NavBar = ({dashboard} : IProps) => {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const isAuth = useSelector((state: IRootState)=> state.isAuth);
+    const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const navigate = useNavigate();
     const  dispatch = useDispatch();
 

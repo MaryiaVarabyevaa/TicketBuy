@@ -28,7 +28,12 @@ export const userReducer = (state = defaultState, action: IUserAction): IUserSta
             const isAuth = !!localStorage.getItem('isAuth');
             const users = JSON.parse(localStorage.getItem('users') as string);
             const currentUser = JSON.parse(localStorage.getItem('currentUser') as string);
-            return {...state, users: users? users : [], isAuth: isAuth? isAuth : false, currentUser: currentUser? currentUser : []};
+            return {
+                ...state,
+                users: users? users : [],
+                isAuth: isAuth? isAuth : false,
+                currentUser: currentUser? currentUser : [],
+            };
         default:
             return state;
     }
