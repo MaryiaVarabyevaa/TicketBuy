@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
 import {IUserState} from "../types/user";
+import Box from "@mui/material/Box";
 
 interface IRootState {
     user: any
@@ -26,6 +27,8 @@ const NavBar = ({dashboard} : IProps) => {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
+    const isAdmin = useSelector((state: IRootState) => state.user.isAdmin);
+    const isModerator = useSelector((state: IRootState) => state.user.isModerator);
     const navigate = useNavigate();
     const  dispatch = useDispatch();
 
@@ -68,11 +71,23 @@ const NavBar = ({dashboard} : IProps) => {
     return (
         <AppBar position={`${dashboard? "fixed" : "static"}`}>
             <Toolbar>
-                <Typography variant="h5" component="h3" sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-                    TicketBuy
-                </Typography>
+                <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'center', pl: '48px'}}>
+                    <Typography
+                        variant="h5"
+                        component="h3"
+                        sx={{
+                            display: 'inline-flex',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => navigate(MAIN_ROUTE)}
+                    >
+                        TicketBuy
+                    </Typography>
+                </Box>
                 {
-                    !isAuth? <IconButton><LoginIcon onClick={handleClick} /></IconButton> :  (
+                    !isAuth? <IconButton onClick={handleClick}>
+                        <LoginIcon />
+                    </IconButton> :  (
                         <div>
                             <Tooltip title='Open settings'>
                                 <IconButton
@@ -103,7 +118,7 @@ const NavBar = ({dashboard} : IProps) => {
                                 onClose={handleClose}
                             >
                                 {
-                                    !dashboard &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
+                                    ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
                                 }
                                 {
                                     dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>

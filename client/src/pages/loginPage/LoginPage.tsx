@@ -18,7 +18,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {emailValidation, firstNameValidation, lastNameValidation, passwordValidation} from "./validation";
 import {getUser, login, registration} from "../../http/userAPI";
 import {useDispatch} from "react-redux";
-import {addCurrentUserStorageAction, addUserAction} from "../../store/reducers/userReducer";
+import {logInAction, addUserAction} from "../../store/reducers/userReducer";
 import {ILoginForm} from "../../types/form";
 import {useNavigate} from "react-router-dom";
 import {MAIN_ROUTE} from "../../constants/routes";
@@ -49,7 +49,7 @@ const LoginPage = () => {
         if(isAuth) {
             response = await login(data);
             const user = await getUser(data.email);
-            dispatch(addCurrentUserStorageAction(user))
+            dispatch(logInAction(user))
         }
         else {
            response = await registration(data);

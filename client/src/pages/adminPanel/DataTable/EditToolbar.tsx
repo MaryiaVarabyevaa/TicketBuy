@@ -16,13 +16,11 @@ export function EditToolbar(props: EditToolbarProps) {
 
     const handleClick = () => {
         const id = randomId();
-        const number = Number(localStorage.getItem('rowsLength') as string);
-        setRows((oldRows) => [...oldRows, { id ,name: '', number: 1, type:'', city: '', street: '', buildingNumber: '', isNew: true }]);
+        setRows((oldRows) => [...oldRows, { id ,name: '', type:'', city: '', street: '', buildingNumber: '', isNew: true }]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
         }));
-        localStorage.setItem('rowsLength', `${number + 1}`);
     };
 
     return (
