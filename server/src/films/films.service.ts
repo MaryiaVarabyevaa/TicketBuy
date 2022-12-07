@@ -33,7 +33,7 @@ export class FilmsService {
 
     async getOneFilm(id: number) {
         const film = await this.filmRepository.findOne({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'reviews', 'genre', 'runtime', 'country', 'imdbRating'],
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
             where: {
                 id
             }}

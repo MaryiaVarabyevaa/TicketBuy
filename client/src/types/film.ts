@@ -4,7 +4,6 @@ export interface IFilm {
     description: string;
     url: string;
     rating?: number;
-    reviews?: string;
     genre?: string;
     runtime?: string;
     country?: string;

@@ -50,7 +50,7 @@ const FilmDataTable = () => {
 
 
     // useEffect(() => {
-    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Girls%20', options)
+    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Boys%20', options)
     //         .then(response => response.json())
     //         .then(response => {
     //           const { Title, Country, Genre, Plot, Poster, Runtime, imdbRating } = response;

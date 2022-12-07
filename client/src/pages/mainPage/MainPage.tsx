@@ -9,19 +9,14 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
-import {Rating} from "@mui/material";
-import InstagramIcon from '@mui/icons-material/Instagram';
-import TelegramIcon from '@mui/icons-material/Telegram';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import {Chip, Rating} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {LOGIN_ROUTE, MAIN_ROUTE} from "../../constants/routes";
+import {LOGIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
 import {IFilm} from "../../types/film";
 import {getAllFilms, getFilm} from "../../http/filmAPI";
@@ -111,10 +106,10 @@ const MainPage = () => {
                     </Container>
                 </Box>
                 <Container sx={{ py: 8 }} maxWidth="md">
-                    {/* End hero unit */}
                     <Grid container spacing={4}>
                         {films && films.map((film: IFilm) => {
-                            const {id, title, description, url, rating} = film;
+                            const {id, title, genre, url, rating} = film;
+                            const listOfGenre = genre!.split(', ');
                             return  <Grid
                                 item
                                 key={id}
@@ -124,7 +119,7 @@ const MainPage = () => {
                                 onClick={() => handleClickOnFilm(id as number)}
                             >
                                 <Card
-                                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center'  }}
+                                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px'  }}
                                 >
                                     <CardMedia
                                         component="img"
@@ -134,15 +129,18 @@ const MainPage = () => {
                                         image={url}
                                         alt={title}
                                     />
-                                    <CardContent sx={{ flexGrow: 1}}>
-                                        <Typography gutterBottom variant="h5" component="h2">
+                                    <CardContent sx={{ flexGrow: 1, mb: 0, pb: 0}}>
+                                        <Typography variant="h5" component="h3">
                                             { title }
                                         </Typography>
-                                        <Typography>
-                                            This is a media card. You can use this section to describe the
-                                            content.
-                                        </Typography>
                                     </CardContent>
+                                    <Stack direction="row" spacing={1}>
+                                        {
+                                            listOfGenre.map((genre, genreId) => {
+                                                return <Chip key={genreId} label={genre} />
+                                            })
+                                        }
+                                    </Stack>
                                     <Rating
                                         name="read-only"
                                         value={rating}
