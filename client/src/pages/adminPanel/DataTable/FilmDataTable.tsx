@@ -50,7 +50,7 @@ const FilmDataTable = () => {
 
 
     // useEffect(() => {
-    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Game%20', options)
+    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Girls%20', options)
     //         .then(response => response.json())
     //         .then(response => {
     //           const { Title, Country, Genre, Plot, Poster, Runtime, imdbRating } = response;
@@ -184,15 +184,15 @@ const FilmDataTable = () => {
         {
             field: 'runtime',
             headerName: 'Runtime',
-            width: 200,
+            width: 100,
             editable: true,
             // preProcessEditCellProps: urlPreProcessEditCellProps,
             // renderEditCell: renderEditCell,
         },
         {
-            field: 'imdbRating ',
+            field: 'imdbRating',
             headerName: 'IMDb Rating',
-            width: 200,
+            width: 100,
             editable: true,
             // preProcessEditCellProps: urlPreProcessEditCellProps,
             // renderEditCell: renderEditCell,

@@ -9,8 +9,6 @@ import Button from "@mui/material/Button";
 import Footer from "../../components/Footer";
 import Divider from "@mui/material/Divider";
 import StarIcon from '@mui/icons-material/Star';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {useSelector} from "react-redux";
 import {StarBorder} from "@mui/icons-material";
 import Reviews from "./Reviews";
@@ -29,6 +27,7 @@ const Film = () => {
     useEffect(()=>{
         setListOfGenre(genre.split(', '));
     },[])
+
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '32px' }} >
@@ -139,7 +138,9 @@ const Film = () => {
                         </CardActions>
                     </Box>
                 </Card>
-                <Reviews />
+                {
+                    reviews && <Reviews {...reviews} />
+                }
             </Container>
             <Footer />
         </Box>
