@@ -13,6 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {useSelector} from "react-redux";
 import {StarBorder} from "@mui/icons-material";
+import Reviews from "./Reviews";
 
 interface IRootState {
     film: any
@@ -138,6 +139,7 @@ const Film = () => {
                         </CardActions>
                     </Box>
                 </Card>
+                <Reviews />
             </Container>
             <Footer />
         </Box>
