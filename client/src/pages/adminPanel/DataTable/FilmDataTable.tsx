@@ -26,6 +26,13 @@ import {IFilm, INewFilm} from "../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
 import {validateLength, validateTitle} from "./validation";
 
+const options = {
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Key': '610bfd8990msh4a20ec81aeccd75p190756jsn2eba0fe43d1e',
+        'X-RapidAPI-Host': 'moviesdb5.p.rapidapi.com'
+    }
+};
 
 const FilmDataTable = () => {
     const [rows, setRows] = useState<IFilm[]>([]);
@@ -41,9 +48,28 @@ const FilmDataTable = () => {
     }
 
 
+
+    // useEffect(() => {
+    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Game%20', options)
+    //         .then(response => response.json())
+    //         .then(response => {
+    //           const { Title, Country, Genre, Plot, Poster, Runtime, imdbRating } = response;
+    //           addFilm({
+    //               title: Title,
+    //               description: Plot,
+    //               url: Poster,
+    //               genre: Genre,
+    //               country: Country,
+    //               runtime: Runtime,
+    //               imdbRating
+    //           })
+    //         })
+    //         .catch(err => console.error(err));
+    // },[])
+
     useEffect(() => {
         getFilms()
-
+        // getFilmsFromApi();
     }, [isClicked])
 
     function EditInputCell(props: GridRenderEditCellParams) {
@@ -103,12 +129,12 @@ const FilmDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const {  id, title, description, url }  = updatedRow;
+        const {  id, title, description, url, genre, runtime, country, imdbRating }  = updatedRow;
 
         if ('isNew' in updatedRow) {
-            await addFilm({title, description, url });
+            await addFilm({title, description, url, genre, runtime, country, imdbRating });
         } else {
-            await updateFilmInfo({ id, title, description, url });
+            await updateFilmInfo({ id, title, description, url, genre, runtime, country, imdbRating });
         }
         setIsClicked(!isClicked);
         return updatedRow;
@@ -118,7 +144,7 @@ const FilmDataTable = () => {
         {
             field: 'title',
             headerName: 'Title',
-            width: 300,
+            width: 200,
             editable: true,
             preProcessEditCellProps: titlePreProcessEditCellProps,
             renderEditCell: renderEditCell,
@@ -126,7 +152,7 @@ const FilmDataTable = () => {
         {
             field: 'description',
             headerName: 'Description',
-            width: 500,
+            width: 300,
             editable: true,
             preProcessEditCellProps: descriptionPreProcessEditCellProps,
             renderEditCell: renderEditCell,
@@ -134,10 +160,42 @@ const FilmDataTable = () => {
         {
             field: 'url',
             headerName: 'Url',
-            width: 300,
+            width: 200,
             editable: true,
             preProcessEditCellProps: urlPreProcessEditCellProps,
             renderEditCell: renderEditCell,
+        },
+        {
+            field: 'genre',
+            headerName: 'Genre',
+            width: 200,
+            editable: true,
+            // preProcessEditCellProps: urlPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'country',
+            headerName: 'Country',
+            width: 150,
+            editable: true,
+            // preProcessEditCellProps: urlPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'runtime',
+            headerName: 'Runtime',
+            width: 200,
+            editable: true,
+            // preProcessEditCellProps: urlPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
+        },
+        {
+            field: 'imdbRating ',
+            headerName: 'IMDb Rating',
+            width: 200,
+            editable: true,
+            // preProcessEditCellProps: urlPreProcessEditCellProps,
+            // renderEditCell: renderEditCell,
         },
         {
             field: 'actions',

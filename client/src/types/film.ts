@@ -5,6 +5,10 @@ export interface IFilm {
     url: string;
     rating?: number;
     reviews?: string;
+    genre?: string;
+    runtime?: string;
+    country?: string;
+    imdbRating?: string;
 }
 
 export interface INewFilm extends IFilm{

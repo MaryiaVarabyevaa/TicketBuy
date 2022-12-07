@@ -28,6 +28,7 @@ import SessionDataTable from "./DataTable/SessionDataTable";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NavBar from "../../components/NavBar";
 import {IUserState} from "../../types/user";
+import Footer from "../../components/Footer";
 
 interface IRootState {
     user: IUserState
