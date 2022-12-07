@@ -1,5 +1,6 @@
-import {Table, Column, Model, DataType, HasMany} from 'sequelize-typescript';
+import {Column, DataType, HasMany, Model, Table} from 'sequelize-typescript';
 import {Session} from "../sessions/sessions.entity";
+import {Comment} from "../comments/comments.entity";
 
 // todo: закончить объект для создания
 interface FilmCreationAttrs {
@@ -42,18 +43,39 @@ export class Film extends Model<Film, FilmCreationAttrs> {
     url: string;
 
     @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    genre: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    runtime: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    country: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    imdbRating: string;
+
+    @Column({
         type: DataType.INTEGER,
         defaultValue: 0
     })
     rating: number;
 
-    @Column({
-        type: DataType.STRING,
-        defaultValue: ''
-    })
-    reviews: string;
-
 
     @HasMany(() => Session)
     session: Session[]
+
+    @HasMany(() => Comment)
+    comments: Comment[]
 }

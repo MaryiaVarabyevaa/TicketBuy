@@ -15,10 +15,6 @@ export class CinemaController {
     getAll() {
         return this.cinemaService.getAllCinema();
     }
-    @Get('get_id')
-    getId() {
-        return this.cinemaService.getId();
-    }
 
     @Post('delete')
     deleteCinema(@Request() req) {

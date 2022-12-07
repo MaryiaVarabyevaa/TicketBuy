@@ -6,6 +6,7 @@ export declare class FilmsService {
     constructor(filmRepository: typeof Film);
     addFilm(filmDto: CreateFilmsDto): Promise<Film>;
     getAllFilms(): Promise<Film[]>;
+    getOneFilm(id: number): Promise<Film>;
     deleteFilm(id: number): Promise<void>;
     updateFilmInfo(filmDto: UpdateFilmDto): Promise<[affectedCount: number]>;
 }

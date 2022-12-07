@@ -1,7 +1,6 @@
-import {Body, Controller, Get, Post, Request} from '@nestjs/common';
+import {Body, Controller, Get, Param, ParseIntPipe, Post, Request} from '@nestjs/common';
 import {FilmsService} from "./films.service";
 import {CreateFilmsDto} from "./dto/create-films.dto";
-import {UpdateCinemaDto} from "../cinema/dto/update-cinema.dto";
 import {UpdateFilmDto} from "./dto/update-films.dto";
 
 @Controller('film')
@@ -26,4 +25,11 @@ export class FilmsController {
     getAll() {
         return this.filmService.getAllFilms();
     }
+    @Get(':id')
+    getPostById(
+        @Param('id', ParseIntPipe) id: number
+    ) {
+       return this.filmService.getOneFilm(id);
+    }
+
 }

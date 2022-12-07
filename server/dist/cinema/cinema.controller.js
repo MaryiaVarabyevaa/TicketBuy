@@ -27,9 +27,6 @@ let CinemaController = class CinemaController {
     getAll() {
         return this.cinemaService.getAllCinema();
     }
-    getId() {
-        return this.cinemaService.getId();
-    }
     deleteCinema(req) {
         return this.cinemaService.deleteCinema(req.body.id);
     }
@@ -50,12 +47,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CinemaController.prototype, "getAll", null);
-__decorate([
-    (0, common_1.Get)('get_id'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], CinemaController.prototype, "getId", null);
 __decorate([
     (0, common_1.Post)('delete'),
     __param(0, (0, common_1.Request)()),

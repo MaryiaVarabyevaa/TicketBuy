@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Film = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const sessions_entity_1 = require("../sessions/sessions.entity");
+const comments_entity_1 = require("../comments/comments.entity");
 let Film = class Film extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -47,22 +48,47 @@ __decorate([
 ], Film.prototype, "url", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+    }),
+    __metadata("design:type", String)
+], Film.prototype, "genre", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+    }),
+    __metadata("design:type", String)
+], Film.prototype, "runtime", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+    }),
+    __metadata("design:type", String)
+], Film.prototype, "country", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false,
+    }),
+    __metadata("design:type", String)
+], Film.prototype, "imdbRating", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
         defaultValue: 0
     }),
     __metadata("design:type", Number)
 ], Film.prototype, "rating", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.STRING,
-        defaultValue: ''
-    }),
-    __metadata("design:type", String)
-], Film.prototype, "reviews", void 0);
-__decorate([
     (0, sequelize_typescript_1.HasMany)(() => sessions_entity_1.Session),
     __metadata("design:type", Array)
 ], Film.prototype, "session", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => comments_entity_1.Comment),
+    __metadata("design:type", Array)
+], Film.prototype, "comments", void 0);
 Film = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'films',

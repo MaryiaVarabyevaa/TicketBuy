@@ -33,6 +33,9 @@ let FilmsController = class FilmsController {
     getAll() {
         return this.filmService.getAllFilms();
     }
+    getPostById(id) {
+        return this.filmService.getOneFilm(id);
+    }
 };
 __decorate([
     (0, common_1.Post)('create'),
@@ -61,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], FilmsController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], FilmsController.prototype, "getPostById", null);
 FilmsController = __decorate([
     (0, common_1.Controller)('film'),
     __metadata("design:paramtypes", [films_service_1.FilmsService])

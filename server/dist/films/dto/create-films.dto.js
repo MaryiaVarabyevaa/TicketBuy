@@ -39,9 +39,45 @@ __decorate([
         message: 'Required to fill in'
     }),
     (0, class_validator_1.IsString)({
-        message: 'Description must be a string'
+        message: 'Url must be a string'
     }),
     __metadata("design:type", String)
 ], CreateFilmsDto.prototype, "url", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsString)({
+        message: 'Genre must be a string'
+    }),
+    __metadata("design:type", String)
+], CreateFilmsDto.prototype, "genre", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsString)({
+        message: 'Genre must be a string'
+    }),
+    __metadata("design:type", String)
+], CreateFilmsDto.prototype, "runtime", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsString)({
+        message: 'Genre must be a string'
+    }),
+    __metadata("design:type", String)
+], CreateFilmsDto.prototype, "country", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsString)({
+        message: 'Genre must be a string'
+    }),
+    __metadata("design:type", String)
+], CreateFilmsDto.prototype, "imdbRating", void 0);
 exports.CreateFilmsDto = CreateFilmsDto;
 //# sourceMappingURL=create-films.dto.js.map

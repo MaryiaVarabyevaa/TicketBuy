@@ -21,6 +21,8 @@ const cinema_entity_1 = require("./cinema/cinema.entity");
 const auth_module_1 = require("./auth/auth.module");
 const halls_module_1 = require("./halls/halls.module");
 const halls_entity_1 = require("./halls/halls.entity");
+const comments_module_1 = require("./comments/comments.module");
+const comments_entity_1 = require("./comments/comments.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -36,7 +38,7 @@ AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
-                models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session, halls_entity_1.Halls],
+                models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session, halls_entity_1.Halls, comments_entity_1.Comment],
                 autoLoadModels: true,
                 synchronize: true,
             }),
@@ -45,7 +47,8 @@ AppModule = __decorate([
             films_module_1.FilmsModule,
             sessions_module_1.SessionsModule,
             auth_module_1.AuthModule,
-            halls_module_1.HallsModule
+            halls_module_1.HallsModule,
+            comments_module_1.CommentsModule
         ],
     })
 ], AppModule);

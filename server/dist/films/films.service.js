@@ -44,9 +44,24 @@ let FilmsService = class FilmsService {
     }
     async getAllFilms() {
         const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url']
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating']
         });
         return films;
+    }
+    async getOneFilm(id) {
+        const film = await this.filmRepository.findOne({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'reviews', 'genre', 'runtime', 'country', 'imdbRating'],
+            where: {
+                id
+            }
+        });
+        if (!film) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'There is no film with this id in the system',
+            }, common_1.HttpStatus.OK);
+        }
+        return film.dataValues;
     }
     async deleteFilm(id) {
         const film = await this.filmRepository.findOne({ where: { id } });
@@ -66,12 +81,12 @@ let FilmsService = class FilmsService {
     }
     async updateFilmInfo(filmDto) {
         const { id } = filmDto, others = __rest(filmDto, ["id"]);
-        const updateCinemaInfo = await this.filmRepository.update(Object.assign({}, others), {
+        const updateFilmInfo = await this.filmRepository.update(Object.assign({}, others), {
             where: {
                 id
             }
         });
-        return updateCinemaInfo;
+        return updateFilmInfo;
     }
 };
 FilmsService = __decorate([

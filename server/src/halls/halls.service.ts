@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Halls} from "./halls.entity";
 import {CreateHallsDto} from "./dto/create-halls.dto";
@@ -25,5 +25,24 @@ export class HallsService {
             }
         });
         return updateHallsInfo;
+    }
+
+    async deleteHall(id: number) {
+        const cinema = await this.hallsRepository.findOne({where: {id}});
+        if (cinema) {
+            const deletedHall = await this.hallsRepository.destroy({
+                where: {
+                    cinemaId: id,
+                }
+            })
+        } else {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'There is no hall with this cinemaId in the system',
+                },
+                HttpStatus.OK,
+            );
+        }
     }
 }

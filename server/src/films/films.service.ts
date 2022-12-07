@@ -2,8 +2,8 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Film} from "./films.entity";
 import {CreateFilmsDto} from "./dto/create-films.dto";
-import {UpdateCinemaDto} from "../cinema/dto/update-cinema.dto";
 import {UpdateFilmDto} from "./dto/update-films.dto";
+import sequelize from "sequelize";
 
 @Injectable()
 export class FilmsService {
@@ -26,9 +26,28 @@ export class FilmsService {
     }
     async getAllFilms() {
         const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url']
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating']
         });
         return films;
+    }
+
+    async getOneFilm(id: number) {
+        const film = await this.filmRepository.findOne({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'reviews', 'genre', 'runtime', 'country', 'imdbRating'],
+            where: {
+                id
+            }}
+        );
+        if (!film) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'There is no film with this id in the system',
+                },
+                HttpStatus.OK,
+            );
+        }
+        return film.dataValues;
     }
 
     async deleteFilm(id: number) {
@@ -52,11 +71,12 @@ export class FilmsService {
 
     async updateFilmInfo(filmDto: UpdateFilmDto) {
         const {id, ...others} = filmDto;
-        const updateCinemaInfo = await this.filmRepository.update({...others}, {
+        const updateFilmInfo = await this.filmRepository.update({...others}, {
             where: {
                 id
             }
         });
-        return updateCinemaInfo;
+        return updateFilmInfo;
     }
+
 }

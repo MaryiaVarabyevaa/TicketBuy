@@ -21,7 +21,6 @@ export class UpdateFilmDto {
     })
     readonly title: string;
 
-
     @IsNotEmpty({
         message: 'Required to fill in'
     })
@@ -37,4 +36,36 @@ export class UpdateFilmDto {
         message: 'Description must be a string'
     })
     readonly url: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly genre: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly runtime: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly country: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly imdbRating: string;
 }

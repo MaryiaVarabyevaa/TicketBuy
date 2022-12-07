@@ -39,18 +39,6 @@ export class CinemaService {
         });
         return cinema;
     }
-    async getId() {
-        let id = 1;
-        const cinema = await this.cinemaRepository.findAll({
-            paranoid: false
-        });
-
-        cinema.sort((a, b) => parseInt(String(b.id)) - parseInt(String(a.id)));
-
-        return cinema[0].id;
-    }
-
-
 
     async deleteCinema(id: number) {
         const cinema = await this.cinemaRepository.findOne({where: {id}});

@@ -26,17 +26,41 @@ export class CreateFilmsDto {
         message: 'Required to fill in'
     })
     @IsString({
-        message: 'Description must be a string'
+        message: 'Url must be a string'
     })
     readonly url: string;
 
-    // @IsNotEmpty({
-    //     message: 'Required to fill in'
-    // })
-    // @IsNumber( {}, {
-    //     message: 'Rating must be a number'
-    // })
-    // readonly rating: number;
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly genre: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly runtime: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly country: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsString({
+        message: 'Genre must be a string'
+    })
+    readonly imdbRating: string;
     //
     // @IsNotEmpty({
     //     message: 'Required to fill in'

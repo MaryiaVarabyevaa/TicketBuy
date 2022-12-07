@@ -8,4 +8,5 @@ export declare class FilmsController {
     deleteCinema(req: any): Promise<void>;
     updateUserInfo(cinemaDto: UpdateFilmDto): Promise<[affectedCount: number]>;
     getAll(): Promise<import("./films.entity").Film[]>;
+    getPostById(id: number): Promise<import("./films.entity").Film>;
 }

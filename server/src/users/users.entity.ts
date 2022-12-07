@@ -1,4 +1,6 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, HasMany} from 'sequelize-typescript';
+import {Session} from "../sessions/sessions.entity";
+import {Comment} from "../comments/comments.entity";
 
 // todo: закончить объект для создания
 interface UserCreationAttrs {
@@ -54,4 +56,7 @@ export class User extends Model<User, UserCreationAttrs> {
         defaultValue: false
     })
     isBlocked: boolean;
+
+    @HasMany(() => Comment)
+    session: Comment[]
 }

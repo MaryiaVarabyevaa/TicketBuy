@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post, Request} from '@nestjs/common';
 import {HallsService} from "./halls.service";
 import {CreateSessionDto} from "../sessions/dto/create-session.dto";
 import {CreateHallsDto} from "./dto/create-halls.dto";
@@ -17,6 +17,11 @@ export class HallsController {
     @Post('update')
     async updateUserInfo(@Body() hallDto: UpdateHallDto) {
         return this.hallsService.updateHallInfo(hallDto);
+    }
+
+    @Post('delete')
+    deleteCinema(@Request() req) {
+        return this.hallsService.deleteHall(req.body.id);
     }
 
     @Get()
