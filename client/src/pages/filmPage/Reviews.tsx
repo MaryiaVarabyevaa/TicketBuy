@@ -3,26 +3,22 @@ import Box from "@mui/material/Box";
 import {TextField, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from "@mui/material/IconButton";
 
-const Reviews = (reviews: string[]) => {
+const Reviews = () => {
     const [value, setValue] = useState('');
     const [listOfReviews, setListOfReviews] = useState<string[]>([]);
 
-   useEffect(() => {
-       const arr = [];
-       for (const review in reviews) {
-           arr.push(reviews[review]);
-       }
-       setListOfReviews(arr);
-   },[])
-    console.log(listOfReviews);
-    const handleSubmit = () => {
-        console.log(value);
-    }
+   // useEffect(() => {
+   //     const arr = [];
+   //     for (const review in reviews) {
+   //         arr.push(reviews[review]);
+   //     }
+   //     setListOfReviews(arr);
+   // },[])
+   //  console.log(listOfReviews);
+   //  const handleSubmit = () => {
+   //      console.log(value);
+   //  }
 
     return (
         <Stack spacing={3} sx={{mt: 5}}>
@@ -45,7 +41,7 @@ const Reviews = (reviews: string[]) => {
                    variant="contained"
                    size='large'
                    sx={{mt: 2}}
-                   onClick={handleSubmit}
+                   // onClick={handleSubmit}
                >
                    Leave a comment
                </Button>

@@ -4,9 +4,7 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridEditInputCell,
     GridPreProcessEditCellProps,
-    GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
@@ -18,87 +16,59 @@ import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
-import {StyledTooltip} from './StyledTooltip';
+import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {EditToolbar} from "./EditToolbar";
-import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/filmAPI";
-import {IFilm, INewFilm} from "../../../types/film";
+import {ICinema, INewCinema} from "../../../types/cinema";
+import {EditToolbar, renderEditCell} from "./EditComponents";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validateLength, validateTitle} from "./validation";
+import {validateNumber, validateName, validateStreet} from "./validation";
+import {addHalls, deleteHall, getAllHalls, updateHallInfo} from "../../../http/hallsAPI";
+import {IHalls} from "../../../types/halls";
 
-const options = {
-    method: 'GET',
-    headers: {
-        'X-RapidAPI-Key': '610bfd8990msh4a20ec81aeccd75p190756jsn2eba0fe43d1e',
-        'X-RapidAPI-Host': 'moviesdb5.p.rapidapi.com'
-    }
-};
 
-const FilmDataTable = () => {
-    const [rows, setRows] = useState<IFilm[]>([]);
+const CinemaDataTable = () => {
+    const [rows, setRows] = useState<ICinema[]>([]);
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
 
-    const [films, setFilms] = useState<any[]>([]);
+    const getCinema = async () => {
+        const cinema = await getAllCinema();
+        const halls = await getAllHalls();
 
-    const getFilms = async () => {
-        const films = await getAllFilms();
-        setRows(films);
+        halls.map((hall: IHalls) => {
+            cinema.map((item: ICinema) => {
+                if (item.id === hall.cinemaId) {
+                    item['number'] = hall.number;
+                    item['type'] = hall.type;
+                }
+            })
+        })
+
+        setRows(cinema);
     }
-
-
-
-    // useEffect(() => {
-    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Boys%20', options)
-    //         .then(response => response.json())
-    //         .then(response => {
-    //           const { Title, Country, Genre, Plot, Poster, Runtime, imdbRating } = response;
-    //           addFilm({
-    //               title: Title,
-    //               description: Plot,
-    //               url: Poster,
-    //               genre: Genre,
-    //               country: Country,
-    //               runtime: Runtime,
-    //               imdbRating
-    //           })
-    //         })
-    //         .catch(err => console.error(err));
-    // },[])
-
     useEffect(() => {
-        getFilms()
-        // getFilmsFromApi();
+        getCinema();
+
     }, [isClicked])
 
-    function EditInputCell(props: GridRenderEditCellParams) {
-        const { error } = props;
-
-        return (
-            <StyledTooltip open={!!error} title={error}>
-                <GridEditInputCell {...props} />
-            </ StyledTooltip >
-        );
-    }
-
-    function renderEditCell(params: GridRenderEditCellParams) {
-        return <EditInputCell {...params} />;
-    }
-
-    const titlePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateTitle(params.props.value!.toString());
-        return { ...params.props, error: errorMessage }
-    };
-
-
-    const descriptionPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateLength(params.props.value!.toString());
+    const namePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateName(params.props.value!.toString(), 'Cinema name');
         return { ...params.props, error: errorMessage };
     };
 
-    const urlPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateLength(params.props.value!.toString());
+    const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
+        return { ...params.props, error: errorMessage };
+    };
+
+    const streetPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateStreet(params.props.value!.toString());
+        return { ...params.props, error: errorMessage };
+    };
+
+    const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
+        const errorMessage = validateNumber(params.props.value!.toString());
         return { ...params.props, error: errorMessage };
     };
 
@@ -112,16 +82,18 @@ const FilmDataTable = () => {
     };
 
     const handleDeleteClick = (id: GridRowId) => async () => {
-        setIsClicked(!isClicked);
-        await deleteFilm(id);
+       setIsClicked(!isClicked);
+       await deleteCinema(id);
+       await deleteHall(id);
     };
+
 
     const handleCancelClick = (id: GridRowId) => () => {
         setRowModesModel({
             ...rowModesModel,
             [id]: {mode: GridRowModes.View, ignoreModifications: true},
         });
-        const editedRow = rows.find((row) => row.id === id) as unknown as INewFilm;
+        const editedRow = rows.find((row) => row.id === id) as INewCinema;
         if ("isNew" in editedRow) {
             setRows(rows.filter((row) => row.id !== id));
         }
@@ -129,12 +101,14 @@ const FilmDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const {  id, title, description, url, genre, runtime, country, imdbRating }  = updatedRow;
+        const {  id, name, type, number, city, street, buildingNumber }  = updatedRow;
 
         if ('isNew' in updatedRow) {
-            await addFilm({title, description, url, genre, runtime, country, imdbRating });
+          const cinema = await addCinema({ name, city, street, buildingNumber: +buildingNumber });
+          const halls = await addHalls({number: +number, type, cinemaId: +cinema.id })
         } else {
-            await updateFilmInfo({ id, title, description, url, genre, runtime, country, imdbRating });
+            await updateCinemaInfo({ id, name, city, street, buildingNumber: +buildingNumber });
+            await updateHallInfo({cinemaId : id, number: +number, type});
         }
         setIsClicked(!isClicked);
         return updatedRow;
@@ -142,60 +116,52 @@ const FilmDataTable = () => {
 
     const columns: GridColumns = [
         {
-            field: 'title',
-            headerName: 'Title',
-            width: 200,
+            field: 'name',
+            headerName: 'Name',
+            width: 130,
             editable: true,
-            preProcessEditCellProps: titlePreProcessEditCellProps,
+            preProcessEditCellProps: namePreProcessEditCellProps,
             renderEditCell: renderEditCell,
         },
         {
-            field: 'description',
-            headerName: 'Description',
-            width: 300,
+            field: 'number',
+            headerName: 'Number of halls',
+            width: 130,
             editable: true,
-            preProcessEditCellProps: descriptionPreProcessEditCellProps,
+            preProcessEditCellProps: numberPreProcessEditCellProps,
             renderEditCell: renderEditCell,
         },
         {
-            field: 'url',
-            headerName: 'Url',
-            width: 200,
+            field: 'type',
+            headerName: 'Type of halls',
+            width: 250,
             editable: true,
-            preProcessEditCellProps: urlPreProcessEditCellProps,
+            preProcessEditCellProps: typePreProcessEditCellProps,
             renderEditCell: renderEditCell,
         },
         {
-            field: 'genre',
-            headerName: 'Genre',
+            field: 'city',
+            headerName: 'City',
             width: 200,
             editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: typePreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
-            field: 'country',
-            headerName: 'Country',
+            field: 'street',
+            headerName: 'Street',
+            width: 250,
+            editable: true,
+            preProcessEditCellProps: streetPreProcessEditCellProps,
+            renderEditCell: renderEditCell,
+        },
+        {
+            field: 'buildingNumber',
+            headerName: 'Number building',
             width: 150,
             editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'runtime',
-            headerName: 'Runtime',
-            width: 100,
-            editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'imdbRating',
-            headerName: 'IMDb Rating',
-            width: 100,
-            editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            preProcessEditCellProps: numberPreProcessEditCellProps,
+            renderEditCell: renderEditCell,
         },
         {
             field: 'actions',
@@ -261,7 +227,7 @@ const FilmDataTable = () => {
                     component="h3"
                     sx={{ textAlign: 'center', mt: 3, mb: 3 }}
                 >
-                    Manage films
+                    Manage Cinema
                 </Typography>
                 {
                     rows && <DataGrid
@@ -293,4 +259,4 @@ const FilmDataTable = () => {
     )
 }
 
-export default FilmDataTable;
+export default CinemaDataTable;

@@ -1,4 +1,5 @@
-import {IUserDate} from "./UserDataTable";
+import {IUserDate} from "../../../types/user";
+
 
 export const validateLength = (value: string) => {
     if (value.length === 0) {
@@ -6,7 +7,7 @@ export const validateLength = (value: string) => {
     }
 }
 
-export const validateHallsNumber = (hallsNumber: string) => {
+export const validateNumber = (hallsNumber: string) => {
     if (hallsNumber.length === 0) {
         return 'Required to fill in';
     }
@@ -33,11 +34,11 @@ export const validateEmail = (rows: IUserDate[], email: string, id: number)=> {
     }
 }
 
-export const validateName = (firstName: string, value: string) => {
-    if (firstName.length === 0) {
+export const validateName = (name: string, value: string) => {
+    if (name.length === 0) {
         return 'Required to fill in';
     }
-    if(!firstName.match(/^[a-zA-Z ]+$/)) {
+    if(!name.match(/^[a-zA-Z ]+$/)) {
         return `${value} can contain only latin alphabet`;
     }
 }

@@ -23,17 +23,9 @@ import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
 import {Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {renderEditCell} from "./CellEditInputCell";
+import {renderEditCell} from "./EditComponents";
 import {validateEmail, validateName} from "./validation";
-
-export interface IUserDate {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    isBlocked: boolean;
-}
+import {IUserDate} from "../../../types/user";
 
 const UserDataTable = () => {
     const [rows, setRows] = useState<IUserDate[]>([]);

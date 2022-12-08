@@ -4,8 +4,7 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridEditInputCell, GridPreProcessEditCellProps,
-    GridRenderEditCellParams,
+    GridPreProcessEditCellProps,
     GridRowId,
     GridRowModel,
     GridRowModes,
@@ -19,7 +18,6 @@ import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
-import {StyledTooltip} from './StyledTooltip';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {getAllFilms} from "../../../http/filmAPI";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
@@ -29,44 +27,12 @@ import {randomId} from "@mui/x-data-grid-generator";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import {ISession} from "../../../types/session";
-import {renderEditCell} from "./CellEditInputCell";
-import {validateTime, validateDate, validatePrice} from "./validation";
+import {EditToolbar, renderEditCell} from "./EditComponents";
+import {validateDate, validatePrice, validateTime} from "./validation";
 import {ICinema} from "../../../types/cinema";
 import {IFilm} from "../../../types/film";
 import {getAllHalls} from "../../../http/hallsAPI";
 import {IHalls} from "../../../types/halls";
-
-interface EditToolbarProps {
-    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-    setRowModesModel: (
-        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-    ) => void;
-}
-
-export function EditToolbar(props: EditToolbarProps) {
-    const { setRows, setRowModesModel } = props;
-
-    const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, filmTitle: '', cinemaName: "", price: 0, date: '', time: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button color="primary"
-                    startIcon={<AddIcon />}
-                    onClick={handleClick}>
-                Add record
-            </Button>
-        </GridToolbarContainer>
-    );
-}
-
-
 
 const SessionDataTable = () => {
     const [rows, setRows] = useState<ISession[]>([]);

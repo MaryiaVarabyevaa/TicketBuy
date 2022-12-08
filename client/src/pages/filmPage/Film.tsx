@@ -12,6 +12,7 @@ import StarIcon from '@mui/icons-material/Star';
 import {StarBorder} from "@mui/icons-material";
 import {useParams} from "react-router-dom";
 import {getFilm} from "../../http/filmAPI";
+import Reviews from "./Reviews";
 
 const Film = () => {
     const [film, setFilm] = useState<any>({});
@@ -144,9 +145,7 @@ const Film = () => {
                                 </CardActions>
                             </Box>
                         </Card>
-                        {/*{*/}
-                        {/*    reviews && <Reviews {...reviews} />*/}
-                        {/*}*/}
+                            <Reviews />
                     </Container>
                     <Footer />
                 </Box>

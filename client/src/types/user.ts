@@ -36,3 +36,12 @@ export interface IUpdateUserInfo {
     lastName: string;
     email: string;
 }
+
+export interface IUserDate {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    isBlocked: boolean;
+}
