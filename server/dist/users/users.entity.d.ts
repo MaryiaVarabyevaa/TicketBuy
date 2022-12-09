@@ -14,6 +14,6 @@ export declare class User extends Model<User, UserCreationAttrs> {
     password: string;
     role: string;
     isBlocked: boolean;
-    session: Comment[];
+    comments: Comment[];
 }
 export {};

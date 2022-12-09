@@ -13,7 +13,7 @@ export class CreateHallsDto {
         message: 'Required to fill in'
     })
     @IsString({
-        message: 'Description must be a string'
+        message: 'Type must be a string'
     })
     readonly type: string;
 
@@ -24,5 +24,4 @@ export class CreateHallsDto {
         message: 'Cinema id must be a number'
     })
     readonly cinemaId: number;
-
 }

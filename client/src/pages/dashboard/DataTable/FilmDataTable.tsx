@@ -26,13 +26,13 @@ import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
 import {validateLength, validateTitle} from "./validation";
 import {EditToolbar} from "./EditComponents";
 
-// const options = {
-//     method: 'GET',
-//     headers: {
-//         'X-RapidAPI-Key': '610bfd8990msh4a20ec81aeccd75p190756jsn2eba0fe43d1e',
-//         'X-RapidAPI-Host': 'moviesdb5.p.rapidapi.com'
-//     }
-// };
+const options = {
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Key': '610bfd8990msh4a20ec81aeccd75p190756jsn2eba0fe43d1e',
+        'X-RapidAPI-Host': 'moviesdb5.p.rapidapi.com'
+    }
+};
 
 const FilmDataTable = () => {
     const [rows, setRows] = useState<IFilm[]>([]);
@@ -50,7 +50,7 @@ const FilmDataTable = () => {
 
 
     // useEffect(() => {
-    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Boys%20', options)
+    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Girls%20', options)
     //         .then(response => response.json())
     //         .then(response => {
     //           const { Title, Country, Genre, Plot, Poster, Runtime, imdbRating } = response;
@@ -69,7 +69,6 @@ const FilmDataTable = () => {
 
     useEffect(() => {
         getFilms()
-        // getFilmsFromApi();
     }, [isClicked])
 
     function EditInputCell(props: GridRenderEditCellParams) {

@@ -69,7 +69,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.HasMany)(() => comments_entity_1.Comment),
     __metadata("design:type", Array)
-], User.prototype, "session", void 0);
+], User.prototype, "comments", void 0);
 User = __decorate([
     (0, sequelize_typescript_1.Table)({ tableName: 'users' })
 ], User);

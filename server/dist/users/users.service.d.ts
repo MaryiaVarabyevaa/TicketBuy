@@ -8,6 +8,7 @@ export declare class UsersService {
     findOne(email: string): Promise<User>;
     getAllUsers(): Promise<any[]>;
     getUser(email: string): Promise<User>;
+    getUserById(id: number): Promise<User>;
     blockUser(id: number): Promise<boolean>;
     changeRole(id: number): Promise<void>;
     updateUserInfo(userDto: UpdateUserDto): Promise<void>;

@@ -41,9 +41,18 @@ let UsersService = class UsersService {
     }
     async getUser(email) {
         const user = await this.userRepository.findOne({
-            attributes: ['email', "firstName", "lastName", "role"],
+            attributes: ['email', "firstName", "lastName", "role", "id"],
             where: {
                 email
+            }
+        });
+        return user;
+    }
+    async getUserById(id) {
+        const user = await this.userRepository.findOne({
+            attributes: ["firstName", "lastName"],
+            where: {
+                id
             }
         });
         return user;

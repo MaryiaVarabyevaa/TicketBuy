@@ -36,9 +36,19 @@ export class UsersService {
 
     async getUser(email: string) {
         const user = await this.userRepository.findOne({
-            attributes: ['email', "firstName", "lastName", "role"],
+            attributes: ['email', "firstName", "lastName", "role", "id"],
             where: {
                 email
+            }
+        })
+        return user;
+    }
+
+    async getUserById(id: number) {
+        const user = await this.userRepository.findOne({
+            attributes: ["firstName", "lastName"],
+            where: {
+                id
             }
         })
         return user;

@@ -18,4 +18,5 @@ export declare class UsersController {
     getProfile(req: any): any;
     getAll(): Promise<any[]>;
     getOneUser(req: any): Promise<import("./users.entity").User>;
+    getUserById(req: any): Promise<import("./users.entity").User>;
 }

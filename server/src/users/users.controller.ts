@@ -55,4 +55,9 @@ export class UsersController {
     getOneUser(@Request() req) {
         return this.userService.getUser(req.body.email);
     }
+
+    @Post('getUserById')
+    getUserById(@Request() req) {
+        return this.userService.getUserById(req.body.id);
+    }
 }

@@ -58,5 +58,5 @@ export class User extends Model<User, UserCreationAttrs> {
     isBlocked: boolean;
 
     @HasMany(() => Comment)
-    session: Comment[]
+    comments: Comment[]
 }

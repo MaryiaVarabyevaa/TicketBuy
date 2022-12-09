@@ -50,6 +50,9 @@ let UsersController = class UsersController {
     getOneUser(req) {
         return this.userService.getUser(req.body.email);
     }
+    getUserById(req) {
+        return this.userService.getUserById(req.body.id);
+    }
 };
 __decorate([
     (0, common_1.Post)('registration'),
@@ -108,6 +111,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "getOneUser", null);
+__decorate([
+    (0, common_1.Post)('getUserById'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "getUserById", null);
 UsersController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [users_service_1.UsersService,

@@ -40,3 +40,7 @@ export const getUser = async (email: string) => {
     return data;
 }
 
+export const getUserById = async (id: number) => {
+    const { data } = await $host.post('user/getUserById', {id});
+    return data;
+}
