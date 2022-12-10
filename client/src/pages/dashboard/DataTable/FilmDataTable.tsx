@@ -29,8 +29,8 @@ import {EditToolbar} from "./EditComponents";
 const options = {
     method: 'GET',
     headers: {
-        'X-RapidAPI-Key': '610bfd8990msh4a20ec81aeccd75p190756jsn2eba0fe43d1e',
-        'X-RapidAPI-Host': 'moviesdb5.p.rapidapi.com'
+        'X-RapidAPI-Key': '49e76c8e6fmsh57449ef1bca92a0p109cc5jsn45794d463839',
+        'X-RapidAPI-Host': 'movie-details1.p.rapidapi.com'
     }
 };
 
@@ -50,19 +50,20 @@ const FilmDataTable = () => {
 
 
     // useEffect(() => {
-    //     fetch('https://moviesdb5.p.rapidapi.com/om?t=Girls%20', options)
+    //     fetch('https://movie-details1.p.rapidapi.com/imdb_api/movie?id=tt1375670', options)
     //         .then(response => response.json())
     //         .then(response => {
-    //           const { Title, Country, Genre, Plot, Poster, Runtime, imdbRating } = response;
-    //           addFilm({
-    //               title: Title,
-    //               description: Plot,
-    //               url: Poster,
-    //               genre: Genre,
-    //               country: Country,
-    //               runtime: Runtime,
-    //               imdbRating
-    //           })
+    //             console.log(response)
+    //             const { title, rating,countries,description, runtime, image, genres } = response;
+    //             addFilm({
+    //                 title,
+    //                 description,
+    //                 url: image,
+    //                 genre: genres.join(', '),
+    //                 country: countries[0],
+    //                 runtime,
+    //                 imdbRating: String(rating)
+    //             })
     //         })
     //         .catch(err => console.error(err));
     // },[])

@@ -25,6 +25,36 @@ export class FilmsController {
     getAll() {
         return this.filmService.getAllFilms();
     }
+
+    @Get('get_by_rating_desc')
+    getAllFilmsByRatingDESC() {
+        return this.filmService.getAllFilmsByRatingDESC();
+    }
+    @Get('get_by_rating_asc')
+    getAllFilmsByRatingASC() {
+        return this.filmService.getAllFilmsByRatingASC();
+    }
+
+    @Get('get_by_country_asc')
+    getAllFilmsByCountryASC() {
+        return this.filmService.getAllFilmsByCountryASC();
+    }
+
+    @Get('get_by_country_desc')
+    getAllFilmsByCountryDESC() {
+        return this.filmService.getAllFilmsByCountryDESC();
+    }
+
+    @Get('get_by_title_asc')
+    getAllFilmsByTitleASC() {
+        return this.filmService.getAllFilmsByTitleASC();
+    }
+
+    @Get('get_by_title_desc')
+    getAllFilmsByTitleDESC() {
+        return this.filmService.getAllFilmsByTitleDESC();
+    }
+
     @Get(':id')
     getPostById(
         @Param('id', ParseIntPipe) id: number

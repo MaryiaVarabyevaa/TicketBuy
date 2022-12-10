@@ -31,6 +31,70 @@ export class FilmsService {
         return films;
     }
 
+    async getAllFilmsByRatingDESC() {
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
+            order: [
+                ['imdbRating', 'DESC']
+            ]
+        });
+        return films;
+    }
+
+    async getAllFilmsByRatingASC() {
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
+            order: [
+                ['imdbRating', 'ASC']
+            ]
+        });
+        return films;
+    }
+
+    async getAllFilmsByCountryASC() {
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
+            order: [
+                ['country', 'ASC'],
+                ['imdbRating', 'DESC']
+            ]
+        });
+        return films;
+    }
+
+    async getAllFilmsByCountryDESC() {
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
+            order: [
+                ['country', 'DESC'],
+                ['imdbRating', 'DESC'],
+            ]
+        });
+        return films;
+    }
+
+    async getAllFilmsByTitleDESC() {
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
+            order: [
+                ['title', 'DESC'],
+                ['imdbRating', 'DESC'],
+            ]
+        });
+        return films;
+    }
+
+    async getAllFilmsByTitleASC() {
+        const films = await this.filmRepository.findAll({
+            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
+            order: [
+                ['title', 'ASC'],
+                ['imdbRating', 'DESC'],
+            ]
+        });
+        return films;
+    }
+
     async getOneFilm(id: number) {
         const film = await this.filmRepository.findOne({
             attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],

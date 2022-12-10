@@ -9,9 +9,7 @@ import {
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams,
-    GridRowsProp,
-    GridToolbarContainer
+    GridRowParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
@@ -23,9 +21,6 @@ import {getAllFilms} from "../../../http/filmAPI";
 import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
 import {getAllCinema} from "../../../http/cinemaAPI";
 import {addSession, deleteSession, getAllSessions, updateSessionInfo} from "../../../http/sessionAPI";
-import {randomId} from "@mui/x-data-grid-generator";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
 import {ISession} from "../../../types/session";
 import {EditToolbar, renderEditCell} from "./EditComponents";
 import {validateDate, validatePrice, validateTime} from "./validation";
@@ -66,11 +61,11 @@ const SessionDataTable = () => {
                 }
             })
 
-            halls.map((hall: IHalls) => {
-                if (session.cinemaId === hall.cinemaId) {
-                    session['hallNumber'] = hall.number;
-                }
-            })
+            // halls.map((hall: IHalls) => {
+            //     if (session.cinemaId === hall.cinemaId) {
+            //         session['hallNumber'] = hall.number;
+            //     }
+            // })
         })
 
         cinema.map((cinemaInfo: ICinema) => {

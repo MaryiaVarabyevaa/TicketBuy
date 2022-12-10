@@ -53,7 +53,8 @@ const LoginPage = () => {
         }
         else {
            response = await registration(data);
-           dispatch(addUserAction(data));
+           // @ts-ignore
+            dispatch(addUserAction({...data, id: +response.sub}));
         }
         navigate(MAIN_ROUTE);
 

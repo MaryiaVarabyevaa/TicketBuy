@@ -2,8 +2,8 @@ import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-t
 import {Cinema} from "../cinema/cinema.entity";
 
 interface HallsCreationAttrs {
-    number: number;
     type: string;
+    cinemaId: number;
 }
 
 
@@ -22,12 +22,6 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
     id: number;
 
     @Column({
-        type: DataType.INTEGER,
-        allowNull: false
-    })
-    number: number;
-
-    @Column({
         type: DataType.STRING,
         allowNull: false,
     })
@@ -36,7 +30,6 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
     @ForeignKey(() => Cinema)
     @Column({
         type: DataType.INTEGER,
-        unique: true,
     })
     cinemaId: number;
 
