@@ -21,6 +21,15 @@ export class FilmsController {
         return this.filmService.updateFilmInfo(cinemaDto);
     }
 
+    @Post('filter_by_genre')
+    async getFilmsByGenre(@Request() req) {
+        return this.filmService.getFilmsByGenre(
+            req.body.genre,
+            req.body.title,
+            req.body.value
+        );
+    }
+
     @Get()
     getAll() {
         return this.filmService.getAllFilms();

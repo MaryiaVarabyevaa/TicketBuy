@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Film} from "./films.entity";
 import {CreateFilmsDto} from "./dto/create-films.dto";
 import {UpdateFilmDto} from "./dto/update-films.dto";
-import sequelize from "sequelize";
+import sequelize, {Op, Sequelize} from "sequelize";
 
 @Injectable()
 export class FilmsService {
@@ -90,6 +90,22 @@ export class FilmsService {
             order: [
                 ['title', 'ASC'],
                 ['imdbRating', 'DESC'],
+            ]
+        });
+        return films;
+    }
+
+    async getFilmsByGenre(genre: string[], title: string, value: string) {
+        const args = genre.join(' | ');
+        const films = await this.filmRepository.findAll({
+            where: {
+                genre: {
+                    [Op.match]: Sequelize.fn('to_tsquery', args)
+                }
+
+            },
+            order: [
+                [title, value]
             ]
         });
         return films;

@@ -27,6 +27,7 @@ exports.FilmsService = void 0;
 const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const films_entity_1 = require("./films.entity");
+const sequelize_2 = require("sequelize");
 let FilmsService = class FilmsService {
     constructor(filmRepository) {
         this.filmRepository = filmRepository;
@@ -102,6 +103,20 @@ let FilmsService = class FilmsService {
             order: [
                 ['title', 'ASC'],
                 ['imdbRating', 'DESC'],
+            ]
+        });
+        return films;
+    }
+    async getFilmsByGenre(genre, title, value) {
+        const args = genre.join(' | ');
+        const films = await this.filmRepository.findAll({
+            where: {
+                genre: {
+                    [sequelize_2.Op.match]: sequelize_2.Sequelize.fn('to_tsquery', args)
+                }
+            },
+            order: [
+                [title, value]
             ]
         });
         return films;

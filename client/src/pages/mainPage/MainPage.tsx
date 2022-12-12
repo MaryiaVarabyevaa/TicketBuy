@@ -9,9 +9,9 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {createStyles, createTheme, Theme, ThemeProvider} from '@mui/material/styles';
+import {createTheme, Theme, ThemeProvider} from '@mui/material/styles';
 import {SelectChangeEvent} from '@mui/material/Select';
-import {BottomNavigation, Chip, Rating} from "@mui/material";
+import {BottomNavigation, Checkbox, Chip, FormControl, InputLabel, OutlinedInput, Rating, Select} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
@@ -23,7 +23,7 @@ import {
     getAllFilmsByRatingDESC,
     getAllFilmsByTitleASC,
     getAllFilmsByTitleDESC,
-    getFilm
+    getFilm, getFilmsByGenre
 } from "../../http/filmAPI";
 import Footer from "../../components/Footer";
 import {useDispatch} from "react-redux";
@@ -32,6 +32,52 @@ import StarIcon from "@mui/icons-material/Star";
 import {StarBorder} from "@mui/icons-material";
 
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import MenuItem from "@mui/material/MenuItem";
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ListItemText from "@mui/material/ListItemText";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const names = [
+    'action',
+    'adventure',
+    'comedy',
+    'drama',
+    'crime',
+    'horror',
+    'fantasy',
+    'romance',
+    'thriller',
+    'animation',
+    'family',
+    'war',
+    'documentary',
+    'musical',
+    'biography',
+    'science fiction',
+    'western',
+    'post-apocalyptic'
+];
+
+function getStyles(name: string, personName: readonly string[], theme: Theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
+
 
 export const theme = createTheme({});
 
@@ -49,6 +95,20 @@ const MainPage = () => {
     const dispatch = useDispatch();
 
 
+    const [personName, setPersonName] = React.useState<string[]>([]);
+
+    const handleChangeField = async (event: SelectChangeEvent<typeof personName>) => {
+        const {
+            target: { value },
+        } = event;
+        setPersonName(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+
+       const getFilms = await getFilmsByGenre(value as string[], 'imdbRating', 'ASC');
+       setFilms(getFilms);
+    };
+
     const setIsClickedValue = (rating: boolean, country: boolean, title: boolean, date: boolean) => {
         setIsClickedRating(rating);
         setIsClickedCountry(country);
@@ -65,6 +125,7 @@ const MainPage = () => {
     useEffect(() => {
         getFilms();
     }, [])
+
     const handleChange = (event: SelectChangeEvent) => {
         setSortValue(event.target.value);
     };
@@ -165,13 +226,54 @@ const MainPage = () => {
                                         setValue(newValue);
                                     }}
                                 >
-                                    <BottomNavigationAction label="Rating" onClick={handleSortByRating}/>
-                                    <BottomNavigationAction label="Country" onClick={handleSortByCountry}/>
-                                    <BottomNavigationAction label="Title" onClick={handleSortByTitle}/>
-                                    <BottomNavigationAction label="Date"/>
+                                    <BottomNavigationAction
+                                        onClick={handleSortByRating}
+                                        icon={isClickedRating? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
+                                        label="Rating"
+                                        sx={{display: 'flex', flexDirection: 'row-reverse'}}
+                                    />
+                                    <BottomNavigationAction
+                                        label="Country"
+                                        onClick={handleSortByCountry}
+                                        icon={isClickedCountry? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
+                                        sx={{display: 'flex', flexDirection: 'row-reverse'}}
+                                    />
+                                    <BottomNavigationAction
+                                        label="Title"
+                                        onClick={handleSortByTitle}
+                                        icon={isClickedTitle? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
+                                        sx={{display: 'flex', flexDirection: 'row-reverse'}}
+                                    />
+                                    {/*<BottomNavigationAction label="Date"/>*/}
                                 </BottomNavigation>
                             </Box>
-
+                            <FormControl sx={{ m: 1, width: 300 }}>
+                                <InputLabel id="demo-multiple-checkbox-label">Genre</InputLabel>
+                                <Select
+                                    labelId="demo-multiple-checkbox-label"
+                                    id="demo-multiple-checkbox"
+                                    multiple
+                                    value={personName}
+                                    onChange={handleChangeField}
+                                    input={<OutlinedInput label="Genre" />}
+                                    renderValue={(selected) => selected.join(', ')}
+                                    MenuProps={MenuProps}
+                                >
+                                    {names.sort().map((name) => (
+                                        <MenuItem key={name} value={name}>
+                                            <Checkbox checked={personName.indexOf(name) > -1} />
+                                            <ListItemText primary={name} />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <Box>
+                                {
+                                    personName.length !== 0 && personName.map((name) => {
+                                        return <Chip label={name} key={name} variant="outlined"/>
+                                    })
+                                }
+                            </Box>
                         </Box>
                     </Container>
                 </Box>

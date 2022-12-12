@@ -23,7 +23,7 @@ import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
 import {genrePreProcessEditCellProps} from "./validation";
 import {renderEditCell} from "../CellEditInputCell";
-
+//
 // const options = {
 //     method: 'GET',
 //     headers: {
@@ -46,7 +46,7 @@ const FilmDataTable = () => {
 
 
     // useEffect(() => {
-    //     fetch('https://movie-details1.p.rapidapi.com/imdb_api/movie?id=tt1375670', options)
+    //     fetch('https://movie-details1.p.rapidapi.com/imdb_api/movie?id=tt1375671', options)
     //         .then(response => response.json())
     //         .then(response => {
     //             console.log(response)

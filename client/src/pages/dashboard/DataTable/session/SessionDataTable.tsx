@@ -3,12 +3,12 @@ import {useEffect, useState} from "react";
 import {
     DataGrid,
     GridActionsCellItem,
-    GridColumns,
+    GridColumns, GridEventListener,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams
+    GridRowParams, GridValueGetterParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
@@ -26,6 +26,8 @@ import {IFilm} from "../../../../types/film";
 import {getAllHalls} from "../../../../http/hallsAPI";
 import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
+import {hallNumberPreProcessEditCellProps} from "./validation";
+import {renderEditCell} from "../CellEditInputCell";
 
 const SessionDataTable = () => {
     const [rows, setRows] = useState<ISession[]>([]);
@@ -84,6 +86,10 @@ const SessionDataTable = () => {
         getData();
     }, [isClicked])
 
+    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
+        event.defaultMuiPrevented = true;
+    };
+
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
@@ -135,6 +141,9 @@ const SessionDataTable = () => {
         setIsClicked(!isClicked);
         return updatedRow;
     };
+    function getFullName(params: GridValueGetterParams) {
+        return `${params.row.cinemaName}`;
+    }
 
     const otherColumns: GridColumns = [
         {
@@ -152,6 +161,15 @@ const SessionDataTable = () => {
             editable: true,
             type: 'singleSelect',
             valueOptions: filmsTitle,
+        },
+        {
+            field: 'hallNumber',
+            headerName: 'Number of hall',
+            width: 170,
+            editable: true,
+            valueGetter: getFullName,
+            // type: 'singleSelect',
+            // valueOptions: cinemaName,
         },
         {
             field: 'actions',
@@ -222,7 +240,7 @@ const SessionDataTable = () => {
                 {
                     rows && <DataGrid
                         rows={rows}
-                        columns={otherColumns.slice(0, 2).concat(columns, otherColumns[2])}
+                        columns={otherColumns.slice(0, 3).concat(columns, otherColumns[3])}
                         editMode="row"
                         processRowUpdate={processRowUpdate}
                         rowModesModel={rowModesModel}

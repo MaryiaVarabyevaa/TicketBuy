@@ -37,6 +37,11 @@ export const getAllFilmsByTitleDESC = async () => {
     return data;
 }
 
+export const getFilmsByGenre = async (genre: string[], title: string, value: string) => {
+    const { data } = await $host.post('film/filter_by_genre', {genre, title, value});
+    return data;
+}
+
 export const deleteFilm = async (id: GridRowId) => {
     const { data } = await $host.post('film/delete', {id});
     return data;

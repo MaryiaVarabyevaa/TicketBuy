@@ -8,14 +8,6 @@ import {renderEditCell} from "../CellEditInputCell";
 
 export const columns: GridColumns = [
     {
-        field: 'hallNumber',
-        headerName: 'Number of hall',
-        width: 170,
-        editable: true,
-        preProcessEditCellProps: hallNumberPreProcessEditCellProps,
-        renderEditCell: renderEditCell,
-    },
-    {
         field: 'price',
         headerName: 'Price',
         width: 100,
