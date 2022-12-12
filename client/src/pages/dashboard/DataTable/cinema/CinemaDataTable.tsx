@@ -60,6 +60,11 @@ const CinemaDataTable = () => {
 
     }, [isClicked])
 
+    useEffect(() => {
+        getCinema();
+
+    }, [])
+
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });

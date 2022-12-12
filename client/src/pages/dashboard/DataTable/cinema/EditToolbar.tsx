@@ -1,15 +1,16 @@
-import {useState} from "react";
 import * as React from "react";
+import {useState} from "react";
 import {MuiChipsInput, MuiChipsInputChip} from "mui-chips-input";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {ICinema} from "../../../../types/cinema";
 import {addCinema} from "../../../../http/cinemaAPI";
 import {addHalls} from "../../../../http/hallsAPI";
-import {GridToolbarContainer} from "@mui/x-data-grid";
+import {GridRowModesModel, GridRowsProp, GridToolbarContainer} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import {Box, Grid, Modal, TextField} from "@mui/material";
 import Stack from "@mui/material/Stack";
+import {validation, validationChip, validationNumber, validationStreet} from "./validation";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -26,26 +27,32 @@ const style = {
     alignItems: 'center',
 };
 
-export const EditToolbar = () => {
+interface EditToolbarProps {
+    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+    setRowModesModel: (
+        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
+    ) => void;
+}
+
+export const EditToolbar = (props: EditToolbarProps) => {
     const [isClicked, setIsClicked] = useState(false);
     const [open, setOpen] = React.useState(false);
-    // const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const [value, setValue] = React.useState<MuiChipsInputChip[]>([])
 
-
     const { handleSubmit, control } = useForm<any>({
-        mode: 'onSubmit',
+        mode: 'onChange',
         defaultValues: {
             name: '',
             city: '',
             street: '',
+            type: [],
             buildingNumber: 1,
         }
     });
     const {errors} = useFormState({
         control
     });
+    const handleClose = () => setOpen(false);
 
     const handleClick = () => {
         setIsClicked(!isClicked);
@@ -53,10 +60,11 @@ export const EditToolbar = () => {
     }
 
     const onSubmit: SubmitHandler<ICinema> = async (data)=> {
-        const {buildingNumber, ...others} = data;
+        const {buildingNumber, type,...others} = data;
+
         const cinema = await addCinema({...others, buildingNumber: +buildingNumber});
         const halls = await addHalls({
-            type: value,
+            type: type as string[],
             cinemaId: cinema.id
         });
         setOpen(false)
@@ -85,15 +93,6 @@ export const EditToolbar = () => {
             >
                 <Box
                     sx={style}
-                    // sx={{
-                    //     paddingTop: 8,
-                    //     paddingBottom: 8,
-                    //     paddingLeft: 2,
-                    //     paddingRight: 2,
-                    //     display: 'flex',
-                    //     flexDirection: 'column',
-                    //     alignItems: 'center',
-                    // }}
                 >
                     <Box component="form"
                          onSubmit={handleSubmit(onSubmit)}
@@ -104,7 +103,7 @@ export const EditToolbar = () => {
                                 <Controller
                                     control={ control }
                                     name='name'
-                                    // rules={ firstNameValidation }
+                                    rules={validation}
                                     render={({
                                                  field: {onChange, value}
                                              }) => (
@@ -115,20 +114,45 @@ export const EditToolbar = () => {
                                             autoFocus
                                             onChange={onChange}
                                             value={value}
-                                            // error={!!errors.firstName?.message}
-                                            // helperText={ errors.firstName?.message }
+                                            error={!!errors.name?.message}
+                                            helperText={ errors.name?.message as string }
                                         />
                                     )}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <MuiChipsInput label="Type of halls" fullWidth value={value} onChange={handleChange} />
+                                <Controller
+                                    name="type"
+                                    control={ control }
+                                    rules={ validationChip }
+                                    render={({
+                                                 field: {onChange, value},
+                                             }) =>  (
+                                        <MuiChipsInput
+                                            label="Type of halls"
+                                            id='type'
+                                            fullWidth
+                                            value={value}
+                                            hideClearAll
+                                            onChange={onChange}
+                                            error={!!errors.type?.message}
+                                            helperText={ errors.type?.message as string }
+                                            validate={(chipValue) => {
+                                                return {
+                                                    isError: !(chipValue.match(/^[a-zA-Z ]+$/)),
+                                                    textError: 'The value can contain only latin alphabet'
+                                                }
+                                            }}
+                                        />
+                                    )}
+                                />
+
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Controller
                                     control={ control }
                                     name='city'
-                                    // rules={ firstNameValidation }
+                                    rules={ validation }
                                     render={({
                                                  field: {onChange, value}
                                              }) => (
@@ -139,8 +163,8 @@ export const EditToolbar = () => {
                                             autoFocus
                                             onChange={onChange}
                                             value={value}
-                                            // error={!!errors.firstName?.message}
-                                            // helperText={ errors.firstName?.message }
+                                            error={!!errors.city?.message}
+                                            helperText={ errors.city?.message as string }
                                         />
                                     )}
                                 />
@@ -149,7 +173,7 @@ export const EditToolbar = () => {
                                 <Controller
                                     control={ control }
                                     name='street'
-                                    // rules={ firstNameValidation }
+                                    rules={ validationStreet }
                                     render={({
                                                  field: {onChange, value}
                                              }) => (
@@ -160,8 +184,8 @@ export const EditToolbar = () => {
                                             autoFocus
                                             onChange={onChange}
                                             value={value}
-                                            // error={!!errors.firstName?.message}
-                                            // helperText={ errors.firstName?.message }
+                                            error={!!errors.street?.message}
+                                            helperText={ errors.street?.message as string}
                                         />
                                     )}
                                 />
@@ -170,7 +194,7 @@ export const EditToolbar = () => {
                                 <Controller
                                     control={ control }
                                     name='buildingNumber'
-                                    // rules={ firstNameValidation }
+                                    rules={ validationNumber }
                                     render={({
                                                  field: {onChange, value}
                                              }) => (
@@ -181,8 +205,8 @@ export const EditToolbar = () => {
                                             autoFocus
                                             onChange={onChange}
                                             value={value}
-                                            // error={!!errors.firstName?.message}
-                                            // helperText={ errors.firstName?.message }
+                                            error={!!errors.buildingNumber?.message}
+                                            helperText={ errors.buildingNumber?.message as string }
                                         />
                                     )}
                                 />

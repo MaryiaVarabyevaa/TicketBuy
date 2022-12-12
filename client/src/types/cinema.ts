@@ -6,6 +6,7 @@ export interface ICinema {
     buildingNumber: number;
     number?: number;
     types?: string[];
+    type?: string[];
 }
 
 export interface INewCinema extends ICinema{

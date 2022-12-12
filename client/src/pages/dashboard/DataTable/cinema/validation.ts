@@ -62,7 +62,7 @@ const validateBuildingNumber = (buildingNumber: string) => {
     if (buildingNumber.length === 0) {
         return REQUIRED_FIELD;
     }
-    if(!buildingNumber.match(/^[a-zA-Z0-9 /]+$/)) {
+    if(!buildingNumber.match(/^[a-zA-Z0-9 .,-]+$/)) {
         return CORRECT_VALUE;
     }
 }
@@ -71,3 +71,41 @@ export const buildingNumberPreProcessEditCellProps =  (params: GridPreProcessEdi
     const errorMessage = validateBuildingNumber(params.props.value!.toString());
     return { ...params.props, error: errorMessage };
 };
+
+export const validation = {
+    required: REQUIRED_FIELD,
+    validate: (value: string) => {
+        if(!value.match(/^[a-zA-Z ]+$/)) {
+            return 'This field can contain only latin alphabet';
+        }
+
+        return true;
+    }
+}
+
+export const validationStreet = {
+    required: REQUIRED_FIELD,
+    validate: (value: string) => {
+        if(!value.match(/^[a-zA-Z0-9 .,-]+$/)) {
+            return CORRECT_VALUE;
+        }
+
+        return true;
+    }
+}
+
+export const validationNumber = {
+    required: REQUIRED_FIELD,
+    validate: (value: number) => {
+        const str = String(value);
+        if(!str.match(/^[a-zA-Z0-9 ]+$/)) {
+            return CORRECT_VALUE;
+        }
+
+        return true;
+    }
+}
+
+export const validationChip = {
+    required: REQUIRED_FIELD
+}
