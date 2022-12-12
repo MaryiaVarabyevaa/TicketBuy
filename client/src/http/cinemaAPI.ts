@@ -12,6 +12,11 @@ export const deleteCinema = async (id: GridRowId) => {
     return data;
 }
 
+export const getCinemaId = async (cinema: ICinema) => {
+    const { data } = await $host.post('cinema/get_cinema_id', cinema);
+    return data;
+}
+
 export const updateCinemaInfo = async (cinema: ICinema) => {
     const { data } = await $host.post('cinema/update', cinema);
     return data;

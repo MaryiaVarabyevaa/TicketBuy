@@ -1,5 +1,5 @@
 import {$host} from "./service";
-import {IHalls} from "../types/halls";
+import {IHalls, IUpdateHallInfo} from "../types/halls";
 import {GridRowId} from "@mui/x-data-grid";
 
 export const getAllHalls = async () => {
@@ -12,12 +12,18 @@ export const addHalls = async (halls: IHalls) => {
     return data;
 }
 
-export const updateHallInfo = async (hall: IHalls) => {
+export const updateHallInfo = async (hall: IUpdateHallInfo) => {
     const { data } = await $host.post('halls/update', hall);
     return data;
 }
 
-export const deleteHall = async (id: GridRowId) => {
-    const { data } = await $host.post('halls/delete', {id});
+export const deleteHall = async (cinemaId: GridRowId, hallNumber: number) => {
+    const { data } = await $host.post('halls/delete_hall', {cinemaId, hallNumber});
+    return data;
+}
+
+
+export const deleteAllHalls = async (cinemaId: GridRowId) => {
+    const { data } = await $host.post('halls/delete', {cinemaId});
     return data;
 }

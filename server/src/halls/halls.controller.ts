@@ -18,10 +18,14 @@ export class HallsController {
     async updateUserInfo(@Body() hallDto: UpdateHallDto) {
         return this.hallsService.updateHallInfo(hallDto);
     }
+    @Post('delete_hall')
+    deleteHall(@Request() req) {
+        return this.hallsService.deleteHall(req.body.cinemaId, req.body.hallNumber);
+    }
 
     @Post('delete')
-    deleteCinema(@Request() req) {
-        return this.hallsService.deleteHall(req.body.id);
+    deleteAllHalls(@Request() req) {
+        return this.hallsService.deleteAllHalls(req.body.cinemaId);
     }
 
     @Get()

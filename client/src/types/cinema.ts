@@ -5,7 +5,7 @@ export interface ICinema {
     street: string;
     buildingNumber: number;
     number?: number;
-    type?: string;
+    types?: string[];
 }
 
 export interface INewCinema extends ICinema{

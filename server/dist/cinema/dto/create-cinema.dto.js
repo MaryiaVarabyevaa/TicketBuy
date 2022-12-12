@@ -54,7 +54,7 @@ __decorate([
         message: 'Required to fill in'
     }),
     (0, class_validator_1.IsNumber)({}, {
-        message: 'Number of building must be a string'
+        message: 'Number of building must be a number'
     }),
     __metadata("design:type", Number)
 ], CreateCinemaDto.prototype, "buildingNumber", void 0);

@@ -11,16 +11,16 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import UserDataTable from "./DataTable/UserDataTable";
-import CinemaDataTable from "./DataTable/CinemaDataTable";
-import FilmDataTable from "./DataTable/FilmDataTable";
+import UserDataTable from "./DataTable/user/UserDataTable";
+import CinemaDataTable from "./DataTable/cinema/CinemaDataTable";
+import FilmDataTable from "./DataTable/film/FilmDataTable";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import MovieIcon from '@mui/icons-material/Movie';
 import CameraOutdoorIcon from '@mui/icons-material/CameraOutdoor';
-import SessionDataTable from "./DataTable/SessionDataTable";
+import SessionDataTable from "./DataTable/session/SessionDataTable";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import NavBar from "../../components/NavBar";
-import {Drawer, DrawerHeader} from "./DataTable/Drawer";
+import {Drawer, DrawerHeader} from "./Drawer";
 
 
 export default function DashBoard() {

@@ -4,15 +4,14 @@ import {
     DataGrid,
     GridActionsCellItem,
     gridClasses,
-    GridColumns,
-    GridPreProcessEditCellProps,
+    GridColumns, GridPreProcessEditCellProps,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
     GridRowParams
 } from "@mui/x-data-grid";
-import {blockUser, changeRole, getAllUsers, updateUserInfo} from "../../../http/userAPI";
+import {blockUser, changeRole, getAllUsers, updateUserInfo} from "../../../../http/userAPI";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
@@ -22,10 +21,11 @@ import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
 import {Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
-import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {renderEditCell} from "./EditComponents";
-import {validateEmail, validateName} from "./validation";
-import {IUserDate} from "../../../types/user";
+import {handleRowEditStart, handleRowEditStop} from "../handleFunctions";
+import {IUserDate} from "../../../../types/user";
+import {columns} from "./columns";
+import {validateEmail} from "./validation";
+import {renderEditCell} from "../CellEditInputCell";
 
 const UserDataTable = () => {
     const [rows, setRows] = useState<IUserDate[]>([]);
@@ -39,28 +39,16 @@ const UserDataTable = () => {
         const users = await getAllUsers();
         setRows(users);
     }
+
     useEffect(() => {
         getUsers();
 
     }, [isClicked])
 
-
     const emailPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
         const errorMessage = validateEmail(rows ,params.props.value!.toString(), +params.id);
         return { ...params.props, error: errorMessage };
     };
-
-
-    const firstNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'First name');
-        return { ...params.props, error: errorMessage };
-    };
-
-    const lastNamePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Last name');
-        return { ...params.props, error: errorMessage };
-    };
-
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -95,24 +83,7 @@ const UserDataTable = () => {
         return updatedRow;
     };
 
-    const columns: GridColumns = [
-        { field: 'id', headerName: 'ID', width: 90 },
-        {
-            field: 'firstName',
-            headerName: 'First name',
-            width: 210,
-            editable: true,
-            preProcessEditCellProps: firstNamePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'lastName',
-            headerName: 'Last name',
-            width: 210,
-            editable: true,
-            preProcessEditCellProps: lastNamePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
+    const otherColumns: GridColumns = [
         {
             field: 'email',
             headerName: 'Email',
@@ -120,19 +91,6 @@ const UserDataTable = () => {
             editable: true,
             preProcessEditCellProps: emailPreProcessEditCellProps,
             renderEditCell: renderEditCell,
-        },
-        {
-            field: 'role',
-            headerName: 'Role',
-            sortable: false,
-            width: 130,
-        },
-        {
-            field: 'isBlocked',
-            headerName: 'Block',
-            type: 'boolean',
-            sortable: false,
-            width: 130,
         },
         {
             field: 'actions',
@@ -212,7 +170,7 @@ const UserDataTable = () => {
                 {
                     rows && <DataGrid
                         rows={rows}
-                        columns={columns}
+                        columns={columns.concat(otherColumns)}
                         editMode="row"
                         processRowUpdate={processRowUpdate}
                         rowModesModel={rowModesModel}

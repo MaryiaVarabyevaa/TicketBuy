@@ -1,15 +1,8 @@
-import {
-    GridEditInputCell,
-    GridRenderEditCellParams,
-    GridRowModes,
-    GridRowModesModel,
-    GridRowsProp, GridToolbarContainer
-} from "@mui/x-data-grid";
-import * as React from "react";
-import {StyledTooltip} from "./StyledComponents";
 import {randomId} from "@mui/x-data-grid-generator";
+import {GridRowModes, GridRowModesModel, GridRowsProp, GridToolbarContainer} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import * as React from "react";
 
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -18,28 +11,24 @@ interface EditToolbarProps {
     ) => void;
 }
 
-export function CellEditInputCell(props: GridRenderEditCellParams) {
-    const { error } = props;
-
-    return (
-        <StyledTooltip open={!!error} title={error}>
-            <GridEditInputCell {...props} />
-        </ StyledTooltip >
-    );
-}
-export function renderEditCell(params: GridRenderEditCellParams) {
-    return <CellEditInputCell {...params} />;
-}
-
 export function EditToolbar(props: EditToolbarProps) {
     const { setRows, setRowModesModel } = props;
 
     const handleClick = () => {
         const id = randomId();
-        setRows((oldRows) => [...oldRows, { id ,name: '', type:'', city: '', street: '', buildingNumber: '', isNew: true }]);
+        setRows((oldRows) => [...oldRows, {
+            id,
+            title: '',
+            description:'',
+            url: '',
+            genre: '',
+            country: '',
+            runtime: '',
+            imdbRating: '',
+            isNew: true }]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'title' },
         }));
     };
 

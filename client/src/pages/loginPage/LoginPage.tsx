@@ -57,7 +57,6 @@ const LoginPage = () => {
             dispatch(addUserAction({...data, id: +response.sub}));
         }
         navigate(MAIN_ROUTE);
-
     }
 
     const onClick = () => {

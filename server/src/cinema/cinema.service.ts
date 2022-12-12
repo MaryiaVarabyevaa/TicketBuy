@@ -40,6 +40,15 @@ export class CinemaService {
         return cinema;
     }
 
+    async getCinemaId(cinemaDto: CreateCinemaDto) {
+        const cinema = await this.cinemaRepository.findOne({
+            where: {
+                ...cinemaDto
+            }
+        })
+        return cinema.id;
+    }
+
     async deleteCinema(id: number) {
         const cinema = await this.cinemaRepository.findOne({where: {id}});
         if (cinema) {

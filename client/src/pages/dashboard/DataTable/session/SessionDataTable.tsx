@@ -4,7 +4,6 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridPreProcessEditCellProps,
     GridRowId,
     GridRowModel,
     GridRowModes,
@@ -17,17 +16,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {getAllFilms} from "../../../http/filmAPI";
-import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {getAllCinema} from "../../../http/cinemaAPI";
-import {addSession, deleteSession, getAllSessions, updateSessionInfo} from "../../../http/sessionAPI";
-import {ISession} from "../../../types/session";
-import {EditToolbar, renderEditCell} from "./EditComponents";
-import {validateDate, validatePrice, validateTime} from "./validation";
-import {ICinema} from "../../../types/cinema";
-import {IFilm} from "../../../types/film";
-import {getAllHalls} from "../../../http/hallsAPI";
-import {IHalls} from "../../../types/halls";
+import {getAllFilms} from "../../../../http/filmAPI";
+import {handleRowEditStart, handleRowEditStop} from "../handleFunctions";
+import {getAllCinema} from "../../../../http/cinemaAPI";
+import {addSession, deleteSession, getAllSessions, updateSessionInfo} from "../../../../http/sessionAPI";
+import {ISession} from "../../../../types/session";
+import {ICinema} from "../../../../types/cinema";
+import {IFilm} from "../../../../types/film";
+import {getAllHalls} from "../../../../http/hallsAPI";
+import {columns} from "./columns";
+import {EditToolbar} from "./EditToolbar";
 
 const SessionDataTable = () => {
     const [rows, setRows] = useState<ISession[]>([]);
@@ -86,21 +84,6 @@ const SessionDataTable = () => {
         getData();
     }, [isClicked])
 
-console.log(rows);
-    const datePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateDate(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
-    const timePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateTime(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
-    const pricePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validatePrice(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
-
-
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
@@ -153,7 +136,7 @@ console.log(rows);
         return updatedRow;
     };
 
-    const columns: GridColumns = [
+    const otherColumns: GridColumns = [
         {
             field: 'cinemaName',
             headerName: 'Cinema',
@@ -169,38 +152,6 @@ console.log(rows);
             editable: true,
             type: 'singleSelect',
             valueOptions: filmsTitle,
-        },
-        {
-            field: 'price',
-            headerName: 'Price',
-            width: 100,
-            editable: true,
-            preProcessEditCellProps: pricePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'time',
-            headerName: 'Time',
-            width: 170,
-            editable: true,
-            preProcessEditCellProps: timePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'date',
-            headerName: 'Date',
-            width: 170,
-            editable: true,
-            preProcessEditCellProps: datePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'hallNumber',
-            headerName: 'Number of hall',
-            width: 170,
-            editable: true,
-            // preProcessEditCellProps: datePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
         },
         {
             field: 'actions',
@@ -271,7 +222,7 @@ console.log(rows);
                 {
                     rows && <DataGrid
                         rows={rows}
-                        columns={columns}
+                        columns={otherColumns.slice(0, 2).concat(columns, otherColumns[2])}
                         editMode="row"
                         processRowUpdate={processRowUpdate}
                         rowModesModel={rowModesModel}

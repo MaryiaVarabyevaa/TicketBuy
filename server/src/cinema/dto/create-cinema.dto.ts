@@ -38,7 +38,7 @@ export class CreateCinemaDto {
         message: 'Required to fill in'
     })
     @IsNumber({}, {
-        message: 'Number of building must be a string'
+        message: 'Number of building must be a number'
     })
     readonly buildingNumber: number;
 }

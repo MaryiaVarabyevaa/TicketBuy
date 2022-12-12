@@ -16,6 +16,11 @@ export class CinemaController {
         return this.cinemaService.getAllCinema();
     }
 
+    @Post('get_cinema_id')
+    getCinemaID(@Body() cinemaDto: CreateCinemaDto) {
+        return this.cinemaService.getCinemaId(cinemaDto);
+    }
+
     @Post('delete')
     deleteCinema(@Request() req) {
         return this.cinemaService.deleteCinema(req.body.id);

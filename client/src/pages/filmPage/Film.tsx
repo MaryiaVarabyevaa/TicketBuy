@@ -13,11 +13,18 @@ import {StarBorder} from "@mui/icons-material";
 import {useParams} from "react-router-dom";
 import {getFilm} from "../../http/filmAPI";
 import Reviews from "./Reviews";
+import {useSelector} from "react-redux";
+import Tooltip from "@mui/material/Tooltip";
+
+interface IRootState {
+    user: any
+}
 
 const Film = () => {
     const [film, setFilm] = useState<any>({});
     const [newRating, setNewRating] = useState<number | null>(0);
     const [listOfGenre, setListOfGenre] = useState<string[]>([]);
+    const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const {id} = useParams();
 
     const getFilmInfo = async () => {
@@ -108,17 +115,20 @@ const Film = () => {
                                         <Typography variant="h6" gutterBottom>
                                             Your rating
                                         </Typography>
-                                        <Box sx={{display: 'flex'}}>
-                                            <Rating
-                                                name="simple-controlled"
-                                                value={newRating}
-                                                max={10}
-                                                onChange={(event, newValue) => {
-                                                    setNewRating(newValue);
-                                                }}
-                                            />
-                                            <Box sx={{ ml: 2, alignSelf: 'center' }}>{newRating}</Box>
-                                        </Box>
+                                        <Tooltip title={isAuth? 'Put your rating' : 'Register to rate'}>
+                                            <Box sx={{display: 'flex'}}>
+                                                <Rating
+                                                    name="simple-controlled"
+                                                    value={newRating}
+                                                    readOnly={isAuth? false : true}
+                                                    max={10}
+                                                    onChange={(event, newValue) => {
+                                                        setNewRating(newValue);
+                                                    }}
+                                                />
+                                                <Box sx={{ ml: 2, alignSelf: 'center' }}>{newRating}</Box>
+                                            </Box>
+                                        </Tooltip>
                                     </Box>
                                     <Box
                                         sx={{display: 'flex', flexDirection: 'column'}}

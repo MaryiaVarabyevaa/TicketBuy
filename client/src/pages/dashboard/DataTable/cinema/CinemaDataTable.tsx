@@ -4,7 +4,7 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridPreProcessEditCellProps,
+    GridRenderCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
@@ -15,17 +15,17 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import {Typography} from "@mui/material";
-import {addCinema, deleteCinema, getAllCinema, updateCinemaInfo} from "../../../http/cinemaAPI";
+import {Chip, Typography} from "@mui/material";
+import {deleteCinema, getAllCinema, updateCinemaInfo} from "../../../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {ICinema, INewCinema} from "../../../types/cinema";
-import {EditToolbar, renderEditCell} from "./EditComponents";
-import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validateNumber, validateName, validateStreet} from "./validation";
-import {addHalls, deleteHall, getAllHalls, updateHallInfo} from "../../../http/hallsAPI";
-import {IHalls} from "../../../types/halls";
-import {IFullReviewInfo} from "../../../types/review";
-import {getUserById} from "../../../http/userAPI";
+import {ICinema, INewCinema} from "../../../../types/cinema";
+import {handleRowEditStart, handleRowEditStop} from "../handleFunctions";
+import {deleteAllHalls, getAllHalls} from "../../../../http/hallsAPI";
+import {IHalls} from "../../../../types/halls";
+import {renderChipEditInputCell} from "./ChipEditInputCell";
+import {typePreProcessEditCellProps} from "./validation";
+import {columns} from "./columns";
+import {EditToolbar} from "./EditToolbar";
 
 
 const CinemaDataTable = () => {
@@ -38,15 +38,21 @@ const CinemaDataTable = () => {
         const cinema = await getAllCinema();
         const halls = await getAllHalls();
 
-        halls.map((hall: IHalls) => {
-            cinema.map((item: ICinema) => {
-                if (item.id === hall.cinemaId) {
-                    item['number'] = hall.number;
-                    item['type'] = hall.type;
+        cinema.map((item: ICinema) => {
+            halls.map((hall: IHalls) => {
+                const {cinemaId, type} = hall;
+                if (item.id === cinemaId) {
+                    if ('types' in item) {
+                        const arr= item["types"];
+                        // @ts-ignore
+                        item['types'] = [...arr, type]
+                    } else {
+                        // @ts-ignore
+                        item['types'] = [type];
+                    }
                 }
             })
         })
-
         setRows(cinema);
     }
     useEffect(() => {
@@ -54,25 +60,6 @@ const CinemaDataTable = () => {
 
     }, [isClicked])
 
-    const namePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Cinema name');
-        return { ...params.props, error: errorMessage };
-    };
-
-    const typePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateName(params.props.value!.toString(), 'Type of halls');
-        return { ...params.props, error: errorMessage };
-    };
-
-    const streetPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateStreet(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
-
-    const numberPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateNumber(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -86,7 +73,7 @@ const CinemaDataTable = () => {
     const handleDeleteClick = (id: GridRowId) => async () => {
        setIsClicked(!isClicked);
        await deleteCinema(id);
-       await deleteHall(id);
+       await deleteAllHalls(id);
     };
 
 
@@ -103,68 +90,33 @@ const CinemaDataTable = () => {
 
     const processRowUpdate = async (newRow: GridRowModel) => {
         const updatedRow = { ...newRow };
-        const {  id, name, type, number, city, street, buildingNumber }  = updatedRow;
+        const {  id, name, city, street, buildingNumber }  = updatedRow;
 
-        if ('isNew' in updatedRow) {
-          const cinema = await addCinema({ name, city, street, buildingNumber: +buildingNumber });
-          const halls = await addHalls({number: +number, type, cinemaId: +cinema.id })
-        } else {
-            await updateCinemaInfo({ id, name, city, street, buildingNumber: +buildingNumber });
-            // await updateHallInfo({cinemaId : id, number: +number, type});
-        }
+        await updateCinemaInfo({ id, name, city, street, buildingNumber: +buildingNumber });
+
         setIsClicked(!isClicked);
         return updatedRow;
     };
 
-    const columns: GridColumns = [
+    const otherColumns: GridColumns = [
         {
-            field: 'name',
-            headerName: 'Name',
-            width: 130,
-            editable: true,
-            // preProcessEditCellProps: namePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'number',
-            headerName: 'Number of halls',
-            width: 130,
-            editable: true,
-            // preProcessEditCellProps: numberPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'type',
+            field: 'types',
             headerName: 'Type of halls',
-            width: 250,
+            width: 500,
             editable: true,
-
-            // preProcessEditCellProps: typePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'city',
-            headerName: 'City',
-            width: 200,
-            editable: true,
-            // preProcessEditCellProps: typePreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'street',
-            headerName: 'Street',
-            width: 250,
-            editable: true,
-            // preProcessEditCellProps: streetPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'buildingNumber',
-            headerName: 'Number building',
-            width: 150,
-            editable: true,
-            // preProcessEditCellProps: numberPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
+            renderCell: (params: GridRenderCellParams) => {
+                const types = params.value;
+                return types.map((type: string, index: number) => {
+                    return <Chip
+                        key={index}
+                        label={type}
+                        variant="outlined"
+                    />
+                })
+            },
+            preProcessEditCellProps: typePreProcessEditCellProps,
+            //todo: добавить поле с эффектом
+            renderEditCell: renderChipEditInputCell,
         },
         {
             field: 'actions',
@@ -235,7 +187,7 @@ const CinemaDataTable = () => {
                 {
                     rows && <DataGrid
                         rows={rows}
-                        columns={columns}
+                        columns={columns.concat(otherColumns)}
                         editMode="row"
                         processRowUpdate={processRowUpdate}
                         rowModesModel={rowModesModel}
@@ -252,7 +204,7 @@ const CinemaDataTable = () => {
                         experimentalFeatures={{ newEditingApi: true }}
                         initialState={{
                             sorting: {
-                                sortModel: [{ field: 'id', sort: 'asc' }],
+                                sortModel: [{ field: 'name', sort: 'asc' }],
                             },
                         }}
                     />

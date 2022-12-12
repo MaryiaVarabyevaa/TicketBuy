@@ -3,6 +3,7 @@ import {Cinema} from "../cinema/cinema.entity";
 
 interface HallsCreationAttrs {
     type: string;
+    hallNumber: number;
     cinemaId: number;
 }
 
@@ -20,6 +21,12 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
         primaryKey: true
     })
     id: number;
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+    })
+    hallNumber: number;
 
     @Column({
         type: DataType.STRING,

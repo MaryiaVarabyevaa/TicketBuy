@@ -1,21 +1,13 @@
-import {IsNotEmpty, IsNumber, IsString, Matches} from "class-validator";
+import {IsArray, IsNotEmpty, IsNumber, IsString, Matches} from "class-validator";
 
 export class CreateHallsDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @IsNumber( {}, {
-        message: 'Number field must be a number'
+    @IsArray({
+        message: 'Types must be an array'
     })
-    readonly number: number;
-
-    @IsNotEmpty({
-        message: 'Required to fill in'
-    })
-    @IsString({
-        message: 'Type must be a string'
-    })
-    readonly type: string;
+    readonly type: string[];
 
     @IsNotEmpty({
         message: 'Required to fill in'

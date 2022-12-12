@@ -55,6 +55,12 @@ let CinemaService = class CinemaService {
         });
         return cinema;
     }
+    async getCinemaId(cinemaDto) {
+        const cinema = await this.cinemaRepository.findOne({
+            where: Object.assign({}, cinemaDto)
+        });
+        return cinema.id;
+    }
     async deleteCinema(id) {
         const cinema = await this.cinemaRepository.findOne({ where: { id } });
         if (cinema) {

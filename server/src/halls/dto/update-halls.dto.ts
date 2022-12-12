@@ -16,7 +16,7 @@ export class UpdateHallDto {
     @IsNumber( {}, {
         message: 'Number field must be a number'
     })
-    readonly number: number;
+    readonly hallNumber: number;
 
     @IsNotEmpty({
         message: 'Required to fill in'

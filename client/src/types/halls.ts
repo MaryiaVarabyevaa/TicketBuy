@@ -1,6 +1,14 @@
 export interface IHalls {
     id?: number;
     cinemaId: number;
-    number: number;
+    hallNumber?: number;
+    type: string[];
+    // type?: string;
+}
+
+export interface IUpdateHallInfo {
+    cinemaId: number;
+    hallNumber?: number;
     type: string;
+    // type?: string;
 }

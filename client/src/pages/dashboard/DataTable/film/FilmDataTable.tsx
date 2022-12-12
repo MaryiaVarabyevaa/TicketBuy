@@ -4,9 +4,6 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridEditInputCell,
-    GridPreProcessEditCellProps,
-    GridRenderEditCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
@@ -18,29 +15,26 @@ import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
-import {StyledTooltip} from './StyledComponents';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../http/filmAPI";
-import {IFilm, INewFilm} from "../../../types/film";
-import {handleRowEditStart, handleRowEditStop} from "./handleFunctions";
-import {validateLength, validateTitle} from "./validation";
-import {EditToolbar} from "./EditComponents";
+import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../../http/filmAPI";
+import {IFilm, INewFilm} from "../../../../types/film";
+import {handleRowEditStart, handleRowEditStop} from "../handleFunctions";
+import {columns} from "./columns";
+import {EditToolbar} from "./EditToolbar";
 
-const options = {
-    method: 'GET',
-    headers: {
-        'X-RapidAPI-Key': '49e76c8e6fmsh57449ef1bca92a0p109cc5jsn45794d463839',
-        'X-RapidAPI-Host': 'movie-details1.p.rapidapi.com'
-    }
-};
+// const options = {
+//     method: 'GET',
+//     headers: {
+//         'X-RapidAPI-Key': '49e76c8e6fmsh57449ef1bca92a0p109cc5jsn45794d463839',
+//         'X-RapidAPI-Host': 'movie-details1.p.rapidapi.com'
+//     }
+// };
 
 const FilmDataTable = () => {
     const [rows, setRows] = useState<IFilm[]>([]);
     const [isClicked, setIsClicked] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
-
-    const [films, setFilms] = useState<any[]>([]);
 
     const getFilms = async () => {
         const films = await getAllFilms();
@@ -72,35 +66,6 @@ const FilmDataTable = () => {
         getFilms()
     }, [isClicked])
 
-    function EditInputCell(props: GridRenderEditCellParams) {
-        const { error } = props;
-
-        return (
-            <StyledTooltip open={!!error} title={error}>
-                <GridEditInputCell {...props} />
-            </ StyledTooltip >
-        );
-    }
-
-    function renderEditCell(params: GridRenderEditCellParams) {
-        return <EditInputCell {...params} />;
-    }
-
-    const titlePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateTitle(params.props.value!.toString());
-        return { ...params.props, error: errorMessage }
-    };
-
-
-    const descriptionPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateLength(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
-
-    const urlPreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
-        const errorMessage = validateLength(params.props.value!.toString());
-        return { ...params.props, error: errorMessage };
-    };
 
     const handleEditClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -140,63 +105,7 @@ const FilmDataTable = () => {
         return updatedRow;
     };
 
-    const columns: GridColumns = [
-        {
-            field: 'title',
-            headerName: 'Title',
-            width: 200,
-            editable: true,
-            preProcessEditCellProps: titlePreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'description',
-            headerName: 'Description',
-            width: 300,
-            editable: true,
-            preProcessEditCellProps: descriptionPreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'url',
-            headerName: 'Url',
-            width: 200,
-            editable: true,
-            preProcessEditCellProps: urlPreProcessEditCellProps,
-            renderEditCell: renderEditCell,
-        },
-        {
-            field: 'genre',
-            headerName: 'Genre',
-            width: 200,
-            editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'country',
-            headerName: 'Country',
-            width: 150,
-            editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'runtime',
-            headerName: 'Runtime',
-            width: 100,
-            editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
-        {
-            field: 'imdbRating',
-            headerName: 'IMDb Rating',
-            width: 100,
-            editable: true,
-            // preProcessEditCellProps: urlPreProcessEditCellProps,
-            // renderEditCell: renderEditCell,
-        },
+    const actionColumn: GridColumns = [
         {
             field: 'actions',
             type: 'actions',
@@ -266,7 +175,7 @@ const FilmDataTable = () => {
                 {
                     rows && <DataGrid
                         rows={rows}
-                        columns={columns}
+                        columns={columns.concat(actionColumn)}
                         editMode="row"
                         processRowUpdate={processRowUpdate}
                         rowModesModel={rowModesModel}
