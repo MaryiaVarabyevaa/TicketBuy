@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {
     DataGrid,
     GridActionsCellItem,
-    GridColumns,
+    GridColumns, GridRenderCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
@@ -14,13 +14,15 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import {Typography} from "@mui/material";
+import {Chip, Typography} from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {addFilm, deleteFilm, getAllFilms, updateFilmInfo} from "../../../../http/filmAPI";
 import {IFilm, INewFilm} from "../../../../types/film";
 import {handleRowEditStart, handleRowEditStop} from "../handleFunctions";
 import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
+import {genrePreProcessEditCellProps} from "./validation";
+import {renderEditCell} from "../CellEditInputCell";
 
 // const options = {
 //     method: 'GET',

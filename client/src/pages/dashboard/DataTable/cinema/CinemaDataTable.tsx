@@ -109,6 +109,9 @@ const CinemaDataTable = () => {
             headerName: 'Type of halls',
             width: 500,
             editable: true,
+            preProcessEditCellProps: typePreProcessEditCellProps,
+            //todo: добавить поле с эффектом
+            renderEditCell: renderChipEditInputCell,
             renderCell: (params: GridRenderCellParams) => {
                 const types = params.value;
                 return types.map((type: string, index: number) => {
@@ -119,9 +122,6 @@ const CinemaDataTable = () => {
                     />
                 })
             },
-            preProcessEditCellProps: typePreProcessEditCellProps,
-            //todo: добавить поле с эффектом
-            renderEditCell: renderChipEditInputCell,
         },
         {
             field: 'actions',

@@ -9,7 +9,7 @@ const validateText = (title: string) => {
     }
 
     if(!title.match(/^[a-zA-Z0-9\s:,.()!?-]+$/)) {
-        return `Title can contain only latin alphabet`;
+        return CORRECT_VALUE;
     }
 }
 

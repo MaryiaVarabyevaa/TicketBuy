@@ -1,5 +1,6 @@
-import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
+import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
 import {Cinema} from "../cinema/cinema.entity";
+import {Session} from "../sessions/sessions.entity";
 
 interface HallsCreationAttrs {
     type: string;
@@ -42,4 +43,8 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
 
     @BelongsTo(() => Cinema)
     cinemaName: Cinema;
+
+
+    @HasMany(() => Session)
+    session: Session[]
 }

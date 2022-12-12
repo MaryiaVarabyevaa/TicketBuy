@@ -2,6 +2,7 @@ import {Table, Column, Model, DataType, BelongsToMany, BelongsTo, ForeignKey} fr
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {Cinema} from "../cinema/cinema.entity";
 import {Film} from "../films/films.entity";
+import {Halls} from "../halls/halls.entity";
 
 // todo: закончить объект для создания
 interface sessionCreationAttrs {
@@ -60,4 +61,15 @@ export class Session extends Model<Session, CreateSessionDto > {
 
     @BelongsTo(() => Cinema)
     cinemaName: Cinema
+
+
+    @ForeignKey(() => Halls)
+    @Column({
+        type: DataType.INTEGER,
+    })
+    hallId: number;
+
+    @BelongsTo(() => Halls)
+    hallNumber: Cinema;
+
 }

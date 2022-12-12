@@ -36,7 +36,7 @@ export const columns: GridColumns = [
     {
         field: 'genre',
         headerName: 'Genre',
-        width: 200,
+        width: 300,
         editable: true,
         preProcessEditCellProps:  genrePreProcessEditCellProps,
         renderEditCell: renderEditCell,

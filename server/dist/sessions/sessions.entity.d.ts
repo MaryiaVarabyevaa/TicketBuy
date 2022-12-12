@@ -11,4 +11,6 @@ export declare class Session extends Model<Session, CreateSessionDto> {
     filmTitle: Film;
     cinemaId: number;
     cinemaName: Cinema;
+    hallId: number;
+    hallNumber: Cinema;
 }
