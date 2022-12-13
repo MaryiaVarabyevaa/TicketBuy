@@ -7,10 +7,13 @@ import Stack from "@mui/material/Stack";
 import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {getAllFilms} from "../../../../http/filmAPI";
 import {IFilm} from "../../../../types/film";
-import {getAllCinema} from "../../../../http/cinemaAPI";
+import {addCinema, getAllCinema} from "../../../../http/cinemaAPI";
 import {ICinema} from "../../../../types/cinema";
 import MenuItem from "@mui/material/MenuItem";
-import {GetHallsById} from "../../../../http/hallsAPI";
+import {addHalls, GetHallsById} from "../../../../http/hallsAPI";
+import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
+import {validation} from "../cinema/validation";
+import {ISession} from "../../../../types/session";
 
 
 const style = {
@@ -33,14 +36,30 @@ export function EditToolbar(props: any) {
     const { isClicked , setIsClicked } = props;
     const [open, setOpen] = React.useState(false);
     const [films, setFilms] = useState([]);
-    const [filmValue, setFilmValue] = useState('');
     const [cinema, setCinema] = useState([]);
     const [cinemaValue, setCinemaValue] = useState('');
     const [halls, setHalls] = useState([]);
-    const [hallNumber, setHallNumber] = useState('');
-    const [price, setPrice] = useState('');
-    const [date, setDate] = useState('');
-    const [time, setTime] = useState('');
+
+
+    const { handleSubmit, control} = useForm<any>({
+        mode: 'onChange',
+        defaultValues: {
+            price: '',
+            date: '',
+            time: '',
+            hall: '',
+            film: ''
+        }
+    });
+
+    const {errors} = useFormState({
+        control
+    });
+
+    const onSubmit: SubmitHandler<ISession> = async (data)=> {
+        console.log(data);
+    }
+
 
     const getData = async () => {
         const films = await getAllFilms();
@@ -93,6 +112,7 @@ export function EditToolbar(props: any) {
                 <Box
                     sx={style}
                     component="form"
+                    onSubmit={handleSubmit(onSubmit)}
                 >
                     <Stack spacing={2} sx={{width: '100%'}}>
                         <TextField
@@ -100,6 +120,7 @@ export function EditToolbar(props: any) {
                             select
                             fullWidth
                             label="Cinema"
+                            required
                             value={cinemaValue}
                             onChange={(e) => handleClickCinema(e)}
                         >
@@ -111,59 +132,113 @@ export function EditToolbar(props: any) {
                                 }
                             )}
                         </TextField>
-                        <TextField
-                            id="outlined-select-currency"
-                            select
-                            fullWidth
-                            label="Film"
-                            value={filmValue}
-                            onChange={(e) => setFilmValue(e.target.value)}
-                        >
-                            {films && films.map((film) => {
-                                    const {id, title} = film;
-                                    return <MenuItem key={id} value={title}>
-                                        {title}
-                                    </MenuItem>
-                                }
+                        <Controller
+                            control={ control }
+                            name='film'
+                            // rules={validation}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    id="outlined-select-currency"
+                                    select
+                                    fullWidth
+                                    label="Film"
+                                    required
+                                    value={value}
+                                    onChange={onChange}
+                                >
+                                    {films && films.map((film) => {
+                                            const {id, title} = film;
+                                            return <MenuItem key={id} value={title}>
+                                                {title}
+                                            </MenuItem>
+                                        }
+                                    )}
+                                </TextField>
                             )}
-                        </TextField>
-                        <TextField
-                            id="outlined-select-currency"
-                            select
-                            fullWidth
-                            label="Hall"
-                            value={hallNumber}
-                            disabled={cinemaValue.length === 0? true : false}
-                            onChange={(e) => setHallNumber(e.target.value)}
-                        >
-                            {halls && halls.map((hall) => {
-                                    const {id, hallNumber} = hall;
-                                    return <MenuItem key={id} value={hallNumber}>
-                                        {hallNumber}
-                                    </MenuItem>
-                                }
+                        />
+                        <Controller
+                            control={ control }
+                            name='hall'
+                            // rules={validation}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    id="outlined-select-currency"
+                                    select
+                                    fullWidth
+                                    label="Hall"
+                                    required
+                                    value={value}
+                                    disabled={cinemaValue.length === 0? true : false}
+                                    onChange={onChange}
+                                >
+                                    {halls && halls.map((hall) => {
+                                            const {id, hallNumber} = hall;
+                                            return <MenuItem key={id} value={hallNumber}>
+                                                {hallNumber}
+                                            </MenuItem>
+                                        }
+                                    )}
+                                </TextField>
                             )}
-                        </TextField>
-                        <TextField
-                            id="outlined-basic"
-                            label="Price"
-                            variant="outlined"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
                         />
-                        <TextField
-                            label="Date"
-                            InputLabelProps={{ shrink: true }}
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
+
+                        <Controller
+                            control={ control }
+                            name='price'
+                            // rules={validation}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Price"
+                                    variant="outlined"
+                                    value={value}
+                                    onChange={onChange}
+                                    // error={!!errors.name?.message}
+                                    // helperText={ errors.name?.message as string }
+                                />
+                            )}
                         />
-                        <TextField
-                            label="Time"
-                            InputLabelProps={{ shrink: true }}
-                            type="time"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
+                        <Controller
+                            control={ control }
+                            name='date'
+                            // rules={validation}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    label="Date"
+                                    InputLabelProps={{ shrink: true }}
+                                    type="date"
+                                    value={value}
+                                    onChange={onChange}
+                                    // error={!!errors.name?.message}
+                                    // helperText={ errors.name?.message as string }
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={ control }
+                            name='time'
+                            // rules={validation}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    label="Time"
+                                    InputLabelProps={{ shrink: true }}
+                                    type="time"
+                                    value={value}
+                                    onChange={onChange}
+                                    // error={!!errors.name?.message}
+                                    // helperText={ errors.name?.message as string }
+                                />
+                            )}
                         />
                         <Button
                             type="submit"
