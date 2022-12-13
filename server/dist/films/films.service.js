@@ -108,7 +108,9 @@ let FilmsService = class FilmsService {
         return films;
     }
     async getFilmsByGenre(genre, title, value) {
-        const args = genre.join(' | ');
+        const args = genre.map((item) => {
+            return item.replace(/ /g, '_');
+        }).join(' | ');
         const films = await this.filmRepository.findAll({
             where: {
                 genre: {

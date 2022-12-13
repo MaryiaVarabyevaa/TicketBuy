@@ -66,10 +66,11 @@ export class Session extends Model<Session, CreateSessionDto > {
     @ForeignKey(() => Halls)
     @Column({
         type: DataType.INTEGER,
+        onDelete: 'CASCADE',
     })
     hallId: number;
 
-    @BelongsTo(() => Halls)
+    @BelongsTo(() => Halls, {onDelete: 'CASCADE'})
     hallNumber: Cinema;
 
 }

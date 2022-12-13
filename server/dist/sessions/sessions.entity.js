@@ -72,11 +72,12 @@ __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => halls_entity_1.Halls),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
+        onDelete: 'CASCADE',
     }),
     __metadata("design:type", Number)
 ], Session.prototype, "hallId", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => halls_entity_1.Halls),
+    (0, sequelize_typescript_1.BelongsTo)(() => halls_entity_1.Halls, { onDelete: 'CASCADE' }),
     __metadata("design:type", cinema_entity_1.Cinema)
 ], Session.prototype, "hallNumber", void 0);
 Session = __decorate([

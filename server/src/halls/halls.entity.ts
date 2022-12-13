@@ -1,6 +1,8 @@
 import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
 import {Cinema} from "../cinema/cinema.entity";
 import {Session} from "../sessions/sessions.entity";
+import {DestroyOptions, InstanceUpdateOptions} from "sequelize";
+import { HookReturn } from "sequelize/types/hooks";
 
 interface HallsCreationAttrs {
     type: string;
@@ -9,10 +11,34 @@ interface HallsCreationAttrs {
 }
 
 
+
 @Table({
     tableName: 'halls',
     timestamps: true,
     paranoid: true,
+
+    hooks: {
+        beforeBulkDestroy(options): any {
+            options.individualHooks = true;
+            return options;
+        },
+        // afterBulkDestroy: function (options) {
+        //     console.log(options)
+        //     Session.destroy({
+        //         truncate: true
+        //     }).then(r => console.log(r));
+        //
+        // }
+        afterDestroy: function(instance, options) {
+            const id = instance.dataValues.id;
+            Session.destroy({
+                where: {
+                    hallId: id,
+                }
+            }).then(r => console.log(r));
+            console.log('after destroy');
+        },
+    }
 })
 export class Halls extends Model<Halls, HallsCreationAttrs> {
     @Column({
@@ -45,6 +71,6 @@ export class Halls extends Model<Halls, HallsCreationAttrs> {
     cinemaName: Cinema;
 
 
-    @HasMany(() => Session)
+    @HasMany(() => Session, { onDelete: 'CASCADE', hooks: true })
     session: Session[]
 }

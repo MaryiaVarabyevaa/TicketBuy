@@ -119,8 +119,8 @@ const SessionDataTable = () => {
         const updatedRow = { ...newRow };
         let cinemaId: number = 0;
         let filmId: number = 0;
-        let {id, filmTitle, cinemaName, price, date, time} = updatedRow;
-
+        let {id, filmTitle, cinemaName, price, date, time, hallId} = updatedRow;
+        console.log(updatedRow)
         cinema.map((item) => {
             const name = `${item.name} (${item.city}, ${item.street}, ${item.buildingNumber})`
             if (name === cinemaName) {
@@ -134,9 +134,9 @@ const SessionDataTable = () => {
         })
 
         if ('isNew' in updatedRow) {
-            await addSession({ filmId, cinemaId, price, date, time });
+            await addSession({ filmId, cinemaId, price, date, time, hallId: +hallId });
         } else {
-            await updateSessionInfo({id, filmId, cinemaId, date, time, price});
+            await updateSessionInfo({id, filmId, cinemaId, date, time, price, hallId: +hallId});
         }
         setIsClicked(!isClicked);
         return updatedRow;
@@ -163,11 +163,11 @@ const SessionDataTable = () => {
             valueOptions: filmsTitle,
         },
         {
-            field: 'hallNumber',
+            field: 'hallId',
             headerName: 'Number of hall',
             width: 170,
             editable: true,
-            valueGetter: getFullName,
+            // valueGetter: getFullName,
             // type: 'singleSelect',
             // valueOptions: cinemaName,
         },

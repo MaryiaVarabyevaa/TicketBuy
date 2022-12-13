@@ -7,7 +7,7 @@ export interface ISession{
     time: string;
     filmTitle?: string;
     cinemaName?: string;
-    hallNumber?: number;
+    hallId?: number;
 }
 
 export interface INewSession extends ISession{

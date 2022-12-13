@@ -58,5 +58,14 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], CreateSessionDto.prototype, "cinemaId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({
+        message: 'Required to fill in'
+    }),
+    (0, class_validator_1.IsNumber)({}, {
+        message: 'Id must be a number'
+    }),
+    __metadata("design:type", Number)
+], CreateSessionDto.prototype, "hallId", void 0);
 exports.CreateSessionDto = CreateSessionDto;
 //# sourceMappingURL=create-session.dto.js.map

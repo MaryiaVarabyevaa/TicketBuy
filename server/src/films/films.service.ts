@@ -96,7 +96,11 @@ export class FilmsService {
     }
 
     async getFilmsByGenre(genre: string[], title: string, value: string) {
-        const args = genre.join(' | ');
+
+        const args = genre.map((item) => {
+           return item.replace(/ /g,'_');
+        }).join(' | ');
+
         const films = await this.filmRepository.findAll({
             where: {
                 genre: {

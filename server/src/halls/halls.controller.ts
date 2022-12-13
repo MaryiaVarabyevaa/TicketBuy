@@ -1,8 +1,6 @@
 import {Body, Controller, Get, Post, Request} from '@nestjs/common';
 import {HallsService} from "./halls.service";
-import {CreateSessionDto} from "../sessions/dto/create-session.dto";
 import {CreateHallsDto} from "./dto/create-halls.dto";
-import {UpdateCinemaDto} from "../cinema/dto/update-cinema.dto";
 import {UpdateHallDto} from "./dto/update-halls.dto";
 
 @Controller('halls')

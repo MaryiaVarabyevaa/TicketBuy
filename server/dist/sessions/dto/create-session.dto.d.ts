@@ -4,4 +4,5 @@ export declare class CreateSessionDto {
     readonly price: string;
     readonly filmId: number;
     readonly cinemaId: number;
+    readonly hallId: number;
 }

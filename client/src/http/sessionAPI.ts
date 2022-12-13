@@ -5,17 +5,19 @@ interface ISessionUpdate {
     id: number;
     filmId: number;
     cinemaId: number;
+    hallId: number;
     date: string;
     time: string;
-    price: number;
+    price: string;
 }
 
 interface ISession {
     filmId: number;
     cinemaId: number;
+    hallId: number;
     date: string;
     time: string;
-    price: number;
+    price: string;
 }
 
 export const addSession = async (session: ISession) => {
