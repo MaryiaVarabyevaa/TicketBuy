@@ -22,13 +22,6 @@ interface HallsCreationAttrs {
             options.individualHooks = true;
             return options;
         },
-        // afterBulkDestroy: function (options) {
-        //     console.log(options)
-        //     Session.destroy({
-        //         truncate: true
-        //     }).then(r => console.log(r));
-        //
-        // }
         afterDestroy: function(instance, options) {
             const id = instance.dataValues.id;
             Session.destroy({

@@ -26,8 +26,13 @@ export class HallsController {
         return this.hallsService.deleteAllHalls(req.body.cinemaId);
     }
 
+    @Post('get_by_id')
+    getHallsById(@Request() req) {
+        return this.hallsService.getHallsById(req.body.cinemaId);
+    }
     @Get()
     getAll() {
         return this.hallsService.getAllHalls();
     }
+
 }

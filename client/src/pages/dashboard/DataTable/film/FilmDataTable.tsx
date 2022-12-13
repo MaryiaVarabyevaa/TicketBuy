@@ -46,7 +46,7 @@ const FilmDataTable = () => {
 
 
     // useEffect(() => {
-    //     fetch('https://movie-details1.p.rapidapi.com/imdb_api/movie?id=tt1375671', options)
+    //     fetch('https://movie-details1.p.rapidapi.com/imdb_api/movie?id=tt1375690', options)
     //         .then(response => response.json())
     //         .then(response => {
     //             console.log(response)

@@ -7,6 +7,11 @@ export const getAllHalls = async () => {
     return data;
 }
 
+export const GetHallsById = async (cinemaId: number) => {
+    const { data } = await $host.post('halls/get_by_id', {cinemaId});
+    return data;
+}
+
 export const addHalls = async (halls: IHalls) => {
     const { data } = await $host.post('halls/create', halls);
     return data;

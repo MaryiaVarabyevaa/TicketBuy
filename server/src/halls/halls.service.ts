@@ -32,6 +32,15 @@ export class HallsService {
         return halls;
     }
 
+    async getHallsById(cinemaId: number) {
+        const halls = await this.hallsRepository.findAll({
+            where: {
+                cinemaId
+            }
+        })
+        return halls;
+    }
+
     async deleteHall(cinemaId: number, hallNumber: number) {
         const hall = await this.hallsRepository.findOne({where: {
                 cinemaId,

@@ -7,6 +7,7 @@ export interface ICinema {
     number?: number;
     types?: string[];
     type?: string[];
+    fullName?: string;
 }
 
 export interface INewCinema extends ICinema{

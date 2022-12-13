@@ -3,12 +3,14 @@ import {useEffect, useState} from "react";
 import {
     DataGrid,
     GridActionsCellItem,
-    GridColumns, GridEventListener,
+    GridColumns,
+    GridEventListener, GridRenderCellParams,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams, GridValueGetterParams
+    GridRowParams,
+    GridValueGetterParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
@@ -17,7 +19,7 @@ import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {getAllFilms} from "../../../../http/filmAPI";
-import {handleRowEditStart, handleRowEditStop} from "../handleFunctions";
+import {handleRowEditStart} from "../handleFunctions";
 import {getAllCinema} from "../../../../http/cinemaAPI";
 import {addSession, deleteSession, getAllSessions, updateSessionInfo} from "../../../../http/sessionAPI";
 import {ISession} from "../../../../types/session";
@@ -26,8 +28,6 @@ import {IFilm} from "../../../../types/film";
 import {getAllHalls} from "../../../../http/hallsAPI";
 import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
-import {hallNumberPreProcessEditCellProps} from "./validation";
-import {renderEditCell} from "../CellEditInputCell";
 
 const SessionDataTable = () => {
     const [rows, setRows] = useState<ISession[]>([]);
@@ -74,6 +74,7 @@ const SessionDataTable = () => {
         films.map((film: IFilm) => {
             filmsTitle.push(film.title);
         })
+
         setRows(sessions);
         setCinemaName(cinemaName);
         setCinema(cinema);
@@ -120,7 +121,6 @@ const SessionDataTable = () => {
         let cinemaId: number = 0;
         let filmId: number = 0;
         let {id, filmTitle, cinemaName, price, date, time, hallId} = updatedRow;
-        console.log(updatedRow)
         cinema.map((item) => {
             const name = `${item.name} (${item.city}, ${item.street}, ${item.buildingNumber})`
             if (name === cinemaName) {
@@ -152,7 +152,7 @@ const SessionDataTable = () => {
             width: 350,
             editable: true,
             type: 'singleSelect',
-            valueOptions: cinemaName,
+            valueOptions: cinemaName
         },
         {
             field: 'filmTitle',
@@ -248,11 +248,11 @@ const SessionDataTable = () => {
                         onRowEditStart={handleRowEditStart}
                         onRowEditStop={handleRowEditStop}
                         disableSelectionOnClick
-                        componentsProps={{
-                            toolbar: { setRows, setRowModesModel },
-                        }}
                         components={{
                             Toolbar: EditToolbar,
+                        }}
+                        componentsProps={{
+                            toolbar: { isClicked , setIsClicked },
                         }}
                         experimentalFeatures={{ newEditingApi: true }}
                     />
