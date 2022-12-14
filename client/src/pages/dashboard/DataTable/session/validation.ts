@@ -24,6 +24,7 @@ const validatePrice = (price: string) => {
     if (!price.match(/^\d\d.\d\d+$/g)) {
         return CORRECT_VALUE;
     }
+    return true;
 }
 
 export const pricePreProcessEditCellProps =  (params: GridPreProcessEditCellProps) => {
@@ -78,3 +79,22 @@ export const timePreProcessEditCellProps =  (params: GridPreProcessEditCellProps
     const errorMessage = validateTime(params.props.value!.toString());
     return { ...params.props, error: errorMessage }
 };
+
+export const validationFields = {
+    required: REQUIRED_FIELD
+}
+
+export const validationPrice = {
+    required: REQUIRED_FIELD,
+    validate: (value: string) => {
+        // const str = String(value);
+        //
+        // if(!str.match(/^[a-zA-Z0-9 ]+$/)) {
+        //     return CORRECT_VALUE;
+        // }
+
+        return validatePrice(value);
+
+        // return true;
+    }
+}

@@ -4,6 +4,7 @@ import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateFilmDto} from "../films/dto/update-films.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
+import sequelize from "sequelize";
 
 @Injectable()
 export class SessionsService {
@@ -18,6 +19,16 @@ export class SessionsService {
         return sessions;
     }
 
+    async findSessionsByCinemaId(cinemaId: number[]) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId
+            },
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('filmId')), 'filmId']],
+        });
+
+        return sessions;
+    }
     async updateSessionInfo(sessionDto: UpdateSessionDto) {
         const {id, ...others} = sessionDto;
         const updateCSessionInfo = await this.sessionRepository.update({...others}, {

@@ -8,4 +8,5 @@ export declare class SessionsController {
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;
     deleteCinema(req: any): Promise<void>;
     getAll(): Promise<import("./sessions.entity").Session[]>;
+    findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
 }

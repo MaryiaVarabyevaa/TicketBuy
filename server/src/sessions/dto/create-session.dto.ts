@@ -12,17 +12,17 @@ export class CreateSessionDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @Matches(/^\d\d:\d\d:\d\d+$/g, {
-        message: 'Enter the correct value',
-    })
+    // @Matches(/^\d\d:\d\d:\d\d+$/g, {
+    //     message: 'Enter the correct value',
+    // })
     readonly time: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @Matches(/^\d\d.\d\d+$/g, {
-        message: 'Enter the correct value'
-    })
+    // @Matches(/^\d\d.\d\d+$/g, {
+    //     message: 'Enter the correct value'
+    // })
     readonly price: string;
 
     @IsNotEmpty({

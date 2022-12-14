@@ -30,6 +30,13 @@ export class FilmsController {
         );
     }
 
+    @Post('filter_by_id')
+    async getFilmsById(@Request() req) {
+        return this.filmService.getFilmsById(
+            req.body.id,
+        );
+    }
+
     @Get()
     getAll() {
         return this.filmService.getAllFilms();

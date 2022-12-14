@@ -33,6 +33,9 @@ let SessionsController = class SessionsController {
     getAll() {
         return this.sessionService.getAllSessions();
     }
+    findSessionsByCinemaId(req) {
+        return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
+    }
 };
 __decorate([
     (0, common_1.Post)('create'),
@@ -61,6 +64,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Post)('get_by_cinemaId'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "findSessionsByCinemaId", null);
 SessionsController = __decorate([
     (0, common_1.Controller)('sessions'),
     __metadata("design:paramtypes", [sessions_service_1.SessionsService])

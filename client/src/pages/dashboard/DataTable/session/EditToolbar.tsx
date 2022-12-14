@@ -1,19 +1,20 @@
-import {GridRowModesModel, GridRowsProp, GridToolbarContainer} from "@mui/x-data-grid";
+import {GridToolbarContainer} from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import * as React from "react";
-import {Box, Grid, Modal, TextField} from "@mui/material";
+import {ChangeEvent, useEffect, useState} from "react";
+import {Box, Modal, TextField} from "@mui/material";
 import Stack from "@mui/material/Stack";
-import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import {getAllFilms} from "../../../../http/filmAPI";
-import {IFilm} from "../../../../types/film";
-import {addCinema, getAllCinema} from "../../../../http/cinemaAPI";
+import {getAllCinema} from "../../../../http/cinemaAPI";
 import {ICinema} from "../../../../types/cinema";
 import MenuItem from "@mui/material/MenuItem";
-import {addHalls, GetHallsById} from "../../../../http/hallsAPI";
+import {GetHallsById} from "../../../../http/hallsAPI";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
-import {validation} from "../cinema/validation";
-import {ISession} from "../../../../types/session";
+import {validationFields, validationPrice} from "./validation";
+import {IHalls} from "../../../../types/halls";
+import {addSession} from "../../../../http/sessionAPI";
+import {IFilm} from "../../../../types/film";
 
 
 const style = {
@@ -36,7 +37,7 @@ export function EditToolbar(props: any) {
     const { isClicked , setIsClicked } = props;
     const [open, setOpen] = React.useState(false);
     const [films, setFilms] = useState([]);
-    const [cinema, setCinema] = useState([]);
+    const [cinemas, setCinemas] = useState([]);
     const [cinemaValue, setCinemaValue] = useState('');
     const [halls, setHalls] = useState([]);
 
@@ -48,7 +49,8 @@ export function EditToolbar(props: any) {
             date: '',
             time: '',
             hall: '',
-            film: ''
+            film: '',
+            cinema: ''
         }
     });
 
@@ -56,8 +58,32 @@ export function EditToolbar(props: any) {
         control
     });
 
-    const onSubmit: SubmitHandler<ISession> = async (data)=> {
-        console.log(data);
+    const onSubmit: SubmitHandler<any> = async (data)=> {
+        const {cinema, hall, film, price, time, date} = data;
+        let cinemaId = 0;
+        let hallId = 0;
+        let filmId = 0;
+        cinemas.map((item: ICinema) => {
+            if (item.fullName === cinema) {
+                cinemaId = item.id as number;
+            }
+        })
+
+        halls.map((item: IHalls) => {
+            if (hall === item.hallNumber) {
+                hallId = item.id as number;
+            }
+        })
+
+        films.map((item: IFilm) => {
+            if (item.title === film) {
+                filmId = item.id as number;
+            }
+        })
+
+        await addSession({ filmId, cinemaId, price, date, time, hallId });
+        setIsClicked(!isClicked);
+        setOpen(false);
     }
 
 
@@ -70,7 +96,7 @@ export function EditToolbar(props: any) {
         })
 
         setFilms(films);
-        setCinema(cinema)
+        setCinemas(cinema)
     };
 
     useEffect(()=>{
@@ -86,7 +112,7 @@ export function EditToolbar(props: any) {
     const handleClickCinema = async (e: ChangeEvent) => {
         const element = (e.target as HTMLInputElement).value;
         let cinemaId = 0;
-        cinema.map(({fullName, id}) => {
+        cinemas.map(({fullName, id}) => {
             if (element === fullName) {
                 cinemaId = id;
             }
@@ -115,27 +141,40 @@ export function EditToolbar(props: any) {
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <Stack spacing={2} sx={{width: '100%'}}>
-                        <TextField
-                            id="outlined-select-currency"
-                            select
-                            fullWidth
-                            label="Cinema"
-                            required
-                            value={cinemaValue}
-                            onChange={(e) => handleClickCinema(e)}
-                        >
-                            {cinema && cinema.map((item) => {
-                                    const {id, fullName} = item;
-                                    return <MenuItem key={id} value={fullName}>
-                                        {fullName}
-                                    </MenuItem>
-                                }
+                        <Controller
+                            control={ control }
+                            name='cinema'
+                            rules={validationFields}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    id="outlined-select-currency"
+                                    select
+                                    fullWidth
+                                    label="Cinema"
+                                    value={value}
+                                    onChange={(value) => {
+                                        onChange(value);
+                                        handleClickCinema(value)
+                                    } }
+                                    error={!!errors.cinema?.message}
+                                    helperText={ errors.cinema?.message as string }
+                                >
+                                    {cinemas && cinemas.map((item) => {
+                                            const {id, fullName} = item;
+                                            return <MenuItem key={id} value={fullName}>
+                                                {fullName}
+                                            </MenuItem>
+                                        }
+                                    )}
+                                </TextField>
                             )}
-                        </TextField>
+                        />
                         <Controller
                             control={ control }
                             name='film'
-                            // rules={validation}
+                            rules={validationFields}
                             render={({
                                          field: {onChange, value}
                                      }) => (
@@ -144,9 +183,10 @@ export function EditToolbar(props: any) {
                                     select
                                     fullWidth
                                     label="Film"
-                                    required
                                     value={value}
                                     onChange={onChange}
+                                    error={!!errors.film?.message}
+                                    helperText={ errors.film?.message as string }
                                 >
                                     {films && films.map((film) => {
                                             const {id, title} = film;
@@ -161,7 +201,7 @@ export function EditToolbar(props: any) {
                         <Controller
                             control={ control }
                             name='hall'
-                            // rules={validation}
+                            rules={validationFields}
                             render={({
                                          field: {onChange, value}
                                      }) => (
@@ -174,6 +214,8 @@ export function EditToolbar(props: any) {
                                     value={value}
                                     disabled={cinemaValue.length === 0? true : false}
                                     onChange={onChange}
+                                    error={!!errors.hall?.message}
+                                    helperText={ errors.hall?.message as string }
                                 >
                                     {halls && halls.map((hall) => {
                                             const {id, hallNumber} = hall;
@@ -189,7 +231,7 @@ export function EditToolbar(props: any) {
                         <Controller
                             control={ control }
                             name='price'
-                            // rules={validation}
+                            rules={validationPrice}
                             render={({
                                          field: {onChange, value}
                                      }) => (
@@ -199,15 +241,15 @@ export function EditToolbar(props: any) {
                                     variant="outlined"
                                     value={value}
                                     onChange={onChange}
-                                    // error={!!errors.name?.message}
-                                    // helperText={ errors.name?.message as string }
+                                    error={!!errors.price?.message}
+                                    helperText={ errors.price?.message as string }
                                 />
                             )}
                         />
                         <Controller
                             control={ control }
                             name='date'
-                            // rules={validation}
+                            rules={validationFields}
                             render={({
                                          field: {onChange, value}
                                      }) => (
@@ -217,15 +259,15 @@ export function EditToolbar(props: any) {
                                     type="date"
                                     value={value}
                                     onChange={onChange}
-                                    // error={!!errors.name?.message}
-                                    // helperText={ errors.name?.message as string }
+                                    error={!!errors.date?.message}
+                                    helperText={ errors.date?.message as string }
                                 />
                             )}
                         />
                         <Controller
                             control={ control }
                             name='time'
-                            // rules={validation}
+                            rules={validationFields}
                             render={({
                                          field: {onChange, value}
                                      }) => (
@@ -235,8 +277,8 @@ export function EditToolbar(props: any) {
                                     type="time"
                                     value={value}
                                     onChange={onChange}
-                                    // error={!!errors.name?.message}
-                                    // helperText={ errors.name?.message as string }
+                                    error={!!errors.time?.message}
+                                    helperText={ errors.time?.message as string }
                                 />
                             )}
                         />

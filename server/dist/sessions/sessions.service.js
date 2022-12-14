@@ -27,6 +27,7 @@ exports.SessionsService = void 0;
 const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const sessions_entity_1 = require("./sessions.entity");
+const sequelize_2 = require("sequelize");
 let SessionsService = class SessionsService {
     constructor(sessionRepository) {
         this.sessionRepository = sessionRepository;
@@ -37,6 +38,15 @@ let SessionsService = class SessionsService {
     }
     async getAllSessions() {
         const sessions = await this.sessionRepository.findAll();
+        return sessions;
+    }
+    async findSessionsByCinemaId(cinemaId) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId
+            },
+            attributes: [[sequelize_2.default.fn('DISTINCT', sequelize_2.default.col('filmId')), 'filmId']],
+        });
         return sessions;
     }
     async updateSessionInfo(sessionDto) {

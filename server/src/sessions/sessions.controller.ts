@@ -21,8 +21,14 @@ export class SessionsController {
     deleteCinema(@Request() req) {
         return this.sessionService.deleteSession(req.body.id);
     }
+
     @Get()
     getAll() {
         return this.sessionService.getAllSessions();
+    }
+
+    @Post('get_by_cinemaId')
+    findSessionsByCinemaId(@Request() req) {
+        return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
     }
 }

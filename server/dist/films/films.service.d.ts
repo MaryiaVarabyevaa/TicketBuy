@@ -13,6 +13,7 @@ export declare class FilmsService {
     getAllFilmsByTitleDESC(): Promise<Film[]>;
     getAllFilmsByTitleASC(): Promise<Film[]>;
     getFilmsByGenre(genre: string[], title: string, value: string): Promise<Film[]>;
+    getFilmsById(id: number[]): Promise<Film[]>;
     getOneFilm(id: number): Promise<Film>;
     deleteFilm(id: number): Promise<void>;
     updateFilmInfo(filmDto: UpdateFilmDto): Promise<[affectedCount: number]>;

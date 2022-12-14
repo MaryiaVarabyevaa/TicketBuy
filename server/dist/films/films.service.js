@@ -123,6 +123,14 @@ let FilmsService = class FilmsService {
         });
         return films;
     }
+    async getFilmsById(id) {
+        const films = await this.filmRepository.findAll({
+            where: {
+                id
+            },
+        });
+        return films;
+    }
     async getOneFilm(id) {
         const film = await this.filmRepository.findOne({
             attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],

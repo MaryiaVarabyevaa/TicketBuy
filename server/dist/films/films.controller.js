@@ -33,6 +33,9 @@ let FilmsController = class FilmsController {
     async getFilmsByGenre(req) {
         return this.filmService.getFilmsByGenre(req.body.genre, req.body.title, req.body.value);
     }
+    async getFilmsById(req) {
+        return this.filmService.getFilmsById(req.body.id);
+    }
     getAll() {
         return this.filmService.getAllFilms();
     }
@@ -86,6 +89,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], FilmsController.prototype, "getFilmsByGenre", null);
+__decorate([
+    (0, common_1.Post)('filter_by_id'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], FilmsController.prototype, "getFilmsById", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

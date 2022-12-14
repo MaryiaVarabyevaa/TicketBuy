@@ -115,6 +115,17 @@ export class FilmsService {
         return films;
     }
 
+    async getFilmsById(id: number[]) {
+
+        const films = await this.filmRepository.findAll({
+            where: {
+                id
+            },
+        });
+        return films;
+    }
+
+
     async getOneFilm(id: number) {
         const film = await this.filmRepository.findOne({
             attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],

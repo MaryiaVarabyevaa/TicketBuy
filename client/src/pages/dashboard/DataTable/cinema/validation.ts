@@ -109,3 +109,4 @@ export const validationNumber = {
 export const validationChip = {
     required: REQUIRED_FIELD
 }
+

@@ -23,7 +23,7 @@ import {
     getAllFilmsByRatingDESC,
     getAllFilmsByTitleASC,
     getAllFilmsByTitleDESC,
-    getFilm, getFilmsByGenre
+    getFilm, getFilmsByGenre, getFilmsById
 } from "../../http/filmAPI";
 import Footer from "../../components/Footer";
 import {useDispatch} from "react-redux";
@@ -36,6 +36,8 @@ import MenuItem from "@mui/material/MenuItem";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ListItemText from "@mui/material/ListItemText";
+import {getAllCinema} from "../../http/cinemaAPI";
+import {findSessionsByCinemaId} from "../../http/sessionAPI";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -70,39 +72,6 @@ const names = [
     'melodrama'
 ];
 
-const countries = [
-    'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla',
-    'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan',
-    'Bangladesh', 'Barbados', 'Bahamas', 'Bahrain', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda',
-    'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'British Indian Ocean Territory',
-    'British Virgin Islands', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burma', 'Burundi', 'Cambodia',
-    'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China',
-    'Christmas Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo-Brazzaville', 'Congo-Kinshasa',
-    'Cook Islands', 'Costa Rica', 'Croatia', 'Cura?ao', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica',
-    'Dominican Republic', 'East Timor', 'Ecuador', 'El Salvador', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Estonia',
-    'Ethiopia', 'Falkland Islands', 'Faroe Islands', 'Federated States of Micronesia', 'Fiji', 'Finland', 'France',
-    'French Guiana', 'French Polynesia', 'French Southern Lands', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana',
-    'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea',
-    'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard and McDonald Islands', 'Honduras', 'Hong Kong', 'Hungary',
-    'Iceland', 'India', 'Indonesia', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan',
-    'Jersey', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon',
-    'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar',
-    'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius',
-    'Mayotte', 'Mexico', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Montserrat', 'Morocco', 'Mozambique',
-    'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria',
-    'Niue', 'Norfolk Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama',
-    'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn Islands', 'Poland', 'Portugal', 'Puerto Rico',
-    'Qatar', 'R?union', 'Romania', 'Russia', 'Rwanda', 'Saint Barth?lemy', 'Saint Helena', 'Saint Kitts and Nevis',
-    'Saint Lucia', 'Saint Martin', 'Saint Pierre and Miquelon', 'Saint Vincent', 'Samoa', 'San Marino',
-    'S?o Tom? and Pr?ncipe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore',
-    'Sint Maarten', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia',
-    'South Korea', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard and Jan Mayen', 'Sweden', 'Swaziland',
-    'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Togo', 'Tokelau', 'Tonga',
-    'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu',
-    'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay',
-    'Uzbekistan', 'Vanuatu', 'Vatican City', 'Vietnam', 'Venezuela', 'Wallis and Futuna',
-    'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe'];
-
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
     return {
         fontWeight:
@@ -123,6 +92,8 @@ const MainPage = () => {
     const [isClickedCountry, setIsClickedCountry] = useState(false);
     const [isClickedTitle, setIsClickedTitle] = useState(false);
     const [isClickedDate, setIsClickedDate] = useState(false);
+    const [cinema, setCinema] = useState([]);
+    const [cinemaValue, setCinemaValue] = useState<string[]>([]);
 
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
@@ -143,6 +114,38 @@ const MainPage = () => {
        setFilms(getFilms);
     };
 
+    const handleChangeCinemaField = async (event: SelectChangeEvent<typeof personName>) => {
+        const {
+            target: { value },
+        } = event;
+        setCinemaValue(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+
+        let cinemaId: number[] = [];
+        cinema.map((item, index) => {
+            const {name, id} = item;
+
+            if (typeof value !== "string") {
+                value.map((val) => {
+                    if (val === name) {
+                        cinemaId.push(id);
+                    }
+                })
+            }
+
+        })
+        const filmsId = await findSessionsByCinemaId(cinemaId);
+        let id: number[] = [];
+        filmsId.map((item: any) => {
+            const {filmId} = item;
+            id.push(filmId);
+        })
+
+        const sortedFilms = await getFilmsById(id);
+        setFilms(sortedFilms);
+    };
+
     const setIsClickedValue = (rating: boolean, country: boolean, title: boolean, date: boolean) => {
         setIsClickedRating(rating);
         setIsClickedCountry(country);
@@ -153,12 +156,16 @@ const MainPage = () => {
     const getFilms = async() => {
         const sortedFilms = await getAllFilmsByRatingDESC();
         setFilms(sortedFilms);
-        console.log(sortedFilms);
     };
 
+    const getCinema = async () => {
+        const cinema = await getAllCinema();
+        setCinema(cinema);
+    }
 
     useEffect(() => {
         getFilms();
+        getCinema();
     }, [])
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -282,26 +289,70 @@ const MainPage = () => {
                                     {/*<BottomNavigationAction label="Date"/>*/}
                                 </BottomNavigation>
                             </Box>
-                            <FormControl sx={{ m: 1, width: 300 }}>
-                                <InputLabel id="demo-multiple-checkbox-label">Genre</InputLabel>
-                                <Select
-                                    labelId="demo-multiple-checkbox-label"
-                                    id="demo-multiple-checkbox"
-                                    multiple
-                                    value={personName}
-                                    onChange={handleChangeField}
-                                    input={<OutlinedInput label="Genre" />}
-                                    renderValue={(selected) => selected.join(', ')}
-                                    MenuProps={MenuProps}
-                                >
-                                    {names.sort().map((name) => (
-                                        <MenuItem key={name} value={name}>
-                                            <Checkbox checked={personName.indexOf(name) > -1} />
-                                            <ListItemText primary={name} />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                           <Stack direction="row" spacing={2}>
+                               <FormControl sx={{ width: 300 }}>
+                                   <InputLabel id="demo-multiple-checkbox-label">Genre</InputLabel>
+                                   <Select
+                                       labelId="demo-multiple-checkbox-label"
+                                       id="demo-multiple-checkbox"
+                                       multiple
+                                       value={personName}
+                                       onChange={handleChangeField}
+                                       input={<OutlinedInput label="Genre" />}
+                                       renderValue={(selected) => selected.join(', ')}
+                                       MenuProps={MenuProps}
+                                   >
+                                       {names.sort().map((name) => (
+                                           <MenuItem key={name} value={name}>
+                                               <Checkbox checked={personName.indexOf(name) > -1} />
+                                               <ListItemText primary={name} />
+                                           </MenuItem>
+                                       ))}
+                                   </Select>
+                               </FormControl>
+                               <FormControl sx={{ width: 300 }}>
+                                   <InputLabel id="demo-multiple-checkbox-label">Cinema</InputLabel>
+                                   <Select
+                                       labelId="demo-multiple-checkbox-label"
+                                       id="demo-multiple-checkbox"
+                                       multiple
+                                       value={cinemaValue}
+                                       onChange={handleChangeCinemaField}
+                                       input={<OutlinedInput label="Cinema" />}
+                                       renderValue={(selected) => selected.join(', ')}
+                                       MenuProps={MenuProps}
+                                   >
+                                       {cinema && cinema.sort().map((item) => {
+                                           const {name, id} = item;
+                                           return <MenuItem key={id} value={name}>
+                                               <Checkbox checked={cinemaValue.indexOf(name) > -1} />
+                                               <ListItemText primary={name} />
+                                           </MenuItem>
+                                       })}
+                                   </Select>
+                               </FormControl>
+                               <FormControl sx={{ width: 300 }}>
+                                   <InputLabel id="demo-multiple-checkbox-label">Cinema</InputLabel>
+                                   <Select
+                                       labelId="demo-multiple-checkbox-label"
+                                       id="demo-multiple-checkbox"
+                                       multiple
+                                       value={cinemaValue}
+                                       onChange={handleChangeCinemaField}
+                                       input={<OutlinedInput label="Cinema" />}
+                                       renderValue={(selected) => selected.join(', ')}
+                                       MenuProps={MenuProps}
+                                   >
+                                       {cinema && cinema.sort().map((item) => {
+                                           const {name, id} = item;
+                                           return <MenuItem key={id} value={name}>
+                                               <Checkbox checked={cinemaValue.indexOf(name) > -1} />
+                                               <ListItemText primary={name} />
+                                           </MenuItem>
+                                       })}
+                                   </Select>
+                               </FormControl>
+                           </Stack>
                             <Box>
                                 {
                                     personName.length !== 0 && personName.map((name) => {

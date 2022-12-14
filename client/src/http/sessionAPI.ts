@@ -25,6 +25,11 @@ export const addSession = async (session: ISession) => {
     return data;
 }
 
+export const findSessionsByCinemaId = async (cinemaId: number[]) => {
+    const { data } = await $host.post('sessions/get_by_cinemaId', {cinemaId});
+    return data;
+}
+
 export const getAllSessions = async () => {
     const { data } = await $host.get('sessions');
     return data;
