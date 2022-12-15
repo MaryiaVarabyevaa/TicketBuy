@@ -156,7 +156,7 @@ const MainPage = () => {
             }
 
             setIsError(false);
-            setId(id);
+            setId(duplicates);
             setFilms(films);
         } catch (err) {
            setIsError(true);
@@ -174,6 +174,7 @@ const MainPage = () => {
            );
 
            let cinemaId: number[] = [];
+           let duplicates;
            cinema.map((item, index) => {
                const {name, id} = item;
 
@@ -193,7 +194,13 @@ const MainPage = () => {
                id.push(filmId);
            })
 
-           const films = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
+           if (idFromDate.length !== 0) {
+               duplicates = findDuplicates(id.concat(idFromCinema));
+           } else {
+               duplicates = id;
+           }
+
+           const films = await getSortedFilms(genre, duplicates, sortRatingBy) as unknown as IFilm[];
 
            if (films.length === 0) {
                throw Error('There were no suitable events');
@@ -202,7 +209,7 @@ const MainPage = () => {
            setIsError(false);
            setFilms(films);
            setIdFromCinema(id);
-           setId(id);
+           setId(duplicates);
        } catch (err) {
            setIsError(true);
        }
