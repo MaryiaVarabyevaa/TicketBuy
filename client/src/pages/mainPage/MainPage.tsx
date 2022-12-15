@@ -1,18 +1,14 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {createTheme, Theme, ThemeProvider} from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {SelectChangeEvent} from '@mui/material/Select';
 import {
-    BottomNavigation,
+    BottomNavigation, Button,
     Checkbox,
     Chip,
     FormControl,
@@ -26,16 +22,14 @@ import {useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
 import {IFilm} from "../../types/film";
-import {
-    getAllFilmsByRatingASC,
-    getAllFilmsByRatingDESC,
-    getFilm,
-    getFilmsByGenre,
-    getFilmsById, getSortedFilms
-} from "../../http/filmAPI";
+import {getFilm, getSortedFilms} from "../../http/filmAPI";
 import Footer from "../../components/Footer";
 import {useDispatch} from "react-redux";
 import {addFilmAction} from "../../store/reducers/filmReducer";
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import StarIcon from "@mui/icons-material/Star";
 import {StarBorder} from "@mui/icons-material";
 
@@ -49,6 +43,7 @@ import {findSessionsByCinemaId, getSessionsByDate} from "../../http/sessionAPI";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -83,27 +78,18 @@ const names = [
     'melodrama'
 ];
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
+const findDuplicates = (arr: number[]) => arr.filter((item: number, index: number) => arr.indexOf(item) !== index);
 
 export const theme = createTheme({});
 
 const MainPage = () => {
     const [sortValue, setSortValue] = useState('');
-    const [ratingValue, setRatingValue] = useState<number | null>(2);
     const [value, setValue] = useState(0);
-    const [isClickedRating, setIsClickedRating] = useState(true);
     const [cinema, setCinema] = useState([]);
     const [cinemaValue, setCinemaValue] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
 
+    const [isError, setIsError] = useState(false);
 
     const [genre, setGenre] = useState<string[]>([]);
     const [sortRatingBy, setSortRatingBy] = useState('DESC');
@@ -140,65 +126,108 @@ const MainPage = () => {
     };
 
     const handleChangeDate = async (newValue: any) => {
-        const {$D, $y, $M} = newValue;
-        const filmsId = await getSessionsByDate(`${$y}-${$M + 1}-${$D}`);
-        let id: number[] = [];
-        filmsId.map((item: any) => {
-            const {filmId} = item;
-            id.push(filmId);
-        })
-        const films = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
-        setFilms(films);
-        setId(id);
-        setSelectedDate(newValue);
+        try {
+            const {$D, $y, $M} = newValue;
+            setSelectedDate(newValue);
+            const filmsId = await getSessionsByDate(`${$y}-${$M + 1}-${$D}`);
+
+            if (filmsId.length === 0) {
+                throw Error('There were no suitable events');
+            }
+
+            let id: number[] = [];
+            let duplicates;
+
+            filmsId.map((item: any) => {
+                const {filmId} = item;
+                id.push(filmId);
+            })
+
+            if (idFromCinema.length !== 0) {
+                duplicates = findDuplicates(id.concat(idFromCinema));
+            } else {
+                duplicates = id;
+            }
+
+            const films = await getSortedFilms(genre, duplicates, sortRatingBy) as unknown as IFilm[];
+
+            if (films.length === 0) {
+                throw Error('There were no suitable events');
+            }
+
+            setIsError(false);
+            setId(id);
+            setFilms(films);
+        } catch (err) {
+           setIsError(true);
+        }
     };
 
     const handleChangeCinemaField = async (event: SelectChangeEvent<typeof personName>) => {
-        const {
-            target: { value },
-        } = event;
+       try {
+           const {
+               target: { value },
+           } = event;
 
-        setCinemaValue(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+           setCinemaValue(
+               typeof value === 'string' ? value.split(',') : value,
+           );
 
-        let cinemaId: number[] = [];
-        cinema.map((item, index) => {
-            const {name, id} = item;
+           let cinemaId: number[] = [];
+           cinema.map((item, index) => {
+               const {name, id} = item;
 
-            if (typeof value !== "string") {
-                value.map((val) => {
-                    if (val === name) {
-                        cinemaId.push(id);
-                    }
-                })
-            }
+               if (typeof value !== "string") {
+                   value.map((val) => {
+                       if (val === name) {
+                           cinemaId.push(id);
+                       }
+                   })
+               }
 
-        })
-        const filmsId = await findSessionsByCinemaId(cinemaId);
-        let id: number[] = [];
-        filmsId.map((item: any) => {
-            const {filmId} = item;
-            id.push(filmId);
-        })
+           })
+           const filmsId = await findSessionsByCinemaId(cinemaId);
+           let id: number[] = [];
+           filmsId.map((item: any) => {
+               const {filmId} = item;
+               id.push(filmId);
+           })
 
+           const films = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
 
-        const films = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
-        setFilms(films);
-        setId(id);
+           if (films.length === 0) {
+               throw Error('There were no suitable events');
+           }
+
+           setIsError(false);
+           setFilms(films);
+           setIdFromCinema(id);
+           setId(id);
+       } catch (err) {
+           setIsError(true);
+       }
     };
 
 
     const handleSortByGenre = async (event: SelectChangeEvent<typeof personName>) => {
-        const {
-            target: { value },
-        } = event;
-        setGenre(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+      try {
+          const {
+              target: { value },
+          } = event;
+          setGenre(
+              typeof value === 'string' ? value.split(',') : value,
+          );
 
-        const films = await getSortedFilms(value as string[], id, sortRatingBy) as unknown as IFilm[];
-        setFilms(films);
+          const films = await getSortedFilms(value as string[], id, sortRatingBy) as unknown as IFilm[];
+
+          if (films.length === 0) {
+              throw Error('There were no suitable events');
+          }
+          setIsError(false);
+          setFilms(films);
+      } catch (err) {
+          setIsError(true);
+      }
     };
 
 
@@ -214,6 +243,13 @@ const MainPage = () => {
         navigate(LOGIN_ROUTE);
     }
 
+    const handleReset = () => {
+        setSelectedDate(null);
+        setCinemaValue([]);
+        setGenre([]);
+        setSortRatingBy('DESC');
+        setIsError(false);
+    }
 
     const handleClickOnFilm = async (id: number) => {
         const film = await getFilm(id);
@@ -333,57 +369,78 @@ const MainPage = () => {
                     </Container>
                 </Box>
                 <Container sx={{ py: 8 }} maxWidth="md">
-                    <Grid container spacing={4}>
-                        {films && films.map((film: IFilm) => {
-                            const {id, title, genre, url, rating, imdbRating} = film;
-                            const listOfGenre = genre!.split(', ');
-                            return  <Grid
-                                item
-                                key={id}
-                                xs={12}
-                                sm={6}
-                                md={4}
-                                onClick={() => handleClickOnFilm(id as number)}
+                    {
+                        isError && <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '20px'}}>
+                          <ErrorOutlineIcon sx={{ fontSize: 140, color: '#D7DBDD' }}/>
+                          <Typography variant='h3'>There were no suitable events</Typography>
+                          <Typography variant='h4' sx={{color: '#D7DBDD'}}>Try changing the search parameters</Typography>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    bgcolor: '#D7DBDD',
+                                    '&:hover': {
+                                        bgcolor: '#A6ACAF',
+                                    }
+                                }}
+                                onClick={handleReset}
                             >
-                                <Card
-                                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px'  }}
+                                Reset search parameters
+                            </Button>
+                        </Box>
+                    }
+                    {
+                        !isError && <Grid container spacing={4}>
+                            {films && films.map((film: IFilm) => {
+                                const {id, title, genre, url, rating, imdbRating} = film;
+                                const listOfGenre = genre!.split(', ');
+                                return  <Grid
+                                    item
+                                    key={id}
+                                    xs={12}
+                                    sm={6}
+                                    md={4}
+                                    onClick={() => handleClickOnFilm(id as number)}
                                 >
-                                    <CardMedia
-                                        component="img"
-                                        sx={{
-                                            pt: '20%',
-                                        }}
-                                        image={url}
-                                        alt={title}
-                                    />
-                                    <CardContent sx={{ flexGrow: 1, mb: 0, pb: 0}}>
-                                        <Typography variant="h5" component="h3">
-                                            { title }
-                                        </Typography>
-                                    </CardContent>
-                                    <Stack direction="row" spacing={1}>
-                                        {
-                                            listOfGenre.slice(0, 3).map((genre, genreId) => {
-                                                return <Chip key={genreId} label={genre} />
-                                            })
-                                        }
-                                    </Stack>
-                                   <Box sx={{display: 'flex', pb: '20%'}}>
-                                       <Rating
-                                           name="read-only"
-                                           value={imdbRating? +imdbRating/10 : null}
-                                           readOnly
-                                           max={1}
-                                           icon={<StarIcon sx={{ fontSize: 40 }}/>}
-                                           precision={0.1}
-                                           emptyIcon={<StarBorder sx={{ fontSize: 40 }}/>}
-                                       />
-                                       <Typography variant="h6" sx={{ ml: 1, alignSelf: 'center' }}>{imdbRating}</Typography>
-                                   </Box>
-                                </Card>
-                            </Grid>
-                        })}
-                    </Grid>
+                                    <Card
+                                        sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px'  }}
+                                    >
+                                        <CardMedia
+                                            component="img"
+                                            sx={{
+                                                pt: '20%',
+                                            }}
+                                            image={url}
+                                            alt={title}
+                                        />
+                                        <CardContent sx={{ flexGrow: 1, mb: 0, pb: 0}}>
+                                            <Typography variant="h5" component="h3">
+                                                { title }
+                                            </Typography>
+                                        </CardContent>
+                                        <Stack direction="row" spacing={1}>
+                                            {
+                                                listOfGenre.slice(0, 3).map((genre, genreId) => {
+                                                    return <Chip key={genreId} label={genre} />
+                                                })
+                                            }
+                                        </Stack>
+                                        <Box sx={{display: 'flex', pb: '20%'}}>
+                                            <Rating
+                                                name="read-only"
+                                                value={imdbRating? +imdbRating/10 : null}
+                                                readOnly
+                                                max={1}
+                                                icon={<StarIcon sx={{ fontSize: 40 }}/>}
+                                                precision={0.1}
+                                                emptyIcon={<StarBorder sx={{ fontSize: 40 }}/>}
+                                            />
+                                            <Typography variant="h6" sx={{ ml: 1, alignSelf: 'center' }}>{imdbRating}</Typography>
+                                        </Box>
+                                    </Card>
+                                </Grid>
+                            })}
+                        </Grid>
+                    }
                 </Container>
             </main>
             <Footer />
