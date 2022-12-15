@@ -106,8 +106,11 @@ const MainPage = () => {
 
 
     const [genre, setGenre] = useState<string[]>([]);
-    const [id, setId] = useState<number[]>([]);
     const [sortRatingBy, setSortRatingBy] = useState('DESC');
+
+    const [idFromDate, setIdFromDate] = useState<number[]>([]);
+    const [idFromCinema, setIdFromCinema] = useState<number[]>([]);
+    const [id, setId] = useState<number[]>([]);
 
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
@@ -184,7 +187,6 @@ const MainPage = () => {
         setFilms(films);
         setId(id);
     };
-
 
 
     const handleSortByGenre = async (event: SelectChangeEvent<typeof personName>) => {
