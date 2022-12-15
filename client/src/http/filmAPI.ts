@@ -17,28 +17,8 @@ export const getAllFilmsByRatingASC = async () => {
     return data;
 }
 
-export const getAllFilmsByCountryASC = async () => {
-    const { data } = await $host.get('film/get_by_country_asc');
-    return data;
-}
-
-export const getAllFilmsByCountryDESC = async () => {
-    const { data } = await $host.get('film/get_by_country_desc');
-    return data;
-}
-
-export const getAllFilmsByTitleASC = async () => {
-    const { data } = await $host.get('film/get_by_title_asc');
-    return data;
-}
-
-export const getAllFilmsByTitleDESC = async () => {
-    const { data } = await $host.get('film/get_by_title_desc');
-    return data;
-}
-
-export const getFilmsByGenre = async (genre: string[], title: string, value: string) => {
-    const { data } = await $host.post('film/filter_by_genre', {genre, title, value});
+export const getFilmsByGenre = async (genre: string[]) => {
+    const { data } = await $host.post('film/filter_by_genre', {genre});
     return data;
 }
 
@@ -64,5 +44,10 @@ export const updateFilmInfo = async (film: IFilm) => {
 
 export const getFilm = async (id: number) => {
     const { data } = await $host.get('film/' + id);
+    return data;
+}
+
+export const getSortedFilms = async (genre: string[], id: number[], value: string) => {
+    const { data } = await $host.post('film/sort', {genre, id, value});
     return data;
 }

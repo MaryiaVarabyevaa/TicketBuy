@@ -9,12 +9,9 @@ export declare class FilmsController {
     updateUserInfo(cinemaDto: UpdateFilmDto): Promise<[affectedCount: number]>;
     getFilmsByGenre(req: any): Promise<import("./films.entity").Film[]>;
     getFilmsById(req: any): Promise<import("./films.entity").Film[]>;
+    getSortedFilms(req: any): Promise<import("./films.entity").Film[]>;
     getAll(): Promise<import("./films.entity").Film[]>;
     getAllFilmsByRatingDESC(): Promise<import("./films.entity").Film[]>;
     getAllFilmsByRatingASC(): Promise<import("./films.entity").Film[]>;
-    getAllFilmsByCountryASC(): Promise<import("./films.entity").Film[]>;
-    getAllFilmsByCountryDESC(): Promise<import("./films.entity").Film[]>;
-    getAllFilmsByTitleASC(): Promise<import("./films.entity").Film[]>;
-    getAllFilmsByTitleDESC(): Promise<import("./films.entity").Film[]>;
     getPostById(id: number): Promise<import("./films.entity").Film>;
 }

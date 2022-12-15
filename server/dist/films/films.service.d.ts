@@ -8,11 +8,8 @@ export declare class FilmsService {
     getAllFilms(): Promise<Film[]>;
     getAllFilmsByRatingDESC(): Promise<Film[]>;
     getAllFilmsByRatingASC(): Promise<Film[]>;
-    getAllFilmsByCountryASC(): Promise<Film[]>;
-    getAllFilmsByCountryDESC(): Promise<Film[]>;
-    getAllFilmsByTitleDESC(): Promise<Film[]>;
-    getAllFilmsByTitleASC(): Promise<Film[]>;
-    getFilmsByGenre(genre: string[], title: string, value: string): Promise<Film[]>;
+    getFilmsByGenre(genre: string[]): Promise<Film[]>;
+    sortedFilms(genre: string[], id: number[], value: string): Promise<Film[]>;
     getFilmsById(id: number[]): Promise<Film[]>;
     getOneFilm(id: number): Promise<Film>;
     deleteFilm(id: number): Promise<void>;

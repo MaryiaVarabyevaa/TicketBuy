@@ -30,6 +30,11 @@ export const findSessionsByCinemaId = async (cinemaId: number[]) => {
     return data;
 }
 
+export const getSessionsByDate = async (date: string) => {
+    const { data } = await $host.post('sessions/get_by_date', {date});
+    return data;
+}
+
 export const getAllSessions = async () => {
     const { data } = await $host.get('sessions');
     return data;

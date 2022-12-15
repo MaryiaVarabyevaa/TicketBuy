@@ -11,19 +11,27 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, Theme, ThemeProvider} from '@mui/material/styles';
 import {SelectChangeEvent} from '@mui/material/Select';
-import {BottomNavigation, Checkbox, Chip, FormControl, InputLabel, OutlinedInput, Rating, Select} from "@mui/material";
+import {
+    BottomNavigation,
+    Checkbox,
+    Chip,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    Rating,
+    Select,
+    TextField
+} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
 import {IFilm} from "../../types/film";
 import {
-    getAllFilmsByCountryASC,
-    getAllFilmsByCountryDESC,
     getAllFilmsByRatingASC,
     getAllFilmsByRatingDESC,
-    getAllFilmsByTitleASC,
-    getAllFilmsByTitleDESC,
-    getFilm, getFilmsByGenre, getFilmsById
+    getFilm,
+    getFilmsByGenre,
+    getFilmsById, getSortedFilms
 } from "../../http/filmAPI";
 import Footer from "../../components/Footer";
 import {useDispatch} from "react-redux";
@@ -37,7 +45,10 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ListItemText from "@mui/material/ListItemText";
 import {getAllCinema} from "../../http/cinemaAPI";
-import {findSessionsByCinemaId} from "../../http/sessionAPI";
+import {findSessionsByCinemaId, getSessionsByDate} from "../../http/sessionAPI";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {Dayjs} from "dayjs";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -89,11 +100,14 @@ const MainPage = () => {
     const [ratingValue, setRatingValue] = useState<number | null>(2);
     const [value, setValue] = useState(0);
     const [isClickedRating, setIsClickedRating] = useState(true);
-    const [isClickedCountry, setIsClickedCountry] = useState(false);
-    const [isClickedTitle, setIsClickedTitle] = useState(false);
-    const [isClickedDate, setIsClickedDate] = useState(false);
     const [cinema, setCinema] = useState([]);
     const [cinemaValue, setCinemaValue] = useState<string[]>([]);
+    const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
+
+
+    const [genre, setGenre] = useState<string[]>([]);
+    const [id, setId] = useState<number[]>([]);
+    const [sortRatingBy, setSortRatingBy] = useState('DESC');
 
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
@@ -102,22 +116,45 @@ const MainPage = () => {
 
     const [personName, setPersonName] = React.useState<string[]>([]);
 
-    const handleChangeField = async (event: SelectChangeEvent<typeof personName>) => {
-        const {
-            target: { value },
-        } = event;
-        setPersonName(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+    const getFilms = async() => {
+        const sortedFilms = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
+        setFilms(sortedFilms);
+    };
 
-       const getFilms = await getFilmsByGenre(value as string[], 'imdbRating', 'ASC');
-       setFilms(getFilms);
+
+    const getCinema = async () => {
+        const cinema = await getAllCinema();
+        setCinema(cinema);
+    };
+
+    useEffect(() => {
+        getFilms();
+        getCinema();
+    }, [])
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setSortValue(event.target.value);
+    };
+
+    const handleChangeDate = async (newValue: any) => {
+        const {$D, $y, $M} = newValue;
+        const filmsId = await getSessionsByDate(`${$y}-${$M + 1}-${$D}`);
+        let id: number[] = [];
+        filmsId.map((item: any) => {
+            const {filmId} = item;
+            id.push(filmId);
+        })
+        const films = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
+        setFilms(films);
+        setId(id);
+        setSelectedDate(newValue);
     };
 
     const handleChangeCinemaField = async (event: SelectChangeEvent<typeof personName>) => {
         const {
             target: { value },
         } = event;
+
         setCinemaValue(
             typeof value === 'string' ? value.split(',') : value,
         );
@@ -142,82 +179,37 @@ const MainPage = () => {
             id.push(filmId);
         })
 
-        const sortedFilms = await getFilmsById(id);
-        setFilms(sortedFilms);
+
+        const films = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
+        setFilms(films);
+        setId(id);
     };
 
-    const setIsClickedValue = (rating: boolean, country: boolean, title: boolean, date: boolean) => {
-        setIsClickedRating(rating);
-        setIsClickedCountry(country);
-        setIsClickedTitle(title)
-        setIsClickedDate(date);
+
+
+    const handleSortByGenre = async (event: SelectChangeEvent<typeof personName>) => {
+        const {
+            target: { value },
+        } = event;
+        setGenre(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+
+        const films = await getSortedFilms(value as string[], id, sortRatingBy) as unknown as IFilm[];
+        setFilms(films);
+    };
+
+
+
+    const handleSortByRating = async () => {
+        const value = ( sortRatingBy === 'DESC')? 'ASC' : 'DESC';
+        const films = await getSortedFilms(genre, id, value) as unknown as IFilm[];
+        setSortRatingBy(value);
+        setFilms(films);
     }
-
-    const getFilms = async() => {
-        const sortedFilms = await getAllFilmsByRatingDESC();
-        setFilms(sortedFilms);
-    };
-
-    const getCinema = async () => {
-        const cinema = await getAllCinema();
-        setCinema(cinema);
-    }
-
-    useEffect(() => {
-        getFilms();
-        getCinema();
-    }, [])
-
-    const handleChange = (event: SelectChangeEvent) => {
-        setSortValue(event.target.value);
-    };
 
     const handleClick = () => {
         navigate(LOGIN_ROUTE);
-    }
-
-    const handleSortByRating = async () => {
-        let sortedFilms;
-        let isClickedRatingValue;
-        if (isClickedRating) {
-            sortedFilms =  await getAllFilmsByRatingASC();
-            isClickedRatingValue = false;
-        } else {
-            sortedFilms =  await getAllFilmsByRatingDESC();
-            isClickedRatingValue = true;
-        }
-        setFilms(sortedFilms);
-        setIsClickedValue(isClickedRatingValue, false, false, false);
-    }
-
-    const handleSortByCountry = async () => {
-        let sortedFilms;
-        let isClickedCountryValue;
-        if (isClickedCountry) {
-            sortedFilms = await getAllFilmsByCountryDESC();
-            isClickedCountryValue = false;
-        } else {
-
-            sortedFilms =  await getAllFilmsByCountryASC();
-            isClickedCountryValue = true;
-        }
-        setFilms(sortedFilms);
-        setIsClickedValue(false, isClickedCountryValue, false, false);
-    }
-
-    const handleSortByTitle = async () => {
-        let sortedFilms;
-        let isClickedTitleValue;
-        if (isClickedTitle) {
-            sortedFilms = await getAllFilmsByTitleDESC();
-            isClickedTitleValue = false;
-        } else {
-
-            sortedFilms =  await getAllFilmsByTitleASC();
-            isClickedTitleValue = true;
-        }
-        setFilms(sortedFilms);
-        setIsClickedValue(false, false, isClickedTitleValue, false);
     }
 
 
@@ -226,7 +218,6 @@ const MainPage = () => {
         dispatch(addFilmAction(film));
         navigate(`/films/${id}`);
     }
-
 
     return (
         <ThemeProvider theme={theme}>
@@ -260,99 +251,75 @@ const MainPage = () => {
                                 },
                             }}
                         >
-                            <Box sx={{ width: 500 }}>
-                                <BottomNavigation
-                                    showLabels
-                                    value={value}
-                                    onChange={(event, newValue) => {
-                                        setValue(newValue);
-                                    }}
-                                >
-                                    <BottomNavigationAction
-                                        onClick={handleSortByRating}
-                                        icon={isClickedRating? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
-                                        label="Rating"
-                                        sx={{display: 'flex', flexDirection: 'row-reverse'}}
-                                    />
-                                    <BottomNavigationAction
-                                        label="Country"
-                                        onClick={handleSortByCountry}
-                                        icon={isClickedCountry? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
-                                        sx={{display: 'flex', flexDirection: 'row-reverse'}}
-                                    />
-                                    <BottomNavigationAction
-                                        label="Title"
-                                        onClick={handleSortByTitle}
-                                        icon={isClickedTitle? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
-                                        sx={{display: 'flex', flexDirection: 'row-reverse'}}
-                                    />
-                                    {/*<BottomNavigationAction label="Date"/>*/}
-                                </BottomNavigation>
-                            </Box>
-                           <Stack direction="row" spacing={2}>
-                               <FormControl sx={{ width: 300 }}>
-                                   <InputLabel id="demo-multiple-checkbox-label">Genre</InputLabel>
-                                   <Select
-                                       labelId="demo-multiple-checkbox-label"
-                                       id="demo-multiple-checkbox"
-                                       multiple
-                                       value={personName}
-                                       onChange={handleChangeField}
-                                       input={<OutlinedInput label="Genre" />}
-                                       renderValue={(selected) => selected.join(', ')}
-                                       MenuProps={MenuProps}
-                                   >
-                                       {names.sort().map((name) => (
-                                           <MenuItem key={name} value={name}>
-                                               <Checkbox checked={personName.indexOf(name) > -1} />
-                                               <ListItemText primary={name} />
-                                           </MenuItem>
-                                       ))}
-                                   </Select>
-                               </FormControl>
-                               <FormControl sx={{ width: 300 }}>
-                                   <InputLabel id="demo-multiple-checkbox-label">Cinema</InputLabel>
-                                   <Select
-                                       labelId="demo-multiple-checkbox-label"
-                                       id="demo-multiple-checkbox"
-                                       multiple
-                                       value={cinemaValue}
-                                       onChange={handleChangeCinemaField}
-                                       input={<OutlinedInput label="Cinema" />}
-                                       renderValue={(selected) => selected.join(', ')}
-                                       MenuProps={MenuProps}
-                                   >
-                                       {cinema && cinema.sort().map((item) => {
-                                           const {name, id} = item;
-                                           return <MenuItem key={id} value={name}>
-                                               <Checkbox checked={cinemaValue.indexOf(name) > -1} />
-                                               <ListItemText primary={name} />
-                                           </MenuItem>
-                                       })}
-                                   </Select>
-                               </FormControl>
-                               <FormControl sx={{ width: 300 }}>
-                                   <InputLabel id="demo-multiple-checkbox-label">Cinema</InputLabel>
-                                   <Select
-                                       labelId="demo-multiple-checkbox-label"
-                                       id="demo-multiple-checkbox"
-                                       multiple
-                                       value={cinemaValue}
-                                       onChange={handleChangeCinemaField}
-                                       input={<OutlinedInput label="Cinema" />}
-                                       renderValue={(selected) => selected.join(', ')}
-                                       MenuProps={MenuProps}
-                                   >
-                                       {cinema && cinema.sort().map((item) => {
-                                           const {name, id} = item;
-                                           return <MenuItem key={id} value={name}>
-                                               <Checkbox checked={cinemaValue.indexOf(name) > -1} />
-                                               <ListItemText primary={name} />
-                                           </MenuItem>
-                                       })}
-                                   </Select>
-                               </FormControl>
-                           </Stack>
+                          <Box sx={{display: 'flex'}}>
+                              <Stack direction="row" spacing={2}>
+                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                      <DatePicker
+                                          label="Select a date"
+                                          value={selectedDate}
+                                          disablePast
+                                          orientation='portrait'
+                                          onChange={(newValue) => handleChangeDate(newValue)}
+                                          renderInput={(params) => <TextField {...params} />}
+                                      />
+                                  </LocalizationProvider>
+                                  <FormControl sx={{ width: 300 }}>
+                                      <InputLabel id="demo-multiple-checkbox-label">Cinema</InputLabel>
+                                      <Select
+                                          labelId="demo-multiple-checkbox-label"
+                                          id="demo-multiple-checkbox"
+                                          multiple
+                                          value={cinemaValue}
+                                          onChange={handleChangeCinemaField}
+                                          input={<OutlinedInput label="Cinema" />}
+                                          renderValue={(selected) => selected.join(', ')}
+                                          MenuProps={MenuProps}
+                                      >
+                                          {cinema && cinema.sort().map((item) => {
+                                              const {name, id} = item;
+                                              return <MenuItem key={id} value={name}>
+                                                  <Checkbox checked={cinemaValue.indexOf(name) > -1} />
+                                                  <ListItemText primary={name} />
+                                              </MenuItem>
+                                          })}
+                                      </Select>
+                                  </FormControl>
+                                  <FormControl sx={{ width: 300 }}>
+                                      <InputLabel id="demo-multiple-checkbox-label">Genre</InputLabel>
+                                      <Select
+                                          labelId="demo-multiple-checkbox-label"
+                                          id="demo-multiple-checkbox"
+                                          multiple
+                                          value={genre}
+                                          onChange={handleSortByGenre}
+                                          input={<OutlinedInput label="Genre" />}
+                                          renderValue={(selected) => selected.join(', ')}
+                                          MenuProps={MenuProps}
+                                      >
+                                          {names.sort().map((name) => (
+                                              <MenuItem key={name} value={name}>
+                                                  <Checkbox checked={genre.indexOf(name) > -1} />
+                                                  <ListItemText primary={name} />
+                                              </MenuItem>
+                                          ))}
+                                      </Select>
+                                  </FormControl>
+                              </Stack>
+                              <BottomNavigation
+                                  showLabels
+                                  value={value}
+                                  onChange={(event, newValue) => {
+                                      setValue(newValue);
+                                  }}
+                              >
+                                  <BottomNavigationAction
+                                      onClick={handleSortByRating}
+                                      icon={sortRatingBy === 'DESC'? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}
+                                      label="Rating"
+                                      sx={{display: 'flex', flexDirection: 'row-reverse'}}
+                                  />
+                              </BottomNavigation>
+                          </Box>
                             <Box>
                                 {
                                     personName.length !== 0 && personName.map((name) => {

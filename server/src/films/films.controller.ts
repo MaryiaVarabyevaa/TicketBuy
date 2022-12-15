@@ -23,17 +23,22 @@ export class FilmsController {
 
     @Post('filter_by_genre')
     async getFilmsByGenre(@Request() req) {
-        return this.filmService.getFilmsByGenre(
-            req.body.genre,
-            req.body.title,
-            req.body.value
-        );
+        return this.filmService.getFilmsByGenre(req.body.genre);
     }
 
     @Post('filter_by_id')
     async getFilmsById(@Request() req) {
         return this.filmService.getFilmsById(
             req.body.id,
+        );
+    }
+
+    @Post('sort')
+    async getSortedFilms(@Request() req) {
+        return this.filmService.sortedFilms(
+            req.body.genre,
+            req.body.id,
+            req.body.value
         );
     }
 
@@ -49,26 +54,6 @@ export class FilmsController {
     @Get('get_by_rating_asc')
     getAllFilmsByRatingASC() {
         return this.filmService.getAllFilmsByRatingASC();
-    }
-
-    @Get('get_by_country_asc')
-    getAllFilmsByCountryASC() {
-        return this.filmService.getAllFilmsByCountryASC();
-    }
-
-    @Get('get_by_country_desc')
-    getAllFilmsByCountryDESC() {
-        return this.filmService.getAllFilmsByCountryDESC();
-    }
-
-    @Get('get_by_title_asc')
-    getAllFilmsByTitleASC() {
-        return this.filmService.getAllFilmsByTitleASC();
-    }
-
-    @Get('get_by_title_desc')
-    getAllFilmsByTitleDESC() {
-        return this.filmService.getAllFilmsByTitleDESC();
     }
 
     @Get(':id')

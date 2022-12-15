@@ -31,10 +31,13 @@ let FilmsController = class FilmsController {
         return this.filmService.updateFilmInfo(cinemaDto);
     }
     async getFilmsByGenre(req) {
-        return this.filmService.getFilmsByGenre(req.body.genre, req.body.title, req.body.value);
+        return this.filmService.getFilmsByGenre(req.body.genre);
     }
     async getFilmsById(req) {
         return this.filmService.getFilmsById(req.body.id);
+    }
+    async getSortedFilms(req) {
+        return this.filmService.sortedFilms(req.body.genre, req.body.id, req.body.value);
     }
     getAll() {
         return this.filmService.getAllFilms();
@@ -44,18 +47,6 @@ let FilmsController = class FilmsController {
     }
     getAllFilmsByRatingASC() {
         return this.filmService.getAllFilmsByRatingASC();
-    }
-    getAllFilmsByCountryASC() {
-        return this.filmService.getAllFilmsByCountryASC();
-    }
-    getAllFilmsByCountryDESC() {
-        return this.filmService.getAllFilmsByCountryDESC();
-    }
-    getAllFilmsByTitleASC() {
-        return this.filmService.getAllFilmsByTitleASC();
-    }
-    getAllFilmsByTitleDESC() {
-        return this.filmService.getAllFilmsByTitleDESC();
     }
     getPostById(id) {
         return this.filmService.getOneFilm(id);
@@ -97,6 +88,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], FilmsController.prototype, "getFilmsById", null);
 __decorate([
+    (0, common_1.Post)('sort'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], FilmsController.prototype, "getSortedFilms", null);
+__decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -114,30 +112,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], FilmsController.prototype, "getAllFilmsByRatingASC", null);
-__decorate([
-    (0, common_1.Get)('get_by_country_asc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FilmsController.prototype, "getAllFilmsByCountryASC", null);
-__decorate([
-    (0, common_1.Get)('get_by_country_desc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FilmsController.prototype, "getAllFilmsByCountryDESC", null);
-__decorate([
-    (0, common_1.Get)('get_by_title_asc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FilmsController.prototype, "getAllFilmsByTitleASC", null);
-__decorate([
-    (0, common_1.Get)('get_by_title_desc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FilmsController.prototype, "getAllFilmsByTitleDESC", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

@@ -9,4 +9,5 @@ export declare class SessionsController {
     deleteCinema(req: any): Promise<void>;
     getAll(): Promise<import("./sessions.entity").Session[]>;
     findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
+    getSessionsByDate(req: any): Promise<import("./sessions.entity").Session[]>;
 }

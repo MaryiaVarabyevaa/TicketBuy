@@ -19,6 +19,17 @@ export class SessionsService {
         return sessions;
     }
 
+
+    async getSessionsByDate(date: string) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                date
+            },
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('filmId')), 'filmId']],
+        })
+        return sessions;
+    }
+
     async findSessionsByCinemaId(cinemaId: number[]) {
         const sessions = await this.sessionRepository.findAll({
             where: {

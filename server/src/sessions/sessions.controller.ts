@@ -31,4 +31,9 @@ export class SessionsController {
     findSessionsByCinemaId(@Request() req) {
         return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
     }
+
+    @Post('get_by_date')
+    getSessionsByDate(@Request() req) {
+        return this.sessionService.getSessionsByDate(req.body.date);
+    }
 }

@@ -40,6 +40,15 @@ let SessionsService = class SessionsService {
         const sessions = await this.sessionRepository.findAll();
         return sessions;
     }
+    async getSessionsByDate(date) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                date
+            },
+            attributes: [[sequelize_2.default.fn('DISTINCT', sequelize_2.default.col('filmId')), 'filmId']],
+        });
+        return sessions;
+    }
     async findSessionsByCinemaId(cinemaId) {
         const sessions = await this.sessionRepository.findAll({
             where: {

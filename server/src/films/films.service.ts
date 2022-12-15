@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Film} from "./films.entity";
 import {CreateFilmsDto} from "./dto/create-films.dto";
 import {UpdateFilmDto} from "./dto/update-films.dto";
-import sequelize, {Op, Sequelize} from "sequelize";
+import {Op, Sequelize} from "sequelize";
 
 @Injectable()
 export class FilmsService {
@@ -51,51 +51,8 @@ export class FilmsService {
         return films;
     }
 
-    async getAllFilmsByCountryASC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['country', 'ASC'],
-                ['imdbRating', 'DESC']
-            ]
-        });
-        return films;
-    }
 
-    async getAllFilmsByCountryDESC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['country', 'DESC'],
-                ['imdbRating', 'DESC'],
-            ]
-        });
-        return films;
-    }
-
-    async getAllFilmsByTitleDESC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['title', 'DESC'],
-                ['imdbRating', 'DESC'],
-            ]
-        });
-        return films;
-    }
-
-    async getAllFilmsByTitleASC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['title', 'ASC'],
-                ['imdbRating', 'DESC'],
-            ]
-        });
-        return films;
-    }
-
-    async getFilmsByGenre(genre: string[], title: string, value: string) {
+    async getFilmsByGenre(genre: string[]) {
 
         const args = genre.map((item) => {
            return item.replace(/ /g,'_');
@@ -108,11 +65,68 @@ export class FilmsService {
                 }
 
             },
-            order: [
-                [title, value]
-            ]
         });
         return films;
+    }
+
+    async sortedFilms (genre: string[], id: number[], value: string) {
+        if (genre.length === 0 && id.length === 0) {
+            const films = await this.filmRepository.findAll({
+                order: [
+                    ['imdbRating', value]
+                ]
+            });
+            return films;
+        }
+
+        if (genre.length === 0  && id.length !== 0) {
+            const films = await this.filmRepository.findAll({
+               order: [
+                    ['imdbRating', value]
+                ],
+                where: {
+                    id
+                }
+            });
+            return films;
+        }
+
+        if (genre.length !== 0  && id.length === 0) {
+            const args = genre.map((item) => {
+                return item.replace(/ /g,'_');
+            }).join(' | ');
+
+            const films = await this.filmRepository.findAll({
+                where: {
+                    genre: {
+                        [Op.match]: Sequelize.fn('to_tsquery', args)
+                    },
+                },
+                order: [
+                    ['imdbRating', value]
+                ],
+            });
+            return films;
+        }
+
+        if (genre.length !== 0  && id.length !== 0) {
+            const args = genre.map((item) => {
+                return item.replace(/ /g,'_');
+            }).join(' | ');
+
+            const films = await this.filmRepository.findAll({
+                where: {
+                    id,
+                    genre: {
+                        [Op.match]: Sequelize.fn('to_tsquery', args)
+                    },
+                },
+                order: [
+                    ['imdbRating', value]
+                ],
+            });
+            return  films;
+        }
     }
 
     async getFilmsById(id: number[]) {

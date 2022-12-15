@@ -67,47 +67,7 @@ let FilmsService = class FilmsService {
         });
         return films;
     }
-    async getAllFilmsByCountryASC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['country', 'ASC'],
-                ['imdbRating', 'DESC']
-            ]
-        });
-        return films;
-    }
-    async getAllFilmsByCountryDESC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['country', 'DESC'],
-                ['imdbRating', 'DESC'],
-            ]
-        });
-        return films;
-    }
-    async getAllFilmsByTitleDESC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['title', 'DESC'],
-                ['imdbRating', 'DESC'],
-            ]
-        });
-        return films;
-    }
-    async getAllFilmsByTitleASC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['title', 'ASC'],
-                ['imdbRating', 'DESC'],
-            ]
-        });
-        return films;
-    }
-    async getFilmsByGenre(genre, title, value) {
+    async getFilmsByGenre(genre) {
         const args = genre.map((item) => {
             return item.replace(/ /g, '_');
         }).join(' | ');
@@ -117,11 +77,62 @@ let FilmsService = class FilmsService {
                     [sequelize_2.Op.match]: sequelize_2.Sequelize.fn('to_tsquery', args)
                 }
             },
-            order: [
-                [title, value]
-            ]
         });
         return films;
+    }
+    async sortedFilms(genre, id, value) {
+        if (genre.length === 0 && id.length === 0) {
+            const films = await this.filmRepository.findAll({
+                order: [
+                    ['imdbRating', value]
+                ]
+            });
+            return films;
+        }
+        if (genre.length === 0 && id.length !== 0) {
+            const films = await this.filmRepository.findAll({
+                order: [
+                    ['imdbRating', value]
+                ],
+                where: {
+                    id
+                }
+            });
+            return films;
+        }
+        if (genre.length !== 0 && id.length === 0) {
+            const args = genre.map((item) => {
+                return item.replace(/ /g, '_');
+            }).join(' | ');
+            const films = await this.filmRepository.findAll({
+                where: {
+                    genre: {
+                        [sequelize_2.Op.match]: sequelize_2.Sequelize.fn('to_tsquery', args)
+                    },
+                },
+                order: [
+                    ['imdbRating', value]
+                ],
+            });
+            return films;
+        }
+        if (genre.length !== 0 && id.length !== 0) {
+            const args = genre.map((item) => {
+                return item.replace(/ /g, '_');
+            }).join(' | ');
+            const films = await this.filmRepository.findAll({
+                where: {
+                    id,
+                    genre: {
+                        [sequelize_2.Op.match]: sequelize_2.Sequelize.fn('to_tsquery', args)
+                    },
+                },
+                order: [
+                    ['imdbRating', value]
+                ],
+            });
+            return films;
+        }
     }
     async getFilmsById(id) {
         const films = await this.filmRepository.findAll({

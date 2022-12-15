@@ -6,6 +6,7 @@ export declare class SessionsService {
     constructor(sessionRepository: typeof Session);
     addSession(dto: CreateSessionDto): Promise<Session>;
     getAllSessions(): Promise<Session[]>;
+    getSessionsByDate(date: string): Promise<Session[]>;
     findSessionsByCinemaId(cinemaId: number[]): Promise<Session[]>;
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;
     deleteSession(id: number): Promise<void>;
