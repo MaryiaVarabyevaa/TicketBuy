@@ -380,7 +380,7 @@ const MainPage = () => {
                         isError && <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '20px'}}>
                           <ErrorOutlineIcon sx={{ fontSize: 140, color: '#D7DBDD' }}/>
                           <Typography variant='h3'>There were no suitable events</Typography>
-                          <Typography variant='h4' sx={{color: '#D7DBDD'}}>Try changing the search parameters</Typography>
+                          <Typography variant='h4' sx={{color: '#8c2041'}}>Try changing the search parameters</Typography>
                             <Button
                                 variant="contained"
                                 sx={{

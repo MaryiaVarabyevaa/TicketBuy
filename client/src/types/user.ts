@@ -38,6 +38,17 @@ export interface IUpdateUserInfo {
     email: string;
 }
 
+export interface IEditPersonInfo {
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
+export interface IUpdateUserPassword {
+    password: string;
+    repeatedPassword: string;
+}
+
 export interface IUserDate {
     id: number;
     firstName: string;
