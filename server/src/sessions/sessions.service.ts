@@ -2,7 +2,6 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
-import {UpdateFilmDto} from "../films/dto/update-films.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
 import sequelize from "sequelize";
 
@@ -40,6 +39,37 @@ export class SessionsService {
 
         return sessions;
     }
+
+    async getSessionsByCinemaId(cinemaId: number) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId
+            }
+            // attributes: [
+            //     [sequelize.fn('max', sequelize.col('date')), 'date'],
+            //     // [sequelize.fn('max', sequelize.col('time')), 'time']
+            // ],
+            // group: 'date',
+
+        });
+
+        return sessions;
+    }
+
+    async findCinemaIdByFilmId(filmId: number) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                filmId
+            },
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('cinemaId')), 'cinemaId']],
+        });
+        let id = [];
+        sessions.map(({cinemaId}) => {
+            id.push(cinemaId);
+        })
+        return id;
+    }
+
     async updateSessionInfo(sessionDto: UpdateSessionDto) {
         const {id, ...others} = sessionDto;
         const updateCSessionInfo = await this.sessionRepository.update({...others}, {

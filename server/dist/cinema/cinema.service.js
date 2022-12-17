@@ -55,6 +55,15 @@ let CinemaService = class CinemaService {
         });
         return cinema;
     }
+    async getCinemaById(id) {
+        const cinema = await this.cinemaRepository.findAll({
+            attributes: ['name', 'id'],
+            where: {
+                id
+            }
+        });
+        return cinema;
+    }
     async getCinemaId(cinemaDto) {
         const cinema = await this.cinemaRepository.findOne({
             where: Object.assign({}, cinemaDto)

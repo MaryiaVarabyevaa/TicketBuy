@@ -75,9 +75,6 @@ const Reviews = () => {
         getData();
     },[isAdded, isDeleted])
 
-    // useEffect(()=>{
-    //     getData();
-    // },[])
     return (
         <Stack spacing={3} sx={{mt: 5}}>
 

@@ -27,7 +27,7 @@ let SessionsController = class SessionsController {
     async updateSessionInfo(sessionDto) {
         return this.sessionService.updateSessionInfo(sessionDto);
     }
-    deleteCinema(req) {
+    deleteSession(req) {
         return this.sessionService.deleteSession(req.body.id);
     }
     getAll() {
@@ -35,6 +35,12 @@ let SessionsController = class SessionsController {
     }
     findSessionsByCinemaId(req) {
         return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
+    }
+    findCinemaIdByFilmId(req) {
+        return this.sessionService.findCinemaIdByFilmId(req.body.filmId);
+    }
+    getSessionsByCinemaId(req) {
+        return this.sessionService.getSessionsByCinemaId(req.body.cinemaId);
     }
     getSessionsByDate(req) {
         return this.sessionService.getSessionsByDate(req.body.date);
@@ -60,7 +66,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], SessionsController.prototype, "deleteCinema", null);
+], SessionsController.prototype, "deleteSession", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
@@ -74,6 +80,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "findSessionsByCinemaId", null);
+__decorate([
+    (0, common_1.Post)('get_cinemaId'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "findCinemaIdByFilmId", null);
+__decorate([
+    (0, common_1.Post)('get_info'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getSessionsByCinemaId", null);
 __decorate([
     (0, common_1.Post)('get_by_date'),
     __param(0, (0, common_1.Request)()),

@@ -7,6 +7,11 @@ export const getAllCinema = async () => {
     return data;
 }
 
+export const getCinemaInfoById = async (id: number[]) => {
+    const { data } = await $host.post('cinema/get_info_by_id', {id});
+    return data;
+}
+
 export const deleteCinema = async (id: GridRowId) => {
     const { data } = await $host.post('cinema/delete', {id});
     return data;

@@ -6,8 +6,10 @@ export declare class SessionsController {
     constructor(sessionService: SessionsService);
     create(sessionDto: CreateSessionDto): Promise<import("./sessions.entity").Session>;
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;
-    deleteCinema(req: any): Promise<void>;
+    deleteSession(req: any): Promise<void>;
     getAll(): Promise<import("./sessions.entity").Session[]>;
     findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
+    findCinemaIdByFilmId(req: any): Promise<any[]>;
+    getSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     getSessionsByDate(req: any): Promise<import("./sessions.entity").Session[]>;
 }

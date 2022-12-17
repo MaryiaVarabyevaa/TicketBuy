@@ -18,7 +18,7 @@ export class SessionsController {
     }
 
     @Post('delete')
-    deleteCinema(@Request() req) {
+    deleteSession(@Request() req) {
         return this.sessionService.deleteSession(req.body.id);
     }
 
@@ -30,6 +30,16 @@ export class SessionsController {
     @Post('get_by_cinemaId')
     findSessionsByCinemaId(@Request() req) {
         return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
+    }
+
+    @Post('get_cinemaId')
+    findCinemaIdByFilmId(@Request() req) {
+        return this.sessionService.findCinemaIdByFilmId(req.body.filmId);
+    }
+
+    @Post('get_info')
+    getSessionsByCinemaId(@Request() req) {
+        return this.sessionService.getSessionsByCinemaId(req.body.cinemaId);
     }
 
     @Post('get_by_date')

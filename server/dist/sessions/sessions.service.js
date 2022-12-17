@@ -58,6 +58,27 @@ let SessionsService = class SessionsService {
         });
         return sessions;
     }
+    async getSessionsByCinemaId(cinemaId) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId
+            }
+        });
+        return sessions;
+    }
+    async findCinemaIdByFilmId(filmId) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                filmId
+            },
+            attributes: [[sequelize_2.default.fn('DISTINCT', sequelize_2.default.col('cinemaId')), 'cinemaId']],
+        });
+        let id = [];
+        sessions.map(({ cinemaId }) => {
+            id.push(cinemaId);
+        });
+        return id;
+    }
     async updateSessionInfo(sessionDto) {
         const { id } = sessionDto, others = __rest(sessionDto, ["id"]);
         const updateCSessionInfo = await this.sessionRepository.update(Object.assign({}, others), {

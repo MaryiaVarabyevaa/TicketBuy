@@ -6,7 +6,8 @@ export declare class CinemaController {
     constructor(cinemaService: CinemaService);
     create(cinemaDto: CreateCinemaDto): Promise<import("./cinema.entity").Cinema>;
     getAll(): Promise<import("./cinema.entity").Cinema[]>;
-    getCinemaID(cinemaDto: CreateCinemaDto): Promise<number>;
+    getCinemaI(cinemaDto: CreateCinemaDto): Promise<number>;
+    getCinemaById(req: any): Promise<import("./cinema.entity").Cinema[]>;
     deleteCinema(req: any): Promise<void>;
     updateUserInfo(cinemaDto: UpdateCinemaDto): Promise<[affectedCount: number]>;
 }

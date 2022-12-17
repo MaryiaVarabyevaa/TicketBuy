@@ -15,6 +15,7 @@ import {getFilm} from "../../http/filmAPI";
 import Reviews from "./Reviews";
 import {useSelector} from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
+import Sessions from "./Sessions";
 
 interface IRootState {
     user: any
@@ -24,6 +25,7 @@ const Film = () => {
     const [film, setFilm] = useState<any>({});
     const [newRating, setNewRating] = useState<number | null>(0);
     const [listOfGenre, setListOfGenre] = useState<string[]>([]);
+    const [isOpenSelectSession, setIsOpenSelectSession] = useState(false);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const {id} = useParams();
 
@@ -151,11 +153,18 @@ const Film = () => {
                                     </Box>
                                 </Stack>
                                 <CardActions>
-                                    <Button variant="contained" size='large'>Buy ticket</Button>
+                                    <Button variant="contained" size='large'
+                                            onClick={() => setIsOpenSelectSession(true)}
+                                    >
+                                        Buy ticket
+                                    </Button>
                                 </CardActions>
                             </Box>
                         </Card>
-                            <Reviews />
+                            {
+                                isOpenSelectSession && <Sessions />
+                            }
+                            {/*<Reviews />*/}
                     </Container>
                     <Footer />
                 </Box>

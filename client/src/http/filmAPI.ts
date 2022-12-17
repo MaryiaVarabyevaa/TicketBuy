@@ -7,26 +7,6 @@ export const getAllFilms = async () => {
     return data;
 }
 
-export const getAllFilmsByRatingDESC = async () => {
-    const { data } = await $host.get('film/get_by_rating_desc');
-    return data;
-}
-
-export const getAllFilmsByRatingASC = async () => {
-    const { data } = await $host.get('film/get_by_rating_asc');
-    return data;
-}
-
-export const getFilmsByGenre = async (genre: string[]) => {
-    const { data } = await $host.post('film/filter_by_genre', {genre});
-    return data;
-}
-
-export const getFilmsById = async (id: number[]) => {
-    const { data } = await $host.post('film/filter_by_id', {id});
-    return data;
-}
-
 export const deleteFilm = async (id: GridRowId) => {
     const { data } = await $host.post('film/delete', {id});
     return data;

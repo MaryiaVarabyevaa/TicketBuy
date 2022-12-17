@@ -40,6 +40,16 @@ export class CinemaService {
         return cinema;
     }
 
+    async getCinemaById(id: number[]) {
+        const cinema = await this.cinemaRepository.findAll({
+            attributes: ['name', 'id'],
+            where: {
+                id
+            }
+        });
+        return cinema;
+    }
+
     async getCinemaId(cinemaDto: CreateCinemaDto) {
         const cinema = await this.cinemaRepository.findOne({
             where: {
