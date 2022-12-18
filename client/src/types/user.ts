@@ -9,7 +9,7 @@ export interface IUserState {
     isAuth: boolean;
     isAdmin: boolean;
     isModerator: boolean;
-    currentUser: any[];
+    currentUserId: number | null;
     users: any[];
 }
 
@@ -46,7 +46,8 @@ export interface IEditPersonInfo {
 
 export interface IUpdateUserPassword {
     password: string;
-    repeatedPassword: string;
+    newPassword: string;
+    repeatedNewPassword: string;
 }
 
 export interface IUserDate {

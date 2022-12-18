@@ -32,6 +32,12 @@ let UsersController = class UsersController {
     async login(req) {
         return this.authService.login(req.user);
     }
+    check(req) {
+        return this.authService.validateUser(req.body.email, req.body.password);
+    }
+    updatePassword(req) {
+        return this.authService.updatePassword(req.body.email, req.body.password);
+    }
     async block(req) {
         return this.userService.blockUser(req.body.id);
     }
@@ -69,6 +75,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('check'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "check", null);
+__decorate([
+    (0, common_1.Post)('update-password'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "updatePassword", null);
 __decorate([
     (0, common_1.Post)('block'),
     __param(0, (0, common_1.Request)()),

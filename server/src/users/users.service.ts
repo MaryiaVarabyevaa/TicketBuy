@@ -41,12 +41,15 @@ export class UsersService {
                 email
             }
         })
+        if (!user) {
+            return false;
+        }
         return user;
     }
 
     async getUserById(id: number) {
         const user = await this.userRepository.findOne({
-            attributes: ["firstName", "lastName"],
+            attributes: ["firstName", "lastName", "email"],
             where: {
                 id
             }
@@ -65,6 +68,15 @@ export class UsersService {
             }
         });
         return isBlocked;
+    }
+
+    async updatePassword(email: string, password: string) {
+        const changedPassword = await this.userRepository.update({password}, {
+            where: {
+                email
+            }
+        });
+        return changedPassword;
     }
 
     async changeRole(id: number) {
@@ -88,4 +100,13 @@ export class UsersService {
             }
         });
     }
+
+    // async checkUserEmail (email: string) {
+    //     const user = await this.userRepository.findOne({
+    //         attributes: ['email', "firstName", "lastName", "role", "id"],
+    //         where: {
+    //             email
+    //         }
+    //     })
+    // }
 }

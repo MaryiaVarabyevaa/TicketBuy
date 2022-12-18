@@ -4,6 +4,8 @@ import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
 import sequelize from "sequelize";
+import query from 'express';
+const { QueryTypes } = sequelize;
 
 @Injectable()
 export class SessionsService {
@@ -41,20 +43,15 @@ export class SessionsService {
     }
 
     async getSessionsByCinemaId(cinemaId: number) {
-        const sessions = await this.sessionRepository.findAll({
-            where: {
-                cinemaId
-            }
-            // attributes: [
-            //     [sequelize.fn('max', sequelize.col('date')), 'date'],
-            //     // [sequelize.fn('max', sequelize.col('time')), 'time']
-            // ],
-            // group: 'date',
 
-        });
+        const [result] = await this.sessionRepository.sequelize.query(
+            `SELECT * FROM session `
+        );
 
-        return sessions;
+        return result;
     }
+
+
 
     async findCinemaIdByFilmId(filmId: number) {
         const sessions = await this.sessionRepository.findAll({

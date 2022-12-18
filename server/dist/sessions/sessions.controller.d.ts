@@ -10,6 +10,6 @@ export declare class SessionsController {
     getAll(): Promise<import("./sessions.entity").Session[]>;
     findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     findCinemaIdByFilmId(req: any): Promise<any[]>;
-    getSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
+    getSessionsByCinemaId(req: any): Promise<unknown[]>;
     getSessionsByDate(req: any): Promise<import("./sessions.entity").Session[]>;
 }

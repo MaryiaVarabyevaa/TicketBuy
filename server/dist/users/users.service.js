@@ -46,11 +46,14 @@ let UsersService = class UsersService {
                 email
             }
         });
+        if (!user) {
+            return false;
+        }
         return user;
     }
     async getUserById(id) {
         const user = await this.userRepository.findOne({
-            attributes: ["firstName", "lastName"],
+            attributes: ["firstName", "lastName", "email"],
             where: {
                 id
             }
@@ -68,6 +71,14 @@ let UsersService = class UsersService {
             }
         });
         return isBlocked;
+    }
+    async updatePassword(email, password) {
+        const changedPassword = await this.userRepository.update({ password }, {
+            where: {
+                email
+            }
+        });
+        return changedPassword;
     }
     async changeRole(id) {
         const { role } = await this.userRepository.findOne({

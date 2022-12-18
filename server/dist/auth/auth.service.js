@@ -51,6 +51,10 @@ let AuthService = class AuthService {
         }
         return null;
     }
+    async updatePassword(email, password) {
+        const hashPassword = await bcrypt.hash(password, 5);
+        return await this.usersService.updatePassword(email, hashPassword);
+    }
     async login(user) {
         const payload = { email: user.email, sub: user.id };
         return {

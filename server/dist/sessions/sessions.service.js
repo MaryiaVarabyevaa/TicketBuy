@@ -28,6 +28,7 @@ const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const sessions_entity_1 = require("./sessions.entity");
 const sequelize_2 = require("sequelize");
+const { QueryTypes } = sequelize_2.default;
 let SessionsService = class SessionsService {
     constructor(sessionRepository) {
         this.sessionRepository = sessionRepository;
@@ -59,12 +60,8 @@ let SessionsService = class SessionsService {
         return sessions;
     }
     async getSessionsByCinemaId(cinemaId) {
-        const sessions = await this.sessionRepository.findAll({
-            where: {
-                cinemaId
-            }
-        });
-        return sessions;
+        const [result] = await this.sessionRepository.sequelize.query(`SELECT * FROM session `);
+        return result;
     }
     async findCinemaIdByFilmId(filmId) {
         const sessions = await this.sessionRepository.findAll({

@@ -39,6 +39,12 @@ export class AuthService {
         return null;
     }
 
+    async updatePassword(email: string, password: string): Promise<any> {
+        const hashPassword = await bcrypt.hash(password, 5);
+        return await this.usersService.updatePassword(email, hashPassword);
+
+    }
+
     async login(user: any) {
         const payload = { email: user.email, sub: user.id };
         return {

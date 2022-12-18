@@ -25,6 +25,16 @@ export class UsersController {
         return this.authService.login(req.user);
     }
 
+    @Post('check')
+    check(@Request() req) {
+        return this.authService.validateUser(req.body.email, req.body.password) ;
+    }
+
+    @Post('update-password')
+    updatePassword(@Request() req) {
+        return this.authService.updatePassword(req.body.email, req.body.password) ;
+    }
+
     @Post('block')
     async block(@Request() req) {
         return this.userService.blockUser(req.body.id);

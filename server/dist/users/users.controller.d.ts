@@ -12,11 +12,13 @@ export declare class UsersController {
     login(req: any): Promise<{
         token: string;
     }>;
+    check(req: any): Promise<any>;
+    updatePassword(req: any): Promise<any>;
     block(req: any): Promise<boolean>;
     changeRole(req: any): Promise<void>;
     updateUserInfo(userDto: UpdateUserDto): Promise<void>;
     getProfile(req: any): any;
     getAll(): Promise<any[]>;
-    getOneUser(req: any): Promise<import("./users.entity").User>;
+    getOneUser(req: any): Promise<false | import("./users.entity").User>;
     getUserById(req: any): Promise<import("./users.entity").User>;
 }

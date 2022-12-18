@@ -53,6 +53,7 @@ const LoginPage = () => {
         }
         else {
            response = await registration(data);
+           console.log(response)
            // @ts-ignore
             dispatch(addUserAction({...data, id: +response.sub}));
         }

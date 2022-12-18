@@ -15,6 +15,11 @@ export const login = async (user: IUser) => {
     return jwt_decode(data.token);
 }
 
+export const checkUser = async (email: string, password: string) => {
+    const { data } = await $host.post('user/check', {email, password});
+    return data;
+}
+
 export const getAllUsers = async () => {
     const { data } = await $host.get('user');
     return data;
@@ -32,6 +37,11 @@ export const changeRole = async (id: number) => {
 
 export const updateUserInfo = async (user: IUpdateUserInfo) => {
     const { data } = await $host.post('user/update', user);
+    return data;
+}
+
+export const updatePassword = async (email: string, password: string) => {
+    const { data } = await $host.post('user/update-password',{email, password});
     return data;
 }
 
