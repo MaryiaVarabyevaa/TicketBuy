@@ -66,7 +66,8 @@ const Profile = () => {
     const {
         handleSubmit: handleSubmitPassword,
         control: passwordControl,
-        formState: { errors: passwordErrors }
+        formState: { errors: passwordErrors },
+        reset: resetPassword
     } = useForm({
         mode: "onChange",
         defaultValues: {
@@ -103,8 +104,20 @@ const Profile = () => {
                throw new Error('Passwords don\'t match');
            }
            if (checkedUser && (newPassword === repeatedNewPassword)) {
-                const newPassword = await updatePassword(email, repeatedNewPassword);
-                console.log(newPassword);
+               const newPassword = await updatePassword(email, repeatedNewPassword);
+               setValue(5);
+               setAlertVisibility({
+                   ...alertVisibility,
+                   value: true,
+                   isSucceed: true,
+                   title: 'Success',
+                   text: 'Changes saved successfully!'
+               })
+               resetPassword({
+                   password: '',
+                   newPassword: '',
+                   repeatedNewPassword: '',
+               })
            }
 
        } catch (err) {
