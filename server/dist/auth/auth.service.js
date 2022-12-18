@@ -52,6 +52,14 @@ let AuthService = class AuthService {
         return null;
     }
     async updatePassword(email, password) {
+        const user = await this.usersService.findOne(email);
+        let comparedPassword = bcrypt.compareSync(password, user.dataValues.password);
+        if (comparedPassword) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'This password has already been used',
+            }, common_1.HttpStatus.OK);
+        }
         const hashPassword = await bcrypt.hash(password, 5);
         return await this.usersService.updatePassword(email, hashPassword);
     }

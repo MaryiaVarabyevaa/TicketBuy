@@ -105,6 +105,11 @@ const Profile = () => {
            }
            if (checkedUser && (newPassword === repeatedNewPassword)) {
                const newPassword = await updatePassword(email, repeatedNewPassword);
+
+               if (newPassword.error) {
+                   throw new Error(newPassword.error)
+               }
+
                setValue(5);
                setAlertVisibility({
                    ...alertVisibility,

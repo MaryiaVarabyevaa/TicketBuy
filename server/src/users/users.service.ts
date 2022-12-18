@@ -1,9 +1,7 @@
-import * as bcrypt from 'bcrypt';
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {User} from "./users.entity";
 import {InjectModel} from "@nestjs/sequelize";
 import {CreateUserDto} from "./dto/create-user.dto";
-import {AuthService} from "../auth/auth.service";
 import {UpdateUserDto} from "./dto/update-user.dto";
 
 @Injectable()
@@ -101,12 +99,4 @@ export class UsersService {
         });
     }
 
-    // async checkUserEmail (email: string) {
-    //     const user = await this.userRepository.findOne({
-    //         attributes: ['email', "firstName", "lastName", "role", "id"],
-    //         where: {
-    //             email
-    //         }
-    //     })
-    // }
 }

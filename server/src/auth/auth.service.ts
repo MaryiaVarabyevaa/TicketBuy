@@ -40,6 +40,17 @@ export class AuthService {
     }
 
     async updatePassword(email: string, password: string): Promise<any> {
+        const user = await this.usersService.findOne(email);
+        let comparedPassword = bcrypt.compareSync(password, user.dataValues.password);
+        if (comparedPassword) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'This password has already been used',
+                },
+                HttpStatus.OK,
+            );
+        }
         const hashPassword = await bcrypt.hash(password, 5);
         return await this.usersService.updatePassword(email, hashPassword);
 
