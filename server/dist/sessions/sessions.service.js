@@ -28,7 +28,6 @@ const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const sessions_entity_1 = require("./sessions.entity");
 const sequelize_2 = require("sequelize");
-const { QueryTypes } = sequelize_2.default;
 let SessionsService = class SessionsService {
     constructor(sessionRepository) {
         this.sessionRepository = sessionRepository;
@@ -60,8 +59,24 @@ let SessionsService = class SessionsService {
         return sessions;
     }
     async getSessionsByCinemaId(cinemaId) {
-        const [result] = await this.sessionRepository.sequelize.query(`SELECT * FROM session `);
-        return result;
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId
+            },
+            attributes: {
+                include: [
+                    [
+                        sequelize_2.default.literal(`(
+                    SELECT COUNT(*)
+                    FROM session
+                    GROUP BY date
+                )`),
+                        'laughReactionsCount'
+                    ]
+                ]
+            }
+        });
+        return sessions;
     }
     async findCinemaIdByFilmId(filmId) {
         const sessions = await this.sessionRepository.findAll({
@@ -100,6 +115,10 @@ let SessionsService = class SessionsService {
                 error: 'There is no such session',
             }, common_1.HttpStatus.OK);
         }
+    }
+    async getSessionsByFilmId(filmId) {
+        const session = await this.sessionRepository.findAll({ where: { filmId } });
+        return session;
     }
 };
 SessionsService = __decorate([

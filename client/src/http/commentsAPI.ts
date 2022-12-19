@@ -16,3 +16,13 @@ export const addComment = async (comment: IReview) => {
     const { data } = await $host.post('comments/create', comment);
     return data;
 }
+
+export const checkComment = async (userId: number, filmId: number) => {
+    const { data } = await $host.post('comments/check', {userId, filmId});
+    return data;
+}
+
+export const updateComment = async (filmId: number, userId: number, text: string) => {
+    const { data } = await $host.post('comments/update', {userId, filmId, text});
+    return data;
+}

@@ -2,6 +2,7 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Comment} from "./comments.entity";
 import {CreateCommentDto} from "./dto/create-comment.dto";
+import {UpdateSessionDto} from "../sessions/dto/update-session.dto";
 
 @Injectable()
 export class CommentsService {
@@ -47,4 +48,27 @@ export class CommentsService {
         }
     }
 
+    async checkComment(userId: number, filmId: number) {
+        const comment = await this.commentRepository.findOne({
+            where: {
+                userId,
+                filmId
+            }
+        });
+        if (!comment) {
+            return false;
+        }
+        return  true;
+    }
+
+    async updateComment(commentDto: CreateCommentDto) {
+        const {userId, filmId, text} = commentDto;
+        const updateComment = await this.commentRepository.update({text}, {
+            where: {
+                userId,
+                filmId
+            }
+        });
+        return updateComment;
+    }
 }

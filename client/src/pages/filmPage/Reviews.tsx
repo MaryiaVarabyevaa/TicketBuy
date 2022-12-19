@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import Box from "@mui/material/Box";
 import {TextField, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import {useParams} from "react-router-dom";
-import {addComment, deleteComment, getComments} from "../../http/commentsAPI";
+import {addComment, checkComment, deleteComment, getComments, updateComment} from "../../http/commentsAPI";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import IconButton from "@mui/material/IconButton";
 import EditIcon from '@mui/icons-material/Edit';
@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {IFullReviewInfo} from "../../types/review";
 import {getUserById} from "../../http/userAPI";
 import {useSelector} from "react-redux";
+
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 interface IRootState {
@@ -26,7 +27,10 @@ const Reviews = () => {
     const [isAdded, setIsAdded] = useState(false);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const isModerator = useSelector((state: IRootState) => state.user.isModerator);
-    const currentUser = useSelector((state: IRootState) => state.user.currentUser);
+    const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
+    const [hasComment, setHasComment] = useState(false);
+    const [isEdited, setIsEdited] = useState(false);
+    const [commentText, setCommentText] = useState('');
     const {id} = useParams();
 
     const getData = async () => {
@@ -56,10 +60,10 @@ const Reviews = () => {
     }
 
     const handleSubmit = async () => {
-        if (id && currentUser) {
+        if (id && currentUserId) {
             const comment = await addComment({
                 text: value,
-                userId: +currentUser.id,
+                userId: +currentUserId,
                 filmId: +id
             });
             setIsAdded(!isAdded);
@@ -71,18 +75,42 @@ const Reviews = () => {
         setIsDeleted(!isDeleted)
     }
 
+    const checkCommentInfo = async () => {
+        if (id && currentUserId) {
+            const hasComment = await checkComment(currentUserId, +id);
+            setHasComment(hasComment);
+        }
+    }
+
     useEffect(()=>{
         getData();
+        checkCommentInfo();
     },[isAdded, isDeleted])
 
+    const handleEdit = (text: string) => {
+        setIsEdited(!isEdited);
+        setCommentText(text);
+
+    }
+    const handleUpdateComment = async () => {
+        if (id) {
+            const newComment = await updateComment(+id, currentUserId, commentText);
+            setIsAdded(!isAdded);
+            setIsEdited(!isEdited);
+        }
+    }
     return (
         <Stack spacing={3} sx={{mt: 5}}>
 
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h4" gutterBottom>
                 Сomments
             </Typography>
             {
-                isAuth &&
+                (comments.length === 0 && !isAuth) && <Typography variant='h5' sx={{pl: '83px', color: '#D7DBDD'}}>There are no comments here yet</Typography>
+
+            }
+            {
+               ( (isAuth && !hasComment) || isEdited) &&
                 <Box>
                     <TextField
                         placeholder="Enter a comment"
@@ -90,23 +118,25 @@ const Reviews = () => {
                         multiline
                         fullWidth
                         rows={3}
-                        onChange={(event) => setValue(event.target.value)}
-                        value={value}
+                        onChange={(event) => isEdited? setCommentText(event.target.value) : setValue(event.target.value)}
+                        value={isEdited? commentText : value}
                     />
                     <Button
                         variant="contained"
                         size='large'
                         sx={{mt: 2}}
-                        onClick={handleSubmit}
+                        onClick={isEdited? handleUpdateComment : handleSubmit}
                     >
-                        Leave a comment
+                        {
+                            isEdited? 'Edit a comment' : 'Leave a comment'
+                        }
                     </Button>
                 </Box>
             }
             <Stack spacing={2}>
                 {
                     (comments.length !== 0) && comments.map((comment: IFullReviewInfo) => {
-                        const {text, fullName, date, id} = comment;
+                        const {text, fullName, date, id, userId} = comment;
                         return <Box sx={{bgcolor: '#f2f2f2', p: 1}} key={id}>
                             <Box sx={{display: "flex", justifyContent: 'space-between'}}>
                                 <Box sx={{display: "flex", gap: '10px', alignItems: "center"}}>
@@ -119,6 +149,14 @@ const Reviews = () => {
                                     <Box sx={{alignSelf: 'center'}}>
                                         <IconButton sx={{p: 0}} disableRipple onClick={() => handleClick(id)}>
                                             <DeleteIcon fontSize="small" color="disabled" />
+                                        </IconButton>
+                                    </Box>
+                                }
+                                {
+                                    (hasComment && userId === currentUserId && !isEdited) &&
+                                    <Box sx={{alignSelf: 'center'}}>
+                                        <IconButton sx={{p: 0}} disableRipple  onClick={() => handleEdit(text)}>
+                                            <EditIcon fontSize="small" color="disabled"/>
                                         </IconButton>
                                     </Box>
                                 }

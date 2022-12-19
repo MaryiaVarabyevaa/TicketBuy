@@ -154,17 +154,22 @@ const Film = () => {
                                 </Stack>
                                 <CardActions>
                                     <Button variant="contained" size='large'
-                                            onClick={() => setIsOpenSelectSession(true)}
+                                            onClick={() => setIsOpenSelectSession(!isOpenSelectSession)}
                                     >
-                                        Buy ticket
+                                        {
+                                            isOpenSelectSession? 'Hide sessions' : 'Show Sessions'
+                                        }
                                     </Button>
                                 </CardActions>
+
                             </Box>
                         </Card>
-                            {
-                                isOpenSelectSession && <Sessions />
-                            }
-                            {/*<Reviews />*/}
+                    </Container>
+                    {
+                        isOpenSelectSession && <Sessions />
+                    }
+                    <Container>
+                        <Reviews />
                     </Container>
                     <Footer />
                 </Box>

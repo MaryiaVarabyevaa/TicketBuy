@@ -14,6 +14,19 @@ import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
 import {IUserState} from "../types/user";
 import Box from "@mui/material/Box";
+import Badge, { BadgeProps } from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {useState} from "react";
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+    '& .MuiBadge-badge': {
+        right: -3,
+        top: 13,
+        border: `2px solid ${theme.palette.background.paper}`,
+        padding: '0 4px',
+    },
+}));
 
 interface IRootState {
     user: any
@@ -26,6 +39,7 @@ interface IProps {
 const NavBar = ({dashboard} : IProps) => {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [order, setOrder] = useState(0);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const isAdmin = useSelector((state: IRootState) => state.user.isAdmin);
     const isModerator = useSelector((state: IRootState) => state.user.isModerator);
@@ -88,45 +102,52 @@ const NavBar = ({dashboard} : IProps) => {
                     !isAuth? <IconButton onClick={handleClick}>
                         <LoginIcon />
                     </IconButton> :  (
-                        <div>
-                            <Tooltip title='Open settings'>
-                                <IconButton
-                                    size="large"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    onClick={handleMenu}
-                                    color="inherit"
-                                >
-                                    <AccountCircle />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: '35px'}}
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                {
-                                    ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
-                                }
-                                {
-                                    dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
-                                }
-                                <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
-                                <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
-                            </Menu>
-                        </div>
+                       <>
+                           <IconButton aria-label="cart" color="inherit">
+                               <StyledBadge badgeContent={order} color="secondary">
+                                   <ShoppingCartIcon />
+                               </StyledBadge>
+                           </IconButton>
+                           <Box>
+                               <Tooltip title='Open settings'>
+                                   <IconButton
+                                       size="large"
+                                       aria-label="account of current user"
+                                       aria-controls="menu-appbar"
+                                       aria-haspopup="true"
+                                       onClick={handleMenu}
+                                       color="inherit"
+                                   >
+                                       <AccountCircle />
+                                   </IconButton>
+                               </Tooltip>
+                               <Menu
+                                   sx={{ mt: '35px'}}
+                                   id="menu-appbar"
+                                   anchorEl={anchorEl}
+                                   anchorOrigin={{
+                                       vertical: 'top',
+                                       horizontal: 'right',
+                                   }}
+                                   keepMounted
+                                   transformOrigin={{
+                                       vertical: 'top',
+                                       horizontal: 'right',
+                                   }}
+                                   open={Boolean(anchorEl)}
+                                   onClose={handleClose}
+                               >
+                                   {
+                                       ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
+                                   }
+                                   {
+                                       dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
+                                   }
+                                   <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
+                                   <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
+                               </Menu>
+                           </Box>
+                       </>
                     )}
             </Toolbar>
         </AppBar>

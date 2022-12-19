@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Request} from '@nestjs/common';
+import {Body, Controller, Get, Param, ParseIntPipe, Post, Request} from '@nestjs/common';
 import {SessionsService} from "./sessions.service";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
@@ -45,5 +45,17 @@ export class SessionsController {
     @Post('get_by_date')
     getSessionsByDate(@Request() req) {
         return this.sessionService.getSessionsByDate(req.body.date);
+    }
+
+    // @Post('get_by_filmId')
+    // getSessionsByFilmId(@Request() req) {
+    //     return this.sessionService.getSessionsByFilmId(req.body.filmId);
+    // }
+
+    @Get(':id')
+    getSessionsByFilmId(
+        @Param('id', ParseIntPipe) id: number
+    ) {
+        return this.sessionService.getSessionsByFilmId(id);
     }
 }

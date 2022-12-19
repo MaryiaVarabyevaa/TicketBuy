@@ -45,6 +45,9 @@ let SessionsController = class SessionsController {
     getSessionsByDate(req) {
         return this.sessionService.getSessionsByDate(req.body.date);
     }
+    getSessionsByFilmId(id) {
+        return this.sessionService.getSessionsByFilmId(id);
+    }
 };
 __decorate([
     (0, common_1.Post)('create'),
@@ -101,6 +104,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "getSessionsByDate", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getSessionsByFilmId", null);
 SessionsController = __decorate([
     (0, common_1.Controller)('sessions'),
     __metadata("design:paramtypes", [sessions_service_1.SessionsService])

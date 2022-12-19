@@ -4,8 +4,6 @@ import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
 import sequelize from "sequelize";
-import query from 'express';
-const { QueryTypes } = sequelize;
 
 @Injectable()
 export class SessionsService {
@@ -43,12 +41,29 @@ export class SessionsService {
     }
 
     async getSessionsByCinemaId(cinemaId: number) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId
+            },
+            attributes: {
+                include: [
+                    [
+                        sequelize.literal(`(
+                    SELECT COUNT(*)
+                    FROM session
+                    GROUP BY date
+                )`),
+                        'laughReactionsCount'
+                    ]
+                ]
+            }
+        });
+        return sessions;
+        // const [result] = await this.sessionRepository.sequelize.query(
+        //     `SELECT * FROM session WHERE cinemaId=${cinemaId}`
+        // );
 
-        const [result] = await this.sessionRepository.sequelize.query(
-            `SELECT * FROM session `
-        );
-
-        return result;
+        // return result;
     }
 
 
@@ -94,5 +109,10 @@ export class SessionsService {
                 HttpStatus.OK,
             );
         }
+    }
+
+    async getSessionsByFilmId (filmId: number) {
+        const session = await this.sessionRepository.findAll({where: {filmId}});
+        return session
     }
 }

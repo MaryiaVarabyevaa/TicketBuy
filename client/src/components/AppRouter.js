@@ -2,6 +2,7 @@ import React from "react";
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {
     ADMIN_PANEL_ROUTE,
+    BASKET_ROUTE,
     FILM_ROUTE,
     LANDING_PLACE_ROUTE,
     LOGIN_ROUTE,
@@ -11,10 +12,10 @@ import {
 import LoginPage from '../pages/loginPage/LoginPage';
 import MainPage from "../pages/mainPage/MainPage";
 import DashBoard from "../pages/dashboard/Dashboard";
-import {useSelector} from "react-redux";
 import Film from "../pages/filmPage/Film";
 import LandingPage from "../pages/LandingPage";
 import Profile from "../pages/profilePage/Profile";
+import Basket from "../pages/basketPage/Basket";
 
 
 export const AppRouter = () => {
@@ -28,6 +29,7 @@ export const AppRouter = () => {
         <Route path={PROFILE_ROUTE} element={<Profile />}/>
         <Route path={FILM_ROUTE} element={<Film />}/>
         <Route path={LANDING_PLACE_ROUTE} element={<LandingPage />}/>
+        <Route path={BASKET_ROUTE} element={<Basket />}/>
         <Route path="*" element={<Navigate to={MAIN_ROUTE} replace />} />
     </Routes>
 };

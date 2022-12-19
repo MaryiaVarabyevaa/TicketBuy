@@ -27,4 +27,14 @@ export class CommentsController {
     deleteComment(@Request() req) {
         return this.commentService.deleteComment(req.body.id);
     }
+
+    @Post('check')
+    checkComment(@Request() req) {
+        return this.commentService.checkComment(req.body.userId, req.body.filmId);
+    }
+
+    @Post('update')
+    async updateSessionInfo(@Body() commentDto: CreateCommentDto) {
+        return this.commentService.updateComment(commentDto);
+    }
 }
