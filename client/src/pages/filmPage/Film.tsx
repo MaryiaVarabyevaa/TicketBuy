@@ -111,27 +111,29 @@ const Film = () => {
                                             <Box sx={{ ml: 2, alignSelf: 'center' }}>{film.rating}</Box>
                                         </Box>
                                     </Box>
-                                    <Box
-                                        sx={{display: 'flex', flexDirection: 'column'}}
-                                    >
-                                        <Typography variant="h6" gutterBottom>
-                                            Your rating
-                                        </Typography>
-                                        <Tooltip title={isAuth? 'Put your rating' : 'Register to rate'}>
-                                            <Box sx={{display: 'flex'}}>
-                                                <Rating
-                                                    name="simple-controlled"
-                                                    value={newRating}
-                                                    readOnly={isAuth? false : true}
-                                                    max={10}
-                                                    onChange={(event, newValue) => {
-                                                        setNewRating(newValue);
-                                                    }}
-                                                />
-                                                <Box sx={{ ml: 2, alignSelf: 'center' }}>{newRating}</Box>
-                                            </Box>
-                                        </Tooltip>
-                                    </Box>
+                                    {
+                                        isAuth &&  <Box
+                                            sx={{display: 'flex', flexDirection: 'column'}}
+                                        >
+                                            <Typography variant="h6" gutterBottom>
+                                                Your rating
+                                            </Typography>
+                                            <Tooltip title={isAuth? 'Put your rating' : 'Register to rate'}>
+                                                <Box sx={{display: 'flex'}}>
+                                                    <Rating
+                                                        name="simple-controlled"
+                                                        value={newRating}
+                                                        readOnly={newRating? true : false}
+                                                        max={10}
+                                                        onChange={(event, newValue) => {
+                                                            setNewRating(newValue);
+                                                        }}
+                                                    />
+                                                    <Box sx={{ ml: 2, alignSelf: 'center' }}>{newRating}</Box>
+                                                </Box>
+                                            </Tooltip>
+                                        </Box>
+                                    }
                                     <Box
                                         sx={{display: 'flex', flexDirection: 'column'}}
                                     >

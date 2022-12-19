@@ -30,6 +30,7 @@ import {Comment} from "./comments/comments.entity";
             models: [User, Cinema, Film, Session, Halls, Comment],
             autoLoadModels: true,
             synchronize: true,
+            sync: ({ alter: true }),
         }),
         UsersModule,
         CinemaModule,

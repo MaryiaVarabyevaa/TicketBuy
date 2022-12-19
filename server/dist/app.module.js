@@ -41,6 +41,7 @@ AppModule = __decorate([
                 models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session, halls_entity_1.Halls, comments_entity_1.Comment],
                 autoLoadModels: true,
                 synchronize: true,
+                sync: ({ alter: true }),
             }),
             users_module_1.UsersModule,
             cinema_module_1.CinemaModule,

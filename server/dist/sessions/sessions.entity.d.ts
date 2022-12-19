@@ -13,4 +13,5 @@ export declare class Session extends Model<Session, CreateSessionDto> {
     cinemaName: Cinema;
     hallId: number;
     hallNumber: Cinema;
+    seats: string;
 }

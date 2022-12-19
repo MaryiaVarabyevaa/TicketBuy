@@ -37,7 +37,7 @@ export class Film extends Model<Film, FilmCreationAttrs> {
     description: string;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(5000),
         allowNull: false,
     })
     url: string;
