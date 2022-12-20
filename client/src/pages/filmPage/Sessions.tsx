@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {
     findSessionsByCinemaId,
     getCinemaIdByFilmId,
@@ -7,65 +7,50 @@ import {
     getSessionsByFilmId
 } from "../../http/sessionAPI";
 import {getCinemaInfoById} from "../../http/cinemaAPI";
-import {Button, Typography} from "@mui/material";
+import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import {getMonth} from "../../helpers/getMonth";
+import {LANDING_PLACE_ROUTE} from "../../constants/routes";
 
 
 const Sessions = () => {
     const {id} = useParams();
     const [cinema, setCinema] = useState([]);
     const [sessions, setSessions] = useState<any>([]);
-
-
-    const sortedData: any = {};
-    //
-    // data.forEach((e) => {
-    //     const cinemaId = e.cinemaId;
-    //     if (sortedData[e.date]) {
-    //         if (sortedData[e.date][cinemaId]) {
-    //             sortedData[e.date][cinemaId].push(e);
-    //         } else {
-    //             sortedData[e.date][cinemaId] = [e];
-    //         }
-    //     } else {
-    //         sortedData[e.date] = {};
-    //         sortedData[e.date][cinemaId] = [e];
-    //     }
-    // })
-    //
+    const navigate = useNavigate();
 
     const getSessions = async () => {
+        const sortedData: any = {};
         if (id) {
             const sessions = await getSessionsByFilmId(+id);
             const sortedData: any = {};
 
-            sessions.forEach((e: any) => {
-                const cinemaId = e.cinemaId;
-                if (sortedData[e.date]) {
-                    if (sortedData[e.date][cinemaId]) {
-                        sortedData[e.date][cinemaId].push(e);
+            for (const e of sessions) {
+                const cinemaId: number = e.cinemaId;
+                const cinemaInfo = await getCinemaInfoById([cinemaId]);
+                const {name: cinemaName} = cinemaInfo[0];
+
+                const date = e.date
+                const fullDate = `${date.slice(8)} ${getMonth(+(date.slice(5, 7)))} ${date.slice(0, 4)}`;
+
+                if (sortedData[fullDate]) {
+                    if (sortedData[fullDate][cinemaName]) {
+                        sortedData[fullDate][cinemaName].push(e);
                     } else {
-                        sortedData[e.date][cinemaId] = [e];
+                        sortedData[fullDate][cinemaName] = [e];
                     }
                 } else {
-                    sortedData[e.date] = {};
-                    sortedData[e.date][cinemaId] = [e];
+                    sortedData[fullDate] = {};
+                    sortedData[fullDate][cinemaName] = [e];
                 }
-            })
-
-            const arr = [];
-            for (const data in sortedData) {
-                arr.push({[data] : sortedData[data]});
             }
-
-            setSessions(arr);
+            setSessions(sortedData);
         }
     }
 
-    const handleClick = async (id: number) => {
-       const sessions = await getSessionsByCinemaId(id);
-       setSessions(sessions);
+    const handleClick = () => {
+        navigate(LANDING_PLACE_ROUTE);
     }
 
     useEffect(() => {
@@ -73,32 +58,46 @@ const Sessions = () => {
     },[])
 
     return (
-        <>
-            {
-                sessions && sessions.map((item: any) => {
-                    for (const key in item) {
-                        for (const itemKey in item[key]) {
-                            console.log(itemKey)
-                            return <Box key={key}>
-                                {/*<Box>{key}</Box>*/}
-                                <Box>{itemKey}</Box>
-                            </Box>
-                            // item[key][itemKey].map((session: any) => {
-                            //     const {id, time, price} = session;
-                            //     console.log(time);
-                            //     // return <Box key={id}>
-                            //     //     <Stack direction="row" spacing={2}>
-                            //     //         {/*<Box>{key}</Box>*/}
-                            //     //         {/*<Box>{itemKey}</Box>*/}
-                            //     //         <Box>{time}</Box>
-                            //     //     </Stack>
-                            //     // </Box>
-                            // })
-                        }
+        <TableContainer component={Paper}>
+            <Table sx={{ mixWidth: 800 }} aria-label="simple table">
+                <TableBody>
+                    {
+                        sessions && Object.entries(sessions).map(([key, value]) => {
+                            return  <TableRow
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                key={key}
+                            >
+                                <TableCell component="th" scope="row" >{key}</TableCell>
+                                {
+                                    // @ts-ignore
+                                    Object.entries(value).map(([keyItem, itemValue]) => {
+                                        return  <Table>
+                                            <TableBody>
+                                                <TableRow>
+                                                    <TableCell component="th"  >{keyItem}</TableCell>
+                                                    <>
+                                                        {
+                                                            // @ts-ignore
+                                                            itemValue.map((item) => {
+                                                                const {time, id} = item;
+                                                                return   <TableCell align="right" key={id} sx={{m: 0, width: '50px'}}>
+                                                                    <Button onClick={handleClick}>{time.slice(0, 5)}</Button>
+                                                                </TableCell>
+                                                            })
+                                                        }
+                                                    </>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+
+                                    })
+                                }
+                            </TableRow>
+                        })
                     }
-                })
-            }
-        </>
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 };
 

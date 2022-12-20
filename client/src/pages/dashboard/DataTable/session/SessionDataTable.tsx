@@ -167,9 +167,6 @@ const SessionDataTable = () => {
             headerName: 'Number of hall',
             width: 170,
             editable: true,
-            // valueGetter: getFullName,
-            // type: 'singleSelect',
-            // valueOptions: cinemaName,
         },
         {
             field: 'actions',

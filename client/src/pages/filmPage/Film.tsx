@@ -167,10 +167,10 @@ const Film = () => {
                             </Box>
                         </Card>
                     </Container>
-                    {
-                        isOpenSelectSession && <Sessions />
-                    }
                     <Container>
+                        {
+                            isOpenSelectSession && <Sessions />
+                        }
                         <Reviews />
                     </Container>
                     <Footer />

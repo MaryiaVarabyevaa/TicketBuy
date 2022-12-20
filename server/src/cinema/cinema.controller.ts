@@ -17,7 +17,7 @@ export class CinemaController {
     }
 
     @Post('get_cinema_id')
-    getCinemaI(@Body() cinemaDto: CreateCinemaDto) {
+    getCinemaId(@Body() cinemaDto: CreateCinemaDto) {
         return this.cinemaService.getCinemaId(cinemaDto);
     }
 

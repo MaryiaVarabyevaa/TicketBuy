@@ -27,7 +27,7 @@ let CinemaController = class CinemaController {
     getAll() {
         return this.cinemaService.getAllCinema();
     }
-    getCinemaI(cinemaDto) {
+    getCinemaId(cinemaDto) {
         return this.cinemaService.getCinemaId(cinemaDto);
     }
     getCinemaById(req) {
@@ -59,7 +59,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_cinema_dto_1.CreateCinemaDto]),
     __metadata("design:returntype", void 0)
-], CinemaController.prototype, "getCinemaI", null);
+], CinemaController.prototype, "getCinemaId", null);
 __decorate([
     (0, common_1.Post)('get_info_by_id'),
     __param(0, (0, common_1.Request)()),
