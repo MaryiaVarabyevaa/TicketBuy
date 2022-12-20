@@ -23,6 +23,8 @@ const halls_module_1 = require("./halls/halls.module");
 const halls_entity_1 = require("./halls/halls.entity");
 const comments_module_1 = require("./comments/comments.module");
 const comments_entity_1 = require("./comments/comments.entity");
+const orders_module_1 = require("./orders/orders.module");
+const orders_entity_1 = require("./orders/orders.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -38,7 +40,7 @@ AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
-                models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session, halls_entity_1.Halls, comments_entity_1.Comment],
+                models: [users_entity_1.User, cinema_entity_1.Cinema, films_entity_1.Film, sessions_entity_1.Session, halls_entity_1.Halls, comments_entity_1.Comment, orders_entity_1.Order],
                 autoLoadModels: true,
                 synchronize: true,
                 sync: ({ alter: true }),
@@ -49,7 +51,8 @@ AppModule = __decorate([
             sessions_module_1.SessionsModule,
             auth_module_1.AuthModule,
             halls_module_1.HallsModule,
-            comments_module_1.CommentsModule
+            comments_module_1.CommentsModule,
+            orders_module_1.OrdersModule
         ],
     })
 ], AppModule);

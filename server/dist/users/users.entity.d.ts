@@ -1,5 +1,6 @@
 import { Model } from 'sequelize-typescript';
 import { Comment } from "../comments/comments.entity";
+import { Order } from "../orders/orders.entity";
 interface UserCreationAttrs {
     email: string;
     password: string;
@@ -15,5 +16,6 @@ export declare class User extends Model<User, UserCreationAttrs> {
     role: string;
     isBlocked: boolean;
     comments: Comment[];
+    orders: Order[];
 }
 export {};

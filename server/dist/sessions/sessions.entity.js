@@ -14,6 +14,7 @@ const sequelize_typescript_1 = require("sequelize-typescript");
 const cinema_entity_1 = require("../cinema/cinema.entity");
 const films_entity_1 = require("../films/films.entity");
 const halls_entity_1 = require("../halls/halls.entity");
+const orders_entity_1 = require("../orders/orders.entity");
 let Session = class Session extends sequelize_typescript_1.Model {
 };
 __decorate([
@@ -46,6 +47,26 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Session.prototype, "price", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.JSONB,
+        defaultValue: [
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        ]
+    }),
+    __metadata("design:type", String)
+], Session.prototype, "seats", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => films_entity_1.Film),
     (0, sequelize_typescript_1.Column)({
@@ -81,25 +102,9 @@ __decorate([
     __metadata("design:type", cinema_entity_1.Cinema)
 ], Session.prototype, "hallNumber", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.JSONB,
-        defaultValue: [
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        ]
-    }),
-    __metadata("design:type", String)
-], Session.prototype, "seats", void 0);
+    (0, sequelize_typescript_1.HasMany)(() => orders_entity_1.Order),
+    __metadata("design:type", Array)
+], Session.prototype, "orders", void 0);
 Session = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'session',

@@ -1,8 +1,9 @@
-import {Table, Column, Model, DataType, BelongsToMany, BelongsTo, ForeignKey} from 'sequelize-typescript';
+import {Table, Column, Model, DataType, BelongsToMany, BelongsTo, ForeignKey, HasMany} from 'sequelize-typescript';
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {Cinema} from "../cinema/cinema.entity";
 import {Film} from "../films/films.entity";
 import {Halls} from "../halls/halls.entity";
+import {Order} from "../orders/orders.entity";
 
 // todo: закончить объект для создания
 interface sessionCreationAttrs {
@@ -44,6 +45,25 @@ export class Session extends Model<Session, CreateSessionDto > {
     })
     price: string;
 
+    @Column({
+        type: DataType.JSONB,
+        defaultValue: [
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        ]
+    })
+    seats: string;
+
     @ForeignKey(() => Film)
     @Column({
         type: DataType.INTEGER,
@@ -73,23 +93,7 @@ export class Session extends Model<Session, CreateSessionDto > {
     @BelongsTo(() => Halls, {onDelete: 'CASCADE'})
     hallNumber: Cinema;
 
-    @Column({
-        type: DataType.JSONB,
-        defaultValue: [
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-            [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-        ]
-    })
-    seats: string;
+    @HasMany(() => Order)
+    orders: Order[]
 }
 

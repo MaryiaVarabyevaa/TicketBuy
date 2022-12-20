@@ -1,8 +1,6 @@
 import {BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
 import {Cinema} from "../cinema/cinema.entity";
 import {Session} from "../sessions/sessions.entity";
-import {DestroyOptions, InstanceUpdateOptions} from "sequelize";
-import { HookReturn } from "sequelize/types/hooks";
 
 interface HallsCreationAttrs {
     type: string;

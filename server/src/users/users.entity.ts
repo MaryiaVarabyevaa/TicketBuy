@@ -1,6 +1,7 @@
 import {Table, Column, Model, DataType, HasMany} from 'sequelize-typescript';
 import {Session} from "../sessions/sessions.entity";
 import {Comment} from "../comments/comments.entity";
+import {Order} from "../orders/orders.entity";
 
 // todo: закончить объект для создания
 interface UserCreationAttrs {
@@ -59,4 +60,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
     @HasMany(() => Comment)
     comments: Comment[]
+
+    @HasMany(() => Order)
+    orders: Order[]
 }

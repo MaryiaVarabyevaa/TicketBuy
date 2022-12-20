@@ -14,6 +14,8 @@ import {HallsModule} from './halls/halls.module';
 import {Halls} from "./halls/halls.entity";
 import {CommentsModule} from './comments/comments.module';
 import {Comment} from "./comments/comments.entity";
+import { OrdersModule } from './orders/orders.module';
+import {Order} from "./orders/orders.entity";
 
 @Module({
     imports: [
@@ -27,7 +29,7 @@ import {Comment} from "./comments/comments.entity";
             username: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            models: [User, Cinema, Film, Session, Halls, Comment],
+            models: [User, Cinema, Film, Session, Halls, Comment, Order],
             autoLoadModels: true,
             synchronize: true,
             sync: ({ alter: true }),
@@ -38,7 +40,8 @@ import {Comment} from "./comments/comments.entity";
         SessionsModule,
         AuthModule,
         HallsModule,
-        CommentsModule
+        CommentsModule,
+        OrdersModule
     ],
 })
 export class AppModule {}
