@@ -1,11 +1,11 @@
 import {combineReducers, createStore} from "@reduxjs/toolkit";
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {userReducer} from "./reducers/userReducer";
-import {filmReducer} from "./reducers/filmReducer";
+import {orderReducer} from "./reducers/orderReducer";
 
-const rooReducer = combineReducers({
+const rootReducer = combineReducers({
     user: userReducer,
-    film: filmReducer
+    order: orderReducer
 })
 
-export const store = createStore(rooReducer, composeWithDevTools())
+export const store = createStore(rootReducer, composeWithDevTools())

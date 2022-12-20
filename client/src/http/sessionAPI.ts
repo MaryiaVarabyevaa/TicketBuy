@@ -55,6 +55,11 @@ export const getAllSessions = async () => {
     return data;
 }
 
+export const getSeats = async (id: number) => {
+    const { data } = await $host.post('sessions/get-seats', {id});
+    return data;
+}
+
 export const updateSessionInfo = async (session: ISessionUpdate) => {
     const { data } = await $host.post('sessions/update', session);
     return data;

@@ -22,6 +22,11 @@ export class SessionsController {
         return this.sessionService.deleteSession(req.body.id);
     }
 
+    @Post('get-seats')
+    getSeats(@Request() req) {
+        return this.sessionService.getSeats(req.body.id);
+    }
+
     @Get()
     getAll() {
         return this.sessionService.getAllSessions();
@@ -47,10 +52,10 @@ export class SessionsController {
         return this.sessionService.getSessionsByDate(req.body.date);
     }
 
-    // @Post('get_by_filmId')
-    // getSessionsByFilmId(@Request() req) {
-    //     return this.sessionService.getSessionsByFilmId(req.body.filmId);
-    // }
+    @Post('take-seats')
+    takeSeats(@Request() req) {
+        return this.sessionService.takeSeats(req.body.id, req.body.seats);
+    }
 
     @Get(':id')
     getSessionsByFilmId(

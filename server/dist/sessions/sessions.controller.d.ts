@@ -7,10 +7,12 @@ export declare class SessionsController {
     create(sessionDto: CreateSessionDto): Promise<import("./sessions.entity").Session>;
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;
     deleteSession(req: any): Promise<void>;
+    getSeats(req: any): Promise<import("./sessions.entity").Session>;
     getAll(): Promise<import("./sessions.entity").Session[]>;
     findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     findCinemaIdByFilmId(req: any): Promise<any[]>;
     getSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     getSessionsByDate(req: any): Promise<import("./sessions.entity").Session[]>;
+    takeSeats(req: any): Promise<[affectedCount: number]>;
     getSessionsByFilmId(id: number): Promise<import("./sessions.entity").Session[]>;
 }

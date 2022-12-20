@@ -120,6 +120,29 @@ let SessionsService = class SessionsService {
         const session = await this.sessionRepository.findAll({ where: { filmId } });
         return session;
     }
+    async getSeats(id) {
+        const session = await this.sessionRepository.findOne({
+            attributes: ['seats'],
+            where: {
+                id
+            }
+        });
+        if (!session) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'There is no such session',
+            }, common_1.HttpStatus.OK);
+        }
+        return session;
+    }
+    async takeSeats(id, seats) {
+        const takenSeats = await this.sessionRepository.update({ seats }, {
+            where: {
+                id
+            }
+        });
+        return takenSeats;
+    }
 };
 SessionsService = __decorate([
     (0, common_1.Injectable)(),

@@ -1,24 +1,48 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, Box, Button, Chip, Container, createTheme, CssBaseline, Typography} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
+import {getSeats} from "../http/sessionAPI";
+import {useNavigate, useParams} from "react-router-dom";
+import {BASKET_ROUTE} from "../constants/routes";
+import {ISeat} from "../types/order";
+import {useDispatch, useSelector} from "react-redux";
+import {addOrderAction} from "../store/reducers/orderReducer";
 
 const theme = createTheme();
 
-interface ISeat {
-    seat: number;
-    row: number;
+interface IRootState {
+    user: any
 }
 
 const LandingPage = () => {
-    const [seatsNumber, setSeatsNumber] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-    const [rows, setRows] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const [seatsInfo, setSeatsInfo] = useState<ISeat[]>([]);
     const [isError, setIsError] = useState(false);
+    const [seats, setSeats] = useState<any[]>([]);
+    const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
+    const {id} = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+
+    const getLandingPlace = async () => {
+        if (id) {
+            const {seats} = await getSeats(+id);
+            setSeats(seats);
+        }
+    };
+
+    useEffect(()=>{
+        getLandingPlace();
+    },[])
 
     const handleClick = (event: any, obj: ISeat) => {
         try {
             const elem = event.target;
+            if (elem.classList.contains('taken-place')) {
+                throw Error('This place is taken')
+            }
+
             if (seatsInfo.length >= 5 && !elem.classList.contains('clicked')) {
                 throw Error('lala')
             }
@@ -52,6 +76,12 @@ const LandingPage = () => {
             setIsError(true)
         }
     };
+    const handleContinue = () => {
+        dispatch(addOrderAction({
+            [currentUserId] : seatsInfo
+        }))
+        // navigate(BASKET_ROUTE);
+    }
 
     return (
         <>
@@ -71,40 +101,40 @@ const LandingPage = () => {
                         isError &&  <Alert severity="error">The maximum number of seats is selected!</Alert>
                     }
                     <Stack spacing={2} sx={{bgcolor: 'grey', p: 5, borderRadius: '40px'}}>
-
                         {
-                            rows.map((row) => {
-                                return <Stack direction="row" spacing={3} key={row} >
-                                    <Typography variant="h4" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{row}</Typography>
+                            seats.map((seat, index) => {
+                                return <Stack direction="row" spacing={3} key={index} >
+                                    <Typography variant="h4" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
                                     <Stack direction="row" spacing={3}>
                                         {
-                                            seatsNumber.map((seat) => {
+                                            seat.map((item: any, indexNum: number) => {
                                                 return <Box
-                                                    onClick={(event) => handleClick(event, {seat, row})}
-                                                    key={seat}
+                                                    key={indexNum}
+                                                    className={`${item? 'taken-place': 'free-place'}`}
+                                                    onClick={(event) => handleClick(event, {seat: indexNum + 1, row: index + 1})}
                                                     sx={{
                                                         display: 'flex',
                                                         justifyContent: 'center',
                                                         alignItems: 'center',
-                                                        bgcolor: '#34495E ',
-                                                        color: '#34495E ',
+                                                        bgcolor: `${item? '#332f2c' : '#34495E'}`,
+                                                        color: `${item? '#332f2c' : '#34495E'}`,
                                                         width: '35px',
                                                         height: '35px',
                                                         borderRadius: '40px',
-                                                        cursor: 'pointer',
+                                                        cursor: `${item? 'auto' : 'pointer'}`,
                                                         '&:hover': {
-                                                            background: "white",
-                                                            border: '3px solid #34495E ',
-                                                            color: '#34495E'
+                                                            background: `${item? '#332f2c' : 'white'}`,
+                                                            border: `${item? 'none' : '3px solid #34495E'}`,
+                                                            color: `${item? '#332f2c' : '#34495E'}`,
                                                         }
                                                     }}
                                                 >
-                                                    {seat}
-                                                </Box>
+                                                    {indexNum + 1}
+                                                </Box>;
                                             })
                                         }
                                     </Stack>
-                                    <Typography variant="h4"  sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{row}</Typography>
+                                    <Typography variant="h4"  sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
                                 </Stack>
                             })
                         }
@@ -125,12 +155,18 @@ const LandingPage = () => {
                                 })
                             }
                         </Stack>
-                        <Button variant="contained" sx={{height: '60px'}}>Choose a place</Button>
+                        <Button
+                            variant="contained"
+                            sx={{height: '60px'}}
+                            onClick={handleContinue}
+                        >
+                            Continue
+                        </Button>
                     </Box>
                 </AppBar>
             }
         </>
     );
 };
-
+// localStorage.clear();
 export default LandingPage;

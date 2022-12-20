@@ -30,6 +30,9 @@ let SessionsController = class SessionsController {
     deleteSession(req) {
         return this.sessionService.deleteSession(req.body.id);
     }
+    getSeats(req) {
+        return this.sessionService.getSeats(req.body.id);
+    }
     getAll() {
         return this.sessionService.getAllSessions();
     }
@@ -44,6 +47,9 @@ let SessionsController = class SessionsController {
     }
     getSessionsByDate(req) {
         return this.sessionService.getSessionsByDate(req.body.date);
+    }
+    takeSeats(req) {
+        return this.sessionService.takeSeats(req.body.id, req.body.seats);
     }
     getSessionsByFilmId(id) {
         return this.sessionService.getSessionsByFilmId(id);
@@ -70,6 +76,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "deleteSession", null);
+__decorate([
+    (0, common_1.Post)('get-seats'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getSeats", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
@@ -104,6 +117,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "getSessionsByDate", null);
+__decorate([
+    (0, common_1.Post)('take-seats'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "takeSeats", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

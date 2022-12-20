@@ -13,4 +13,6 @@ export declare class SessionsService {
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;
     deleteSession(id: number): Promise<void>;
     getSessionsByFilmId(filmId: number): Promise<Session[]>;
+    getSeats(id: number): Promise<Session>;
+    takeSeats(id: number, seats: any): Promise<[affectedCount: number]>;
 }

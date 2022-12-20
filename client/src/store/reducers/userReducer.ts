@@ -92,4 +92,3 @@ export const logOutAction = () => {
         type: UserActionTypes.LOG_OUT,
     }
 }
-// localStorage.clear()

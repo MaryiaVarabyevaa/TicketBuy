@@ -1,5 +1,4 @@
 import {FilmActionTypes, IFilm, IFilmAction, IFilmState} from "../../types/film";
-import {UserActionTypes} from "../../types/user";
 
 const defaultState: IFilmState = {
     currentFilm: [],
@@ -13,9 +12,6 @@ export const filmReducer = (state = defaultState, action: IFilmAction): IFilmSta
         case FilmActionTypes.DELETE_CURRENT_FILM:
             localStorage.setItem('currentFilm', JSON.stringify([]));
             return {...state, currentFilm: []};
-        // case FilmActionTypes.RESTORE_FROM_STORAGE:
-        //     const currentFilm = JSON.parse(localStorage.getItem('currentUser') as string);
-        //     return {...state, currentFilm: currentFilm? currentFilm : []}
         default:
             return state;
     }

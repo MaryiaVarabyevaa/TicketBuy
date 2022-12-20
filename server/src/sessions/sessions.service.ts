@@ -111,8 +111,39 @@ export class SessionsService {
         }
     }
 
-    async getSessionsByFilmId (filmId: number) {
+    async getSessionsByFilmId(filmId: number) {
         const session = await this.sessionRepository.findAll({where: {filmId}});
         return session
+    }
+
+
+    async getSeats(id: number) {
+        const session = await this.sessionRepository.findOne({
+            attributes: ['seats'],
+            where: {
+                id
+            }
+        });
+        if (!session) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'There is no such session',
+                },
+                HttpStatus.OK,
+            );
+        }
+
+        return session;
+    }
+
+    async takeSeats(id: number,seats) {
+        const takenSeats = await this.sessionRepository.update({seats}, {
+            where: {
+                id
+            }
+        });
+
+        return takenSeats;
     }
 }

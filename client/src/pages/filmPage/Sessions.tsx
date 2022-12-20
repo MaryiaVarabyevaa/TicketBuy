@@ -13,7 +13,6 @@ import Stack from "@mui/material/Stack";
 import {getMonth} from "../../helpers/getMonth";
 import {LANDING_PLACE_ROUTE} from "../../constants/routes";
 
-
 const Sessions = () => {
     const {id} = useParams();
     const [cinema, setCinema] = useState([]);
@@ -49,8 +48,8 @@ const Sessions = () => {
         }
     }
 
-    const handleClick = () => {
-        navigate(LANDING_PLACE_ROUTE);
+    const handleClick = (id: number) => {
+        navigate(`/landing-place/${id}`);
     }
 
     useEffect(() => {
@@ -81,7 +80,7 @@ const Sessions = () => {
                                                             itemValue.map((item) => {
                                                                 const {time, id} = item;
                                                                 return   <TableCell align="right" key={id} sx={{m: 0, width: '50px'}}>
-                                                                    <Button onClick={handleClick}>{time.slice(0, 5)}</Button>
+                                                                    <Button onClick={() => handleClick(id)}>{time.slice(0, 5)}</Button>
                                                                 </TableCell>
                                                             })
                                                         }
