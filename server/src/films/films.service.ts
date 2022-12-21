@@ -31,44 +31,6 @@ export class FilmsService {
         return films;
     }
 
-    async getAllFilmsByRatingDESC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['imdbRating', 'DESC']
-            ]
-        });
-        return films;
-    }
-
-    async getAllFilmsByRatingASC() {
-        const films = await this.filmRepository.findAll({
-            attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating'],
-            order: [
-                ['imdbRating', 'ASC']
-            ]
-        });
-        return films;
-    }
-
-
-    async getFilmsByGenre(genre: string[]) {
-
-        const args = genre.map((item) => {
-           return item.replace(/ /g,'_');
-        }).join(' | ');
-
-        const films = await this.filmRepository.findAll({
-            where: {
-                genre: {
-                    [Op.match]: Sequelize.fn('to_tsquery', args)
-                }
-
-            },
-        });
-        return films;
-    }
-
     async sortedFilms (genre: string[], id: number[], value: string) {
         if (genre.length === 0 && id.length === 0) {
             const films = await this.filmRepository.findAll({

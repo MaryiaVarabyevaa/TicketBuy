@@ -9,6 +9,7 @@ export declare class SessionsService {
     getSessionsByDate(date: string): Promise<Session[]>;
     findSessionsByCinemaId(cinemaId: number[]): Promise<Session[]>;
     getSessionsByCinemaId(cinemaId: number): Promise<Session[]>;
+    getSessionInfoById(id: number): Promise<Session>;
     findCinemaIdByFilmId(filmId: number): Promise<any[]>;
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;
     deleteSession(id: number): Promise<void>;

@@ -51,6 +51,9 @@ let SessionsController = class SessionsController {
     takeSeats(req) {
         return this.sessionService.takeSeats(req.body.id, req.body.seats);
     }
+    getSessionById(req) {
+        return this.sessionService.getSessionInfoById(req.body.id);
+    }
     getSessionsByFilmId(id) {
         return this.sessionService.getSessionsByFilmId(id);
     }
@@ -124,6 +127,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "takeSeats", null);
+__decorate([
+    (0, common_1.Post)('get-info'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getSessionById", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

@@ -78,6 +78,21 @@ let SessionsService = class SessionsService {
         });
         return sessions;
     }
+    async getSessionInfoById(id) {
+        const session = await this.sessionRepository.findOne({
+            where: {
+                id
+            },
+            attributes: { exclude: ['seats', 'deletedAt', 'createdAt', 'updatedAt'] }
+        });
+        if (!session) {
+            throw new common_1.HttpException({
+                status: common_1.HttpStatus.OK,
+                error: 'There is no such session',
+            }, common_1.HttpStatus.OK);
+        }
+        return session;
+    }
     async findCinemaIdByFilmId(filmId) {
         const sessions = await this.sessionRepository.findAll({
             where: {

@@ -69,8 +69,8 @@ const Sessions = () => {
                                 <TableCell component="th" scope="row" >{key}</TableCell>
                                 {
                                     // @ts-ignore
-                                    Object.entries(value).map(([keyItem, itemValue]) => {
-                                        return  <Table>
+                                    Object.entries(value).map(([keyItem, itemValue], index) => {
+                                        return  <Table key={index}>
                                             <TableBody>
                                                 <TableRow>
                                                     <TableCell component="th"  >{keyItem}</TableCell>

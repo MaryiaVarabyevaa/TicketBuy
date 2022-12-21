@@ -57,6 +57,11 @@ export class SessionsController {
         return this.sessionService.takeSeats(req.body.id, req.body.seats);
     }
 
+    @Post('get-info')
+    getSessionById(@Request() req) {
+        return this.sessionService.getSessionInfoById(req.body.id);
+    }
+
     @Get(':id')
     getSessionsByFilmId(
         @Param('id', ParseIntPipe) id: number

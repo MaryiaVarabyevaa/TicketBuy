@@ -2,7 +2,6 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Comment} from "./comments.entity";
 import {CreateCommentDto} from "./dto/create-comment.dto";
-import {UpdateSessionDto} from "../sessions/dto/update-session.dto";
 
 @Injectable()
 export class CommentsService {

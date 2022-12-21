@@ -30,9 +30,6 @@ let FilmsController = class FilmsController {
     async updateUserInfo(cinemaDto) {
         return this.filmService.updateFilmInfo(cinemaDto);
     }
-    async getFilmsByGenre(req) {
-        return this.filmService.getFilmsByGenre(req.body.genre);
-    }
     async getFilmsById(req) {
         return this.filmService.getFilmsById(req.body.id);
     }
@@ -41,12 +38,6 @@ let FilmsController = class FilmsController {
     }
     getAll() {
         return this.filmService.getAllFilms();
-    }
-    getAllFilmsByRatingDESC() {
-        return this.filmService.getAllFilmsByRatingDESC();
-    }
-    getAllFilmsByRatingASC() {
-        return this.filmService.getAllFilmsByRatingASC();
     }
     getPostById(id) {
         return this.filmService.getOneFilm(id);
@@ -74,14 +65,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], FilmsController.prototype, "updateUserInfo", null);
 __decorate([
-    (0, common_1.Post)('filter_by_genre'),
-    __param(0, (0, common_1.Request)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], FilmsController.prototype, "getFilmsByGenre", null);
-__decorate([
-    (0, common_1.Post)('filter_by_id'),
+    (0, common_1.Post)('get-by-id'),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -100,18 +84,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], FilmsController.prototype, "getAll", null);
-__decorate([
-    (0, common_1.Get)('get_by_rating_desc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FilmsController.prototype, "getAllFilmsByRatingDESC", null);
-__decorate([
-    (0, common_1.Get)('get_by_rating_asc'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], FilmsController.prototype, "getAllFilmsByRatingASC", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),

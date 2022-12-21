@@ -13,7 +13,7 @@ import LoginPage from '../pages/loginPage/LoginPage';
 import MainPage from "../pages/mainPage/MainPage";
 import DashBoard from "../pages/dashboard/Dashboard";
 import Film from "../pages/filmPage/Film";
-import LandingPage from "../pages/LandingPage";
+import LandingPage from "../pages/filmPage/LandingPage";
 import Profile from "../pages/profilePage/Profile";
 import Basket from "../pages/basketPage/Basket";
 

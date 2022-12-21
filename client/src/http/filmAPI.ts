@@ -31,3 +31,8 @@ export const getSortedFilms = async (genre: string[], id: number[], value: strin
     const { data } = await $host.post('film/sort', {genre, id, value});
     return data;
 }
+
+export const getFilmById = async (id: number) => {
+    const { data } = await $host.post('film/get-by-id', {id});
+    return data;
+}

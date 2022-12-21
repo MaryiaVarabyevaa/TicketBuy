@@ -69,3 +69,8 @@ export const deleteSession = async (id: GridRowId) => {
     const { data } = await $host.post('sessions/delete', {id});
     return data;
 }
+
+export const getSessionInfoById = async (id: number) => {
+    const { data } = await $host.post('sessions/get-info', {id});
+    return data;
+}

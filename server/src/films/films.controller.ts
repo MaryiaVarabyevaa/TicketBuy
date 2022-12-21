@@ -21,12 +21,8 @@ export class FilmsController {
         return this.filmService.updateFilmInfo(cinemaDto);
     }
 
-    @Post('filter_by_genre')
-    async getFilmsByGenre(@Request() req) {
-        return this.filmService.getFilmsByGenre(req.body.genre);
-    }
 
-    @Post('filter_by_id')
+    @Post('get-by-id')
     async getFilmsById(@Request() req) {
         return this.filmService.getFilmsById(
             req.body.id,
@@ -45,15 +41,6 @@ export class FilmsController {
     @Get()
     getAll() {
         return this.filmService.getAllFilms();
-    }
-
-    @Get('get_by_rating_desc')
-    getAllFilmsByRatingDESC() {
-        return this.filmService.getAllFilmsByRatingDESC();
-    }
-    @Get('get_by_rating_asc')
-    getAllFilmsByRatingASC() {
-        return this.filmService.getAllFilmsByRatingASC();
     }
 
     @Get(':id')

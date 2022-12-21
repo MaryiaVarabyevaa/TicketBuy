@@ -2,24 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {Alert, Box, Button, Chip, Container, createTheme, CssBaseline, Typography} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
-import {getSeats} from "../http/sessionAPI";
+import {getSeats} from "../../http/sessionAPI";
 import {useNavigate, useParams} from "react-router-dom";
-import {BASKET_ROUTE} from "../constants/routes";
-import {ISeat} from "../types/order";
+import {BASKET_ROUTE} from "../../constants/routes";
+import {ISeat} from "../../types/order";
 import {useDispatch, useSelector} from "react-redux";
-import {addOrderAction} from "../store/reducers/orderReducer";
+import {addOrderAction} from "../../store/reducers/orderReducer";
 
 const theme = createTheme();
-
-interface IRootState {
-    user: any
-}
 
 const LandingPage = () => {
     const [seatsInfo, setSeatsInfo] = useState<ISeat[]>([]);
     const [isError, setIsError] = useState(false);
     const [seats, setSeats] = useState<any[]>([]);
-    const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
     const {id} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -77,10 +72,13 @@ const LandingPage = () => {
         }
     };
     const handleContinue = () => {
-        dispatch(addOrderAction({
-            [currentUserId] : seatsInfo
-        }))
-        // navigate(BASKET_ROUTE);
+        if (id) {
+            dispatch(addOrderAction({
+                sessionId: +id,
+                seats: seatsInfo
+            }))
+            navigate(BASKET_ROUTE);
+        }
     }
 
     return (
@@ -168,5 +166,5 @@ const LandingPage = () => {
         </>
     );
 };
-// localStorage.clear();
+
 export default LandingPage;

@@ -14,5 +14,6 @@ export declare class SessionsController {
     getSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     getSessionsByDate(req: any): Promise<import("./sessions.entity").Session[]>;
     takeSeats(req: any): Promise<[affectedCount: number]>;
+    getSessionById(req: any): Promise<import("./sessions.entity").Session>;
     getSessionsByFilmId(id: number): Promise<import("./sessions.entity").Session[]>;
 }

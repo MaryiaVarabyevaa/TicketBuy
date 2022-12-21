@@ -30,6 +30,12 @@ export class HallsController {
     getHallsById(@Request() req) {
         return this.hallsService.getHallsById(req.body.cinemaId);
     }
+
+    @Post('get-number')
+    getHallNumber(@Request() req) {
+        return this.hallsService.getHallNumberById(req.body.id);
+    }
+
     @Get()
     getAll() {
         return this.hallsService.getAllHalls();

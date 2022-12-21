@@ -66,6 +66,25 @@ export class SessionsService {
         // return result;
     }
 
+    async getSessionInfoById(id: number) {
+        const session = await this.sessionRepository.findOne({
+            where: {
+                id
+            },
+            attributes: { exclude: ['seats' , 'deletedAt', 'createdAt', 'updatedAt'] }
+        });
+        if (!session) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'There is no such session',
+                },
+                HttpStatus.OK,
+            );
+        }
+
+        return session;
+    }
 
 
     async findCinemaIdByFilmId(filmId: number) {

@@ -4,8 +4,8 @@ export enum IOrderActionTypes {
 }
 
 export interface IOrderState {
-    order: any[]
-
+    seats: ISeat[];
+    sessionId: number | null;
 }
 
 export interface IOrderAction {
