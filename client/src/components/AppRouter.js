@@ -15,7 +15,7 @@ import DashBoard from "../pages/dashboard/Dashboard";
 import Film from "../pages/filmPage/Film";
 import LandingPage from "../pages/filmPage/LandingPage";
 import Profile from "../pages/profilePage/Profile";
-import Basket from "../pages/basketPage/Basket";
+import Basket from "../pages/paymentPage/Basket";
 
 
 export const AppRouter = () => {

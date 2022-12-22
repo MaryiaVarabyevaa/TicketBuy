@@ -6,10 +6,10 @@ import {getFilmById} from "../../http/filmAPI";
 import {getCinemaInfoById} from "../../http/cinemaAPI";
 import {getHallNumber} from "../../http/hallsAPI";
 import {Button, Typography} from "@mui/material";
-import {ISession} from "../../types/session";
 import {getMonth} from "../../helpers/getMonth";
 import {ISeat} from "../../types/order";
 import Stack from "@mui/material/Stack";
+import CardForm from "./CardForm";
 
 interface IRootState {
     order: any
@@ -44,8 +44,8 @@ const Basket = () => {
             <Typography variant='h5'>
                 {
                     filmTitle &&
-                    `${filmTitle}, 
-                     ${session["date"].slice(8)} ${getMonth(+(session["date"].slice(5, 7)))} ${session["date"].slice(0, 4)}, 
+                    `${filmTitle},
+                     ${session["date"].slice(8)} ${getMonth(+(session["date"].slice(5, 7)))} ${session["date"].slice(0, 4)},
                      ${session["time"].slice(0, 5)}`
                 }
             </Typography>
@@ -68,7 +68,8 @@ const Basket = () => {
                     session.length !== 0 && `${session["price"] * seats[0].length} BYN`
                 }
             </Typography>
-            <Button variant="contained">Buy</Button>
+            <CardForm />
+            {/*<Button variant="contained">Buy</Button>*/}
         </Box>
     );
 };

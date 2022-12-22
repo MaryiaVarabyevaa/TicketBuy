@@ -21,7 +21,7 @@ const validatePrice = (price: string) => {
     if (price.length === 0) {
         return REQUIRED_FIELD;
     }
-    if (!price.match(/^\d\d.\d\d+$/g)) {
+    if (!price.match(/^\d\d.\d\d$/g)) {
         return CORRECT_VALUE;
     }
     return true;
@@ -37,7 +37,7 @@ const validateDate = (date: string) => {
     if (date.length === 0) {
         return REQUIRED_FIELD;
     }
-    if (!date.match(/^\d\d\d\d-\d\d-\d\d+$/g)) {
+    if (!date.match(/^\d\d\d\d-\d\d-\d\d$/g)) {
         return 'Enter the correct value';
     }
     if (+date.substring(0, 4) > currentYear + 1) {
@@ -60,7 +60,7 @@ const validateTime = (time: string) => {
     if (time.length === 0) {
         return REQUIRED_FIELD;
     }
-    if (!time.match(/^\d\d:\d\d:\d\d+$/g)) {
+    if (!time.match(/^\d\d:\d\d:\d\d$/g)) {
         return 'Enter the correct value';
     }
     if (+time.substring(0, 2) > 24) {
