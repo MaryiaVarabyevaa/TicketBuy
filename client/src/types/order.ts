@@ -17,3 +17,9 @@ export interface ISeat {
     seat: number;
     row: number;
 }
+
+export interface IOrder extends IOrderState{
+    userId: number;
+    sum: number;
+    status: string;
+}

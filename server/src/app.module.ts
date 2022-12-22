@@ -14,7 +14,7 @@ import {HallsModule} from './halls/halls.module';
 import {Halls} from "./halls/halls.entity";
 import {CommentsModule} from './comments/comments.module';
 import {Comment} from "./comments/comments.entity";
-import { OrdersModule } from './orders/orders.module';
+import {OrdersModule} from './orders/orders.module';
 import {Order} from "./orders/orders.entity";
 
 @Module({
@@ -41,7 +41,7 @@ import {Order} from "./orders/orders.entity";
         AuthModule,
         HallsModule,
         CommentsModule,
-        OrdersModule
+        OrdersModule,
     ],
 })
 export class AppModule {}

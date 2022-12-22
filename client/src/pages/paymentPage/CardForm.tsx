@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {Button, Grid, TextField} from "@mui/material";
 import {cvcValidation, expiryValidation, nameValidation, numberValidation} from "./validation";
+import {addOrder} from "../../http/orderAPI";
+import {useSelector} from "react-redux";
 
 interface ICard {
     number: string;
@@ -13,7 +15,15 @@ interface ICard {
     cvc: string;
 }
 
+interface IRootState {
+    user: any;
+    order: any;
+}
+
 const CardForm = () => {
+    const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
+    const sessionId = useSelector((state: IRootState) => state.order.sessionId);
+    const seats = useSelector((state: IRootState) => state.order.seats);
     const [number, setNumber] = useState('');
     const [expiry, setExpiry] = useState('');
     const [focus, setFocus] = useState('');
@@ -34,7 +44,14 @@ const CardForm = () => {
     });
 
     const onSubmit: SubmitHandler<ICard> = async (data)=> {
-        console.log(data);
+        const order = await addOrder({
+            userId: +currentUserId,
+            sessionId: +sessionId,
+            seats,
+            sum: 20,
+            status: 'paid'
+        })
+        console.log(order)
     }
     return (
         <Box id="PaymentForm" sx={{

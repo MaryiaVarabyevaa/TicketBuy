@@ -52,7 +52,7 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
             halls_module_1.HallsModule,
             comments_module_1.CommentsModule,
-            orders_module_1.OrdersModule
+            orders_module_1.OrdersModule,
         ],
     })
 ], AppModule);

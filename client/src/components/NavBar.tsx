@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -12,12 +13,10 @@ import {ADMIN_PANEL_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../cons
 import {useNavigate} from "react-router-dom";
 import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
-import {IUserState} from "../types/user";
 import Box from "@mui/material/Box";
-import Badge, { BadgeProps } from '@mui/material/Badge';
-import { styled } from '@mui/material/styles';
+import Badge, {BadgeProps} from '@mui/material/Badge';
+import {styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {useState} from "react";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
