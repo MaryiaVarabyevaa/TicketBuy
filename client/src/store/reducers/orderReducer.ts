@@ -28,6 +28,14 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 seats: seats? seats: [],
                 sessionId: sessionId? sessionId : null,
             };
+        case IOrderActionTypes.CLEAR_ORDER:
+            localStorage.removeItem('seats');
+            localStorage.removeItem('sessionId');
+            return {
+                ...state,
+                seats: [],
+                sessionId: null
+            }
         default:
             return state;
     }
@@ -37,5 +45,11 @@ export const addOrderAction = (payload: any): IOrderAction => {
     return {
         type: IOrderActionTypes.ADD_ORDER,
         payload: payload
+    }
+}
+
+export const clearOrderAction = (): IOrderAction => {
+    return {
+        type: IOrderActionTypes.CLEAR_ORDER,
     }
 }

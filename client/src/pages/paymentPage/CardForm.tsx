@@ -5,8 +5,13 @@ import Box from "@mui/material/Box";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {Button, Grid, TextField} from "@mui/material";
 import {cvcValidation, expiryValidation, nameValidation, numberValidation} from "./validation";
+import {useDispatch, useSelector} from "react-redux";
+import {getStatus} from "../../helpers/getStatus";
+import {OrderStatus} from "../../types/order";
 import {addOrder} from "../../http/orderAPI";
-import {useSelector} from "react-redux";
+import {clearOrderAction} from "../../store/reducers/orderReducer";
+import {useNavigate} from "react-router-dom";
+import {MAIN_ROUTE} from "../../constants/routes";
 
 interface ICard {
     number: string;
@@ -29,8 +34,10 @@ const CardForm = () => {
     const [focus, setFocus] = useState('');
     const [name, setName] = useState('');
     const [cvc, setCvc] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const { handleSubmit, control } = useForm<ICard>({
+    const { handleSubmit, control, reset } = useForm<ICard>({
         mode: 'onSubmit',
         defaultValues: {
             number: '',
@@ -44,14 +51,35 @@ const CardForm = () => {
     });
 
     const onSubmit: SubmitHandler<ICard> = async (data)=> {
-        const order = await addOrder({
-            userId: +currentUserId,
-            sessionId: +sessionId,
-            seats,
-            sum: 20,
-            status: 'paid'
-        })
-        console.log(order)
+       try {
+           const status = getStatus();
+
+           if (status) {
+               const order = await addOrder({
+                   userId: +currentUserId,
+                   sessionId: +sessionId,
+                   seats,
+                   sum: 30,
+                   status: OrderStatus.paid
+               })
+               dispatch(clearOrderAction())
+               navigate(MAIN_ROUTE)
+           } else {
+               reset({
+                   number: '',
+                   expiry: '',
+                   name: '',
+                   cvc: ''
+               });
+               setNumber('');
+               setName('');
+               setExpiry('');
+               setCvc('');
+                throw Error('Payment refused')
+           }
+       } catch (err) {
+           console.log(err)
+       }
     }
     return (
         <Box id="PaymentForm" sx={{
@@ -83,9 +111,6 @@ const CardForm = () => {
                                   label='Card number'
                                   value={value}
                                   onChange={(event) => {
-                                      // if (!!errors.number) {
-                                      //     setNumber(event.target.value);
-                                      // }
                                       setNumber(event.target.value);
                                       onChange(event);
 
@@ -111,9 +136,6 @@ const CardForm = () => {
                                   label='Name'
                                   value={name}
                                   onChange={(event) => {
-                                      // if (!!errors.name) {
-                                      //     setName(event.target.value);
-                                      // }
                                       setName(event.target.value);
                                       onChange(event);
                                   }}
@@ -138,9 +160,6 @@ const CardForm = () => {
                                   label='MM/YY Expiry'
                                   value={expiry}
                                   onChange={(event) => {
-                                      // if (!!errors.expiry) {
-                                      //     setExpiry(event.target.value);
-                                      // }
                                       setExpiry(event.target.value);
                                       onChange(event);
                                   }}
@@ -165,9 +184,6 @@ const CardForm = () => {
                                   label='CVC'
                                   value={cvc}
                                   onChange={(event) => {
-                                      // if (errors.cvc) {
-                                      //     setCvc(event.target.value);
-                                      // }
                                       setCvc(event.target.value);
                                       onChange(event);
                                   }}
@@ -186,6 +202,6 @@ const CardForm = () => {
         </Box>
     );
 };
-
+//
 // localStorage.clear()
 export default CardForm;

@@ -124,7 +124,7 @@ export function EditToolbar(props: any) {
 
     }
 
-    return<GridToolbarContainer>
+    return <GridToolbarContainer>
         <Button color="primary"
                 startIcon={<AddIcon />}
                 onClick={handleClick}>

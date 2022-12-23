@@ -1,6 +1,7 @@
 export enum IOrderActionTypes {
     ADD_ORDER='ADD_ORDER',
     RESTORE_FROM_STORAGE='RESTORE_FROM_STORAGE',
+    CLEAR_ORDER='CLEAR_ORDER'
 }
 
 export interface IOrderState {
@@ -22,4 +23,9 @@ export interface IOrder extends IOrderState{
     userId: number;
     sum: number;
     status: string;
+}
+
+export enum OrderStatus {
+    paid = 'paid',
+    refused = 'refused'
 }
