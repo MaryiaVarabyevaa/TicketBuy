@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
-import sequelize from "sequelize";
+import sequelize, {fn, Sequelize} from "sequelize";
 
 @Injectable()
 export class SessionsService {
@@ -59,11 +59,6 @@ export class SessionsService {
             }
         });
         return sessions;
-        // const [result] = await this.sessionRepository.sequelize.query(
-        //     `SELECT * FROM session WHERE cinemaId=${cinemaId}`
-        // );
-
-        // return result;
     }
 
     async getSessionInfoById(id: number) {
@@ -156,13 +151,21 @@ export class SessionsService {
         return session;
     }
 
-    async takeSeats(id: number,seats) {
-        const takenSeats = await this.sessionRepository.update({seats}, {
-            where: {
-                id
-            }
-        });
+    // async takeSeats() {
+        // const takenSeats = await this.sessionRepository.update({seats}, {
+        //     where: {
+        //         id
+        //     }
+        // });
+        //
+        // return takenSeats;
 
-        return takenSeats;
-    }
+    //     const seats = await this.sessionRepository.update({
+    //         seats: Sequelize.fn("JSON_SET", Sequelize.col('seats'), `[0][1] = false`, `[0][1] = true`)
+    //
+    //     }, {
+    //         where: {id: 2}
+    //     })
+    //     return seats;
+    // }
 }

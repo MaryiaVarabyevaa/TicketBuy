@@ -194,7 +194,7 @@ const Profile = () => {
                        value === 0 && <Box
                            component="form"
                            onSubmit={handleSubmit(onSubmit)}
-                           // sx={{ mt: 3 }}
+                           sx={{ mt: 3 }}
                        >
                            <Grid container spacing={2} sx={{justifyContent: 'center'}}>
                                <Grid item xs={12} sm={7}>

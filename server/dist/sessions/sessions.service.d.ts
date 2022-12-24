@@ -15,5 +15,4 @@ export declare class SessionsService {
     deleteSession(id: number): Promise<void>;
     getSessionsByFilmId(filmId: number): Promise<Session[]>;
     getSeats(id: number): Promise<Session>;
-    takeSeats(id: number, seats: any): Promise<[affectedCount: number]>;
 }

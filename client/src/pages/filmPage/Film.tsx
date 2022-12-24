@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Stack from "@mui/material/Stack";
-import {CardActions, Chip, Container, Rating, Typography} from "@mui/material";
+import {CardActions, Chip, Container, Modal, Rating, Typography} from "@mui/material";
 import NavBar from "../../components/NavBar";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -10,23 +10,28 @@ import Footer from "../../components/Footer";
 import Divider from "@mui/material/Divider";
 import StarIcon from '@mui/icons-material/Star';
 import {StarBorder} from "@mui/icons-material";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {getFilm} from "../../http/filmAPI";
 import Reviews from "./Reviews";
 import {useSelector} from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import Sessions from "./Sessions";
+import {LOGIN_ROUTE} from "../../constants/routes";
+import LandingPage from "./LandingPage";
 
 interface IRootState {
     user: any
 }
+
 
 const Film = () => {
     const [film, setFilm] = useState<any>({});
     const [newRating, setNewRating] = useState<number | null>(0);
     const [listOfGenre, setListOfGenre] = useState<string[]>([]);
     const [isOpenSelectSession, setIsOpenSelectSession] = useState(false);
+    const [isClicked, setIsClicked] = useState(false);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
+    const navigate = useNavigate();
     const {id} = useParams();
 
     const getFilmInfo = async () => {
@@ -41,6 +46,13 @@ const Film = () => {
     useEffect(()=>{
         getFilmInfo();
     },[])
+
+    const handleSelect = () => {
+        if (!isAuth) {
+            navigate(LOGIN_ROUTE);
+        }
+        setIsOpenSelectSession(!isOpenSelectSession)
+    }
 
     return (
         <>
@@ -155,13 +167,15 @@ const Film = () => {
                                     </Box>
                                 </Stack>
                                 <CardActions>
-                                    <Button variant="contained" size='large'
-                                            onClick={() => setIsOpenSelectSession(!isOpenSelectSession)}
-                                    >
-                                        {
-                                            isOpenSelectSession? 'Hide sessions' : 'Show Sessions'
-                                        }
-                                    </Button>
+                                   <Tooltip title={isAuth? "Select a session" : "To view sessions, sign in"} >
+                                       <Button variant="contained" size='large'
+                                               onClick={handleSelect}
+                                       >
+                                           {
+                                               isOpenSelectSession? 'Hide sessions' : 'Show Sessions'
+                                           }
+                                       </Button>
+                                   </Tooltip>
                                 </CardActions>
 
                             </Box>
@@ -169,8 +183,15 @@ const Film = () => {
                     </Container>
                     <Container>
                         {
-                            isOpenSelectSession && <Sessions />
+                            isOpenSelectSession &&
+                            <Sessions
+                                setIsClicked={setIsClicked}
+                                isClicked={isClicked}
+                            />
                         }
+                        {/*{*/}
+                        {/*    isClicked && <LandingPage/>*/}
+                        {/*}*/}
                         <Reviews />
                     </Container>
                     <Footer />

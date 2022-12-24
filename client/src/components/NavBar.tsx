@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -17,18 +17,22 @@ import Box from "@mui/material/Box";
 import Badge, {BadgeProps} from '@mui/material/Badge';
 import {styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {toggleBasketAction} from "../store/reducers/basketReducer";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
-        right: -3,
-        top: 13,
+        right: -4,
+        top: 18,
         border: `2px solid ${theme.palette.background.paper}`,
-        padding: '0 4px',
+        padding: '6px',
+        borderRadius: '10px'
     },
 }));
 
 interface IRootState {
-    user: any
+    user: any,
+    order: any,
+    basket: any
 }
 
 interface IProps {
@@ -38,13 +42,25 @@ interface IProps {
 const NavBar = ({dashboard} : IProps) => {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [order, setOrder] = useState(0);
+    const [variant, setVariant] = useState<"dot" | "standard">("standard");
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const isAdmin = useSelector((state: IRootState) => state.user.isAdmin);
+    const toggle = useSelector((state: IRootState) => state.basket.toggle);
+    const seats = useSelector((state: IRootState) => state.order.seats);
+    const continueVal = useSelector((state: IRootState) => state.order.continue);
+    const payment = useSelector((state: IRootState) => state.order.payment);
     const isModerator = useSelector((state: IRootState) => state.user.isModerator);
     const navigate = useNavigate();
-    const  dispatch = useDispatch();
+    const dispatch = useDispatch();
 
+
+    useEffect(() =>{
+       if (seats.length !== 0) {
+            setVariant('dot');
+       } else {
+           setVariant('standard');
+       }
+    },[continueVal])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAuth(event.target.checked);
@@ -75,6 +91,9 @@ const NavBar = ({dashboard} : IProps) => {
     const handleClick = () => {
         navigate(LOGIN_ROUTE);
     }
+    const handleClickBasket = () => {
+       dispatch(toggleBasketAction(!toggle))
+    }
 
     const handleNavigateToMainPage = () => {
         navigate(MAIN_ROUTE)
@@ -102,8 +121,8 @@ const NavBar = ({dashboard} : IProps) => {
                         <LoginIcon />
                     </IconButton> :  (
                        <>
-                           <IconButton aria-label="cart" color="inherit">
-                               <StyledBadge badgeContent={order} color="secondary">
+                           <IconButton aria-label="cart" color="inherit" onClick={handleClickBasket}>
+                               <StyledBadge color="secondary" variant={variant} >
                                    <ShoppingCartIcon />
                                </StyledBadge>
                            </IconButton>
@@ -152,5 +171,5 @@ const NavBar = ({dashboard} : IProps) => {
         </AppBar>
     );
 }
-
+// localStorage.clear()
 export default NavBar;

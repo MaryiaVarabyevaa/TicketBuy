@@ -25,7 +25,6 @@ import {IFilm} from "../../types/film";
 import {getFilm, getSortedFilms} from "../../http/filmAPI";
 import Footer from "../../components/Footer";
 import {useDispatch} from "react-redux";
-import {addFilmAction} from "../../store/reducers/filmReducer";
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -110,7 +109,6 @@ const MainPage = () => {
         setFilms(sortedFilms);
     };
 
-
     const getCinema = async () => {
         const cinema = await getAllCinema();
         setCinema(cinema);
@@ -121,9 +119,10 @@ const MainPage = () => {
         getCinema();
     }, [])
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setSortValue(event.target.value);
-    };
+    useEffect(() => {
+        getFilms();
+        getCinema();
+    }, [isError])
 
     const handleChangeDate = async (newValue: any) => {
         try {
@@ -215,7 +214,6 @@ const MainPage = () => {
        }
     };
 
-
     const handleSortByGenre = async (event: SelectChangeEvent<typeof personName>) => {
       try {
           const {
@@ -237,8 +235,6 @@ const MainPage = () => {
       }
     };
 
-
-
     const handleSortByRating = async () => {
         const value = ( sortRatingBy === 'DESC')? 'ASC' : 'DESC';
         const films = await getSortedFilms(genre, id, value) as unknown as IFilm[];
@@ -246,21 +242,16 @@ const MainPage = () => {
         setFilms(films);
     }
 
-    const handleClick = () => {
-        navigate(LOGIN_ROUTE);
-    }
-
     const handleReset = () => {
         setSelectedDate(null);
         setCinemaValue([]);
         setGenre([]);
         setSortRatingBy('DESC');
+        setId([])
         setIsError(false);
     }
 
     const handleClickOnFilm = async (id: number) => {
-        const film = await getFilm(id);
-        dispatch(addFilmAction(film));
         navigate(`/films/${id}`);
     }
 

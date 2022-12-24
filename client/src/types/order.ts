@@ -1,12 +1,16 @@
 export enum IOrderActionTypes {
-    ADD_ORDER='ADD_ORDER',
+    ADD_SEATS='ADD_SEATS',
+    ADD_SESSION_ID='ADD_SESSION_ID',
     RESTORE_FROM_STORAGE='RESTORE_FROM_STORAGE',
-    CLEAR_ORDER='CLEAR_ORDER'
+    CLEAR_ORDER='CLEAR_ORDER',
+    CLEAR_CONTINUE_OR_PAYMENT_VALUES='CLEAR_CONTINUE_OR_PAYMENT_VALUES'
 }
 
 export interface IOrderState {
     seats: ISeat[];
     sessionId: number | null;
+    continue?: boolean;
+    payment?: boolean;
 }
 
 export interface IOrderAction {
@@ -29,3 +33,4 @@ export enum OrderStatus {
     paid = 'paid',
     refused = 'refused'
 }
+

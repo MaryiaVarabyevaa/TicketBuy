@@ -1,26 +1,40 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {
-    findSessionsByCinemaId,
-    getCinemaIdByFilmId,
-    getSessionsByCinemaId,
-    getSessionsByFilmId
-} from "../../http/sessionAPI";
+import {getSessionsByFilmId} from "../../http/sessionAPI";
 import {getCinemaInfoById} from "../../http/cinemaAPI";
-import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
+import {getMonth} from "../../helpers/getMonth";
+import {useDispatch, useSelector} from "react-redux";
+import {addSessionAction, clearContinueOrPaymentValues} from "../../store/reducers/orderReducer";
+import {Button, Grid, Modal, Paper} from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import {getMonth} from "../../helpers/getMonth";
-import {LANDING_PLACE_ROUTE} from "../../constants/routes";
+import LandingPage from "./LandingPage";
 
-const Sessions = () => {
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    pt: 3,
+    pb: 3
+};
+
+interface IRootState {
+    order: any
+}
+
+const Sessions = ({setIsClicked, isClicked}: any) => {
     const {id} = useParams();
-    const [cinema, setCinema] = useState([]);
     const [sessions, setSessions] = useState<any>([]);
+    const [price, setPrice] = useState<number | null>(null);
+    const [open, setOpen] = React.useState(false);
+    const continueVal = useSelector((state: IRootState) => state.order.continue);
+    const payment = useSelector((state: IRootState) => state.order.payment);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const getSessions = async () => {
-        const sortedData: any = {};
         if (id) {
             const sessions = await getSessionsByFilmId(+id);
             const sortedData: any = {};
@@ -48,55 +62,89 @@ const Sessions = () => {
         }
     }
 
-    const handleClick = (id: number) => {
-        navigate(`/landing-place/${id}`);
+    const handleClose = () => {
+        setOpen(false);
+        dispatch(clearContinueOrPaymentValues({
+            continue: false,
+            payment: false
+        }))
+    };
+
+    const handleClick = (id: number, price: number) => {
+        setIsClicked(!isClicked);
+        setOpen(true);
+        setPrice(price)
+        dispatch(addSessionAction(id));
     }
 
     useEffect(() => {
         getSessions();
     },[])
 
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{ mixWidth: 800 }} aria-label="simple table">
-                <TableBody>
-                    {
-                        sessions && Object.entries(sessions).map(([key, value]) => {
-                            return  <TableRow
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                key={key}
-                            >
-                                <TableCell component="th" scope="row" >{key}</TableCell>
-                                {
-                                    // @ts-ignore
-                                    Object.entries(value).map(([keyItem, itemValue], index) => {
-                                        return  <Table key={index}>
-                                            <TableBody>
-                                                <TableRow>
-                                                    <TableCell component="th"  >{keyItem}</TableCell>
-                                                    <>
-                                                        {
-                                                            // @ts-ignore
-                                                            itemValue.map((item) => {
-                                                                const {time, id} = item;
-                                                                return   <TableCell align="right" key={id} sx={{m: 0, width: '50px'}}>
-                                                                    <Button onClick={() => handleClick(id)}>{time.slice(0, 5)}</Button>
-                                                                </TableCell>
-                                                            })
-                                                        }
-                                                    </>
-                                                </TableRow>
-                                            </TableBody>
-                                        </Table>
+    useEffect(()=>{
+        handleClose()
+    },[continueVal, payment])
 
-                                    })
-                                }
-                            </TableRow>
-                        })
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+    return (
+        <Box component={Paper} sx={{minWidth: '600px'}}>
+            {
+                sessions && Object.entries(sessions).map(([key, value]) => {
+                    return  <Grid
+                        container
+                        spacing={2}
+                        sx={{
+                            marginLeft: '0px',
+                        }}
+                    >
+                        <Grid
+                            xs={3}
+                            sx={{alignSelf: 'center'}}
+                        >
+                            {key}
+                        </Grid>
+                        <Grid xs={8} sx={{p: 2}}>
+                            {
+                                // @ts-ignore
+                                Object.entries(value).map(([keyItem, itemValue], index) => {
+                                    return <Stack
+                                        direction="row"
+                                        sx={{
+                                            '&:hover': {
+                                                background: "#F4F6F6",
+                                            },
+                                        }}
+                                    >
+                                        <Grid xs={7} sx={{alignSelf: 'center'}}>{keyItem}</Grid>
+                                        {
+                                            // @ts-ignore
+                                            itemValue.map((item) => {
+                                                const {time, id, price} = item;
+                                                return <>
+                                                    <Button onClick={() => handleClick(id, price)}>{time.slice(0, 5)}</Button>
+                                                </>
+                                            })
+                                        }
+                                    </Stack>
+
+                                })
+                            }
+                        </Grid>
+                    </Grid>
+                })
+            }
+            {
+                price &&  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                >
+                    <Box sx={{ ...style }}>
+                        <LandingPage price={price}/>
+                    </Box>
+                </Modal>
+            }
+        </Box>
     );
 };
 

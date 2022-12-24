@@ -52,10 +52,10 @@ export class SessionsController {
         return this.sessionService.getSessionsByDate(req.body.date);
     }
 
-    @Post('take-seats')
-    takeSeats(@Request() req) {
-        return this.sessionService.takeSeats(req.body.id, req.body.seats);
-    }
+    // @Post('take-seats')
+    // takeSeats(@Request() req) {
+    //     return this.sessionService.takeSeats();
+    // }
 
     @Post('get-info')
     getSessionById(@Request() req) {

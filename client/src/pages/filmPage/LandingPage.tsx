@@ -1,31 +1,63 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Box, Button, Chip, Container, createTheme, CssBaseline, Typography} from "@mui/material";
+import {
+    Alert,
+    AlertTitle,
+    Box,
+    Button,
+    Chip,
+    Container,
+    createTheme,
+    CssBaseline,
+    Fade, Modal,
+    Typography
+} from "@mui/material";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
 import {getSeats} from "../../http/sessionAPI";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {BASKET_ROUTE} from "../../constants/routes";
 import {ISeat} from "../../types/order";
 import {useDispatch, useSelector} from "react-redux";
-import {addOrderAction} from "../../store/reducers/orderReducer";
+import {addSeatsAction} from "../../store/reducers/orderReducer";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    boxShadow: 24,
+};
+
+interface IRootState {
+    order: any
+}
 
 const theme = createTheme();
 
-const LandingPage = () => {
+const LandingPage = ({price}: {price: number}) => {
+
     const [seatsInfo, setSeatsInfo] = useState<ISeat[]>([]);
-    const [isError, setIsError] = useState(false);
     const [seats, setSeats] = useState<any[]>([]);
-    const {id} = useParams();
+    const sessionId = useSelector((state: IRootState) => state.order.sessionId);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const [alertVisibility, setAlertVisibility] = useState({
+        value: false,
+        isSucceed: false,
+        title: '',
+        text: ''
+    });
 
     const getLandingPlace = async () => {
-        if (id) {
-            const {seats} = await getSeats(+id);
+        if (sessionId) {
+            const {seats} = await getSeats(+sessionId);
             setSeats(seats);
         }
     };
+
 
     useEffect(()=>{
         getLandingPlace();
@@ -38,10 +70,10 @@ const LandingPage = () => {
                 throw Error('This place is taken')
             }
 
-            if (seatsInfo.length >= 5 && !elem.classList.contains('clicked')) {
-                throw Error('lala')
+            if (seatsInfo.length >= 4 && !elem.classList.contains('clicked')) {
+                throw Error('The maximum number of seats is selected!')
             }
-            if (seatsInfo.length >= 5 && elem.classList.contains('clicked')) {
+            if (seatsInfo.length >= 4 && elem.classList.contains('clicked')) {
                 const values = seatsInfo.filter(({seat, row}) => {
                     if (!(seat === obj.seat && row === obj.row)) {
                         return {seat, row};
@@ -66,24 +98,32 @@ const LandingPage = () => {
                 setSeatsInfo(values as ISeat[]);
             }
             elem.classList.toggle('clicked');
-            setIsError(false);
         } catch (err) {
-            setIsError(true)
+            const message = (err as Error).message;
+            setAlertVisibility({
+                ...alertVisibility,
+                value: true,
+                isSucceed: false,
+                title: 'Error',
+                text: message
+
+            })
         }
     };
+
     const handleContinue = () => {
-        if (id) {
-            dispatch(addOrderAction({
-                sessionId: +id,
-                seats: seatsInfo
-            }))
-            navigate(BASKET_ROUTE);
-        }
+        dispatch(addSeatsAction({
+            seats: seatsInfo,
+            continue: true,
+            payment: false,
+        }))
     }
+
+
 
     return (
         <>
-            <Container component="main">
+            <Container component="main" sx={{padding: '0px'}}>
                 <CssBaseline />
                 <Box
                     sx={{
@@ -91,19 +131,39 @@ const LandingPage = () => {
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        gap: '20px'
+                        gap: '10px',
+                        padding: '0px'
                     }}
                 >
                     <Typography variant="h3">Screen</Typography>
-                    {
-                        isError &&  <Alert severity="error">The maximum number of seats is selected!</Alert>
+                    { alertVisibility.value &&
+                        <Modal
+                            open={alertVisibility.value}
+                            aria-labelledby="parent-modal-title"
+                            aria-describedby="parent-modal-description"
+                        >
+                            <Fade
+                                in={alertVisibility.value}
+                                timeout={{ enter: 1000, exit: 1000 }}
+                                addEndListener={() => {
+                                    setTimeout(() => {
+                                        setAlertVisibility({...alertVisibility, value: false});
+                                    }, 1500);
+                                }}
+                            >
+                                <Alert severity={alertVisibility.isSucceed ?  "success" : "error"} variant="standard" className="alert" sx={{ mb: 3, ...style }}>
+                                    <AlertTitle>{alertVisibility.title}</AlertTitle>
+                                    {alertVisibility.text}
+                                </Alert>
+                            </Fade>
+                        </Modal>
                     }
-                    <Stack spacing={2} sx={{bgcolor: 'grey', p: 5, borderRadius: '40px'}}>
+                    <Stack sx={{bgcolor: 'grey', p: 1.5, borderRadius: '40px'}}>
                         {
                             seats.map((seat, index) => {
-                                return <Stack direction="row" spacing={3} key={index} >
-                                    <Typography variant="h4" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
-                                    <Stack direction="row" spacing={3}>
+                                return <Stack direction="row" spacing={1} key={index} >
+                                    <Typography variant="h5" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
+                                    <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
                                         {
                                             seat.map((item: any, indexNum: number) => {
                                                 return <Box
@@ -116,10 +176,11 @@ const LandingPage = () => {
                                                         alignItems: 'center',
                                                         bgcolor: `${item? '#332f2c' : '#34495E'}`,
                                                         color: `${item? '#332f2c' : '#34495E'}`,
-                                                        width: '35px',
-                                                        height: '35px',
-                                                        borderRadius: '40px',
+                                                        width: '20px',
+                                                        height: '20px',
+                                                        borderRadius: '10px',
                                                         cursor: `${item? 'auto' : 'pointer'}`,
+                                                        fontSize: '0.5rem',
                                                         '&:hover': {
                                                             background: `${item? '#332f2c' : 'white'}`,
                                                             border: `${item? 'none' : '3px solid #34495E'}`,
@@ -132,39 +193,37 @@ const LandingPage = () => {
                                             })
                                         }
                                     </Stack>
-                                    <Typography variant="h4"  sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
+                                    <Typography variant="h5"  sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
                                 </Stack>
                             })
                         }
                     </Stack>
+                    {
+                        seatsInfo.length !== 0 && <Stack spacing={1} sx={{alignItems: 'center'}}>
+                            <Stack direction="row" spacing={1}>
+                                {
+                                    seatsInfo.map(({seat, row}) => {
+                                        return <Card>
+                                            <CardContent>
+                                                <Typography sx={{textAlign: 'center'}}>
+                                                    {`${seat} seat, ${row} row`}
+                                                </Typography>
+                                                <Typography sx={{textAlign: 'center'}}>{price} BYN</Typography>
+                                            </CardContent>
+                                        </Card>
+                                    })
+                                }
+                            </Stack>
+                           <Stack direction='row' spacing={2}>
+                               <Button size="small" variant="contained" sx={{width: '150px'}} onClick={handleContinue}>Continue</Button>
+                               <Button size="small" variant="contained" sx={{width: '150px'}}>Pay now</Button>
+                           </Stack>
+                        </Stack>
+                    }
                 </Box>
             </Container>
-            {
-                seatsInfo.length !== 0 && <AppBar position="sticky" color="primary" sx={{ top: 'auto', bottom: 0, bgcolor: 'white', color: 'black', mt: 5}}>
-                    <Box sx={{pl: 6, pr: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <Stack direction="row" spacing={2}>
-                            {
-                                seatsInfo.map(({ seat, row }, index) => {
-                                    return <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',width: '150px', height: '90px', border: '3px solid grey', borderRadius: '5px'}} key={index}>
-                                        <Typography variant="h6">
-                                            {`${row} row, ${seat} place`}
-                                        </Typography>
-                                    </Box>
-                                })
-                            }
-                        </Stack>
-                        <Button
-                            variant="contained"
-                            sx={{height: '60px'}}
-                            onClick={handleContinue}
-                        >
-                            Continue
-                        </Button>
-                    </Box>
-                </AppBar>
-            }
         </>
     );
 };
-
+// localStorage.clear()
 export default LandingPage;

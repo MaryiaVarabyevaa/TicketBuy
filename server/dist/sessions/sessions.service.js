@@ -150,14 +150,6 @@ let SessionsService = class SessionsService {
         }
         return session;
     }
-    async takeSeats(id, seats) {
-        const takenSeats = await this.sessionRepository.update({ seats }, {
-            where: {
-                id
-            }
-        });
-        return takenSeats;
-    }
 };
 SessionsService = __decorate([
     (0, common_1.Injectable)(),
