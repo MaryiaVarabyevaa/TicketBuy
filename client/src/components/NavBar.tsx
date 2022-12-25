@@ -18,6 +18,7 @@ import Badge, {BadgeProps} from '@mui/material/Badge';
 import {styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {toggleBasketAction} from "../store/reducers/basketReducer";
+import DrawerComponent from "./DrawerComponent";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -52,7 +53,6 @@ const NavBar = ({dashboard} : IProps) => {
     const isModerator = useSelector((state: IRootState) => state.user.isModerator);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
 
     useEffect(() =>{
        if (seats.length !== 0) {
@@ -101,74 +101,79 @@ const NavBar = ({dashboard} : IProps) => {
     };
 
     return (
-        <AppBar position={`${dashboard? "fixed" : "static"}`}>
-            <Toolbar>
-                <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'center', pl: '48px'}}>
-                    <Typography
-                        variant="h5"
-                        component="h3"
-                        sx={{
-                            display: 'inline-flex',
-                            cursor: 'pointer',
-                        }}
-                        onClick={() => navigate(MAIN_ROUTE)}
-                    >
-                        TicketBuy
-                    </Typography>
-                </Box>
-                {
-                    !isAuth? <IconButton onClick={handleClick}>
-                        <LoginIcon />
-                    </IconButton> :  (
-                       <>
-                           <IconButton aria-label="cart" color="inherit" onClick={handleClickBasket}>
-                               <StyledBadge color="secondary" variant={variant} >
-                                   <ShoppingCartIcon />
-                               </StyledBadge>
-                           </IconButton>
-                           <Box>
-                               <Tooltip title='Open settings'>
-                                   <IconButton
-                                       size="large"
-                                       aria-label="account of current user"
-                                       aria-controls="menu-appbar"
-                                       aria-haspopup="true"
-                                       onClick={handleMenu}
-                                       color="inherit"
+       <>
+           <AppBar position={`${dashboard? "fixed" : "static"}`}>
+               <Toolbar>
+                   <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'center', pl: '48px'}}>
+                       <Typography
+                           variant="h5"
+                           component="h3"
+                           sx={{
+                               display: 'inline-flex',
+                               cursor: 'pointer',
+                           }}
+                           onClick={() => navigate(MAIN_ROUTE)}
+                       >
+                           TicketBuy
+                       </Typography>
+                   </Box>
+                   {
+                       !isAuth? <IconButton onClick={handleClick}>
+                           <LoginIcon />
+                       </IconButton> :  (
+                           <>
+                               <IconButton aria-label="cart" color="inherit" onClick={handleClickBasket}>
+                                   <StyledBadge color="secondary" variant={variant} >
+                                       <ShoppingCartIcon />
+                                   </StyledBadge>
+                               </IconButton>
+                               <Box>
+                                   <Tooltip title='Open settings'>
+                                       <IconButton
+                                           size="large"
+                                           aria-label="account of current user"
+                                           aria-controls="menu-appbar"
+                                           aria-haspopup="true"
+                                           onClick={handleMenu}
+                                           color="inherit"
+                                       >
+                                           <AccountCircle />
+                                       </IconButton>
+                                   </Tooltip>
+                                   <Menu
+                                       sx={{ mt: '35px'}}
+                                       id="menu-appbar"
+                                       anchorEl={anchorEl}
+                                       anchorOrigin={{
+                                           vertical: 'top',
+                                           horizontal: 'right',
+                                       }}
+                                       keepMounted
+                                       transformOrigin={{
+                                           vertical: 'top',
+                                           horizontal: 'right',
+                                       }}
+                                       open={Boolean(anchorEl)}
+                                       onClose={handleClose}
                                    >
-                                       <AccountCircle />
-                                   </IconButton>
-                               </Tooltip>
-                               <Menu
-                                   sx={{ mt: '35px'}}
-                                   id="menu-appbar"
-                                   anchorEl={anchorEl}
-                                   anchorOrigin={{
-                                       vertical: 'top',
-                                       horizontal: 'right',
-                                   }}
-                                   keepMounted
-                                   transformOrigin={{
-                                       vertical: 'top',
-                                       horizontal: 'right',
-                                   }}
-                                   open={Boolean(anchorEl)}
-                                   onClose={handleClose}
-                               >
-                                   {
-                                       ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
-                                   }
-                                   {
-                                       dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
-                                   }
-                                   <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
-                                   <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
-                               </Menu>
-                           </Box>
-                       </>
-                    )}
-            </Toolbar>
-        </AppBar>
+                                       {
+                                           ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
+                                       }
+                                       {
+                                           dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
+                                       }
+                                       <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
+                                       <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
+                                   </Menu>
+                               </Box>
+                           </>
+                       )}
+               </Toolbar>
+           </AppBar>
+           {
+               toggle && <DrawerComponent />
+           }
+       </>
     );
 }
 // localStorage.clear()

@@ -4,7 +4,8 @@ const defaultState: IOrderState = {
     sessionId: null,
     seats: [],
     continue: false,
-    payment: false
+    payment: false,
+    orders: []
 };
 
 export const orderReducer = (state = defaultState, action: IOrderAction) => {
@@ -37,17 +38,36 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 continue: action.payload.continue,
                 payment: action.payload.payment
             }
+        case IOrderActionTypes.ADD_ORDER:
+            const order = {
+                sessionId: state.sessionId,
+                seats: state.seats
+            }
+            if (state.orders && state.orders.length === 0) {
+                localStorage.setItem('orders', JSON.stringify(order));
+            } else {
+                localStorage.setItem('orders', JSON.stringify([...state.orders, order]));
+            }
+
+            return {
+                ...state,
+                orders: [...state.orders, order],
+                sessionId: null,
+                seats: []
+            };
         case IOrderActionTypes.RESTORE_FROM_STORAGE:
             const seats = JSON.parse(localStorage.getItem('seats') as string);
             const sessionId = localStorage.getItem('sessionId');
-            const continueValue = localStorage.getItem('continue');
-            const payment = localStorage.getItem('payment');
+            const continueValue = localStorage.getItem('continue') === 'true' ? true : false;
+            const payment = localStorage.getItem('payment') === 'true' ? true : false;
+            const orders = JSON.parse(localStorage.getItem('orders') as string);
             return {
                 ...state,
                 seats: seats? seats: [],
                 sessionId: sessionId? sessionId : null,
-                continue: continueValue? continueValue : false,
-                payment: payment? payment : false,
+                orders: orders? orders : [],
+                continue: continueValue,
+                payment,
             };
         case IOrderActionTypes.CLEAR_ORDER:
             localStorage.removeItem('seats');
@@ -86,5 +106,11 @@ export const clearContinueOrPaymentValues = (payload: any): IOrderAction => {
 export const clearOrderAction = (): IOrderAction => {
     return {
         type: IOrderActionTypes.CLEAR_ORDER,
+    }
+}
+
+export const addOrderAction = (): IOrderAction => {
+    return {
+        type: IOrderActionTypes.ADD_ORDER
     }
 }

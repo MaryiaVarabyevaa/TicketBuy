@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Stack from "@mui/material/Stack";
-import {CardActions, Chip, Container, Modal, Rating, Typography} from "@mui/material";
+import {CardActions, Chip, Container, Rating, Typography} from "@mui/material";
 import NavBar from "../../components/NavBar";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -17,10 +17,10 @@ import {useSelector} from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import Sessions from "./Sessions";
 import {LOGIN_ROUTE} from "../../constants/routes";
-import LandingPage from "./LandingPage";
 
 interface IRootState {
-    user: any
+    user: any;
+    basket: any;
 }
 
 
@@ -189,9 +189,6 @@ const Film = () => {
                                 isClicked={isClicked}
                             />
                         }
-                        {/*{*/}
-                        {/*    isClicked && <LandingPage/>*/}
-                        {/*}*/}
                         <Reviews />
                     </Container>
                     <Footer />

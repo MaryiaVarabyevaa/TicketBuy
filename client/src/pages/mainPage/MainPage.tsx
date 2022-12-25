@@ -87,21 +87,14 @@ const MainPage = () => {
     const [cinema, setCinema] = useState([]);
     const [cinemaValue, setCinemaValue] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(null);
-
     const [isError, setIsError] = useState(false);
-
     const [genre, setGenre] = useState<string[]>([]);
     const [sortRatingBy, setSortRatingBy] = useState('DESC');
-
     const [idFromDate, setIdFromDate] = useState<number[]>([]);
     const [idFromCinema, setIdFromCinema] = useState<number[]>([]);
     const [id, setId] = useState<number[]>([]);
-
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-
     const [personName, setPersonName] = React.useState<string[]>([]);
 
     const getFilms = async() => {

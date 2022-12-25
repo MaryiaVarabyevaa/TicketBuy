@@ -88,13 +88,14 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
     return (
         <Box component={Paper} sx={{minWidth: '600px'}}>
             {
-                sessions && Object.entries(sessions).map(([key, value]) => {
+                sessions && Object.entries(sessions).map(([key, value], index) => {
                     return  <Grid
                         container
                         spacing={2}
                         sx={{
                             marginLeft: '0px',
                         }}
+                        key={index}
                     >
                         <Grid
                             xs={3}
@@ -113,15 +114,14 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
                                                 background: "#F4F6F6",
                                             },
                                         }}
+                                        key={index}
                                     >
                                         <Grid xs={7} sx={{alignSelf: 'center'}}>{keyItem}</Grid>
                                         {
                                             // @ts-ignore
                                             itemValue.map((item) => {
-                                                const {time, id, price} = item;
-                                                return <>
-                                                    <Button onClick={() => handleClick(id, price)}>{time.slice(0, 5)}</Button>
-                                                </>
+                                                const {time, id, price, filmId} = item;
+                                                return <Button onClick={() => handleClick(id, price)} key={id}>{time.slice(0, 5)}</Button>
                                             })
                                         }
                                     </Stack>

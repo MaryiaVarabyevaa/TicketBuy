@@ -14,10 +14,10 @@ export const basketReducer = (state=defaultState, action: IBasketAction) => {
                 toggle: action.payload
             }
         case IBasketActionTypes.RESTORE_FROM_STORAGE:
-            const toggle = localStorage.getItem('toggle');
+            const toggle = localStorage.getItem('toggle') === 'true'? true : false;
             return {
                 ...state,
-                toggle: toggle? toggle: false,
+                toggle
             }
         default:
             return state;

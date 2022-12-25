@@ -10,6 +10,8 @@ import {getMonth} from "../../helpers/getMonth";
 import {ISeat} from "../../types/order";
 import Stack from "@mui/material/Stack";
 import CardForm from "./CardForm";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 
 interface IRootState {
     order: any
@@ -38,39 +40,20 @@ const Basket = () => {
         getSessionInfo()
     },[])
 
-
     return (
-        <Box sx={{border: '2px solid black', mt: 5, width: '40%'}}>
-            <Typography variant='h5'>
-                {
-                    filmTitle &&
-                    `${filmTitle},
-                     ${session["date"].slice(8)} ${getMonth(+(session["date"].slice(5, 7)))} ${session["date"].slice(0, 4)},
-                     ${session["time"].slice(0, 5)}`
-                }
-            </Typography>
-            <Typography variant='h5'>
-                {
-                    cinemaName && `${cinemaName}, ${hallNumber} hall`
-                }
-            </Typography>
-            <Stack>
-                {
-                    seats && seats[0].map(({seat, row}: ISeat) => {
-                        return <Typography variant='h5'>
-                            {`${seat} seat, ${row} row`}
-                        </Typography>
-                    })
-                }
-            </Stack>
-            <Typography variant='h5'>
-                {
-                    session.length !== 0 && `${session["price"] * seats[0].length} BYN`
-                }
-            </Typography>
-            <CardForm />
-            {/*<Button variant="contained">Buy</Button>*/}
-        </Box>
+        <Stack sx={{border: '2px solid black', mt: 5, width: '40%'}}>
+
+            {
+                seats[0].map((seat: ISeat) => {
+                    return<Card>
+                        <CardContent>
+
+                        </CardContent>
+                    </Card>
+                })
+            }
+
+        </Stack>
     );
 };
 

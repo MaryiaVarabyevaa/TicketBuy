@@ -18,7 +18,7 @@ import {useNavigate} from "react-router-dom";
 import {BASKET_ROUTE} from "../../constants/routes";
 import {ISeat} from "../../types/order";
 import {useDispatch, useSelector} from "react-redux";
-import {addSeatsAction} from "../../store/reducers/orderReducer";
+import {addOrderAction, addSeatsAction} from "../../store/reducers/orderReducer";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
@@ -113,13 +113,15 @@ const LandingPage = ({price}: {price: number}) => {
 
     const handleContinue = () => {
         dispatch(addSeatsAction({
-            seats: seatsInfo,
+            seats: seatsInfo.map((seat) => {
+                seat['price'] = price;
+                return seat;
+            }),
             continue: true,
             payment: false,
-        }))
+        }));
+        dispatch(addOrderAction());
     }
-
-
 
     return (
         <>
@@ -225,5 +227,5 @@ const LandingPage = ({price}: {price: number}) => {
         </>
     );
 };
-// localStorage.clear()
+
 export default LandingPage;

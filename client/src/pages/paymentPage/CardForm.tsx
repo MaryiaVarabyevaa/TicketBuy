@@ -27,8 +27,7 @@ interface IRootState {
 
 const CardForm = () => {
     const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
-    const sessionId = useSelector((state: IRootState) => state.order.sessionId);
-    const seats = useSelector((state: IRootState) => state.order.seats);
+    const order = useSelector((state: IRootState) => state.order.order);
     const [number, setNumber] = useState('');
     const [expiry, setExpiry] = useState('');
     const [focus, setFocus] = useState('');
@@ -55,13 +54,13 @@ const CardForm = () => {
            const status = getStatus();
 
            if (status) {
-               const order = await addOrder({
-                   userId: +currentUserId,
-                   sessionId: +sessionId,
-                   seats,
-                   sum: 30,
-                   status: OrderStatus.paid
-               })
+               // const newOrder = await addOrder({
+               //     userId: +currentUserId,
+               //     sessionId: +order.sessionId,
+               //     seats: [],
+               //     sum: 30,
+               //     status: OrderStatus.paid
+               // })
                dispatch(clearOrderAction())
                navigate(MAIN_ROUTE)
            } else {
