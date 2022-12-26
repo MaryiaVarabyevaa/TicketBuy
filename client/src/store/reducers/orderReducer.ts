@@ -5,7 +5,7 @@ const defaultState: IOrderState = {
     seats: [],
     continue: false,
     payment: false,
-    orders: []
+    orders: [],
 };
 
 export const orderReducer = (state = defaultState, action: IOrderAction) => {
@@ -43,11 +43,13 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 sessionId: state.sessionId,
                 seats: state.seats
             }
-            if (state.orders && state.orders.length === 0) {
-                localStorage.setItem('orders', JSON.stringify(order));
+            if (state.orders.length === 0) {
+                localStorage.setItem('orders', JSON.stringify([order]));
             } else {
                 localStorage.setItem('orders', JSON.stringify([...state.orders, order]));
             }
+            localStorage.setItem('seats', JSON.stringify([]));
+            localStorage.setItem('sessionId', 'null');
 
             return {
                 ...state,
@@ -64,7 +66,7 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
             return {
                 ...state,
                 seats: seats? seats: [],
-                sessionId: sessionId? sessionId : null,
+                sessionId: sessionId !== 'null'? sessionId : null,
                 orders: orders? orders : [],
                 continue: continueValue,
                 payment,
@@ -114,3 +116,5 @@ export const addOrderAction = (): IOrderAction => {
         type: IOrderActionTypes.ADD_ORDER
     }
 }
+
+// localStorage.clear()

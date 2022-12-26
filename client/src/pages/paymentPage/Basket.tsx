@@ -1,60 +1,97 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from "react-redux";
-import Box from "@mui/material/Box";
+import {useDispatch, useSelector} from "react-redux";
 import {getSessionInfoById} from "../../http/sessionAPI";
 import {getFilmById} from "../../http/filmAPI";
 import {getCinemaInfoById} from "../../http/cinemaAPI";
 import {getHallNumber} from "../../http/hallsAPI";
-import {Button, Typography} from "@mui/material";
-import {getMonth} from "../../helpers/getMonth";
-import {ISeat} from "../../types/order";
 import Stack from "@mui/material/Stack";
-import CardForm from "./CardForm";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import {Button, Typography} from "@mui/material";
+import {getMonth} from "../../helpers/getMonth";
+import {openPaymentAction, toggleBasketAction} from "../../store/reducers/basketReducer";
 
 interface IRootState {
-    order: any
+    order: any;
+    basket: any;
 }
 
-const Basket = () => {
-    const seats = useSelector((state: IRootState) => state.order.seats);
-    const sessionId = useSelector((state: IRootState) => state.order.sessionId);
-    const [session, setSession] = useState<any>({});
-    const [filmTitle, setFilmTitle] = useState('');
-    const [cinemaName, setCinemaName] = useState([]);
-    const [hallNumber, setHallNumber] = useState([]);
 
-    const getSessionInfo = async () => {
-        const session = await getSessionInfoById(+sessionId);
-        const film = await getFilmById(session.filmId);
-        const cinema = await getCinemaInfoById([session.cinemaId]);
-        const hall = await getHallNumber(session.hallId);
-        setSession(session);
-        setFilmTitle(film[0].title);
-        setCinemaName(cinema[0].name);
-        setHallNumber(hall.hallNumber);
+const Basket = () => {
+    const orders = useSelector((state: IRootState) => state.order.orders);
+    const [allOrders, setAllOrders] = useState<any[]>([]);
+    const dispatch = useDispatch();
+
+    const getSessionInfo = async() => {
+        let arr = orders.map(async ({sessionId, seats}: any, index: number) => {
+            const session = await getSessionInfoById(+sessionId);
+            const film = await getFilmById(session.filmId);
+            const cinema = await getCinemaInfoById([session.cinemaId]);
+            const hall = await getHallNumber(session.hallId);
+
+            const info = {
+                sessionId,
+                filmTitle: film[0].title,
+                cinemaName: cinema[0].name,
+                hallNumber: hall.hallNumber,
+                price: session.price,
+                date: `${session.date.slice(8)} ${getMonth(+(session.date.slice(5, 7)))} ${session.date.slice(0, 4)}`,
+                time: session.time.slice(0, 5),
+                seats: Object.values(seats),
+            }
+           return info;
+        });
+
+      Promise.all(arr).then((res) => setAllOrders(res));
+    }
+    useEffect(() =>{
+        setAllOrders([]);
+        getSessionInfo();
+    }, [])
+
+    const handleClick = () => {
+        dispatch(toggleBasketAction(false));
+        dispatch(openPaymentAction(true));
     }
 
-    useEffect(()=>{
-        getSessionInfo()
-    },[])
-
     return (
-        <Stack sx={{border: '2px solid black', mt: 5, width: '40%'}}>
-
+        <Stack sx={{ bgcolor: 'grey', padding: 5}} spacing={2}>
             {
-                seats[0].map((seat: ISeat) => {
-                    return<Card>
-                        <CardContent>
+                allOrders.length !== 0 && allOrders.map((order) => {
+                    const {sessionId, filmTitle, cinemaName, hallNumber, date, time, seats, price} = order;
+                    return <Stack key={sessionId} spacing={2}>
+                        {
+                            seats[0].map((item: any, index: any) => {
+                                const {seat, row} = item;
+                                return <Card key={index}>
+                                    <CardContent>
+                                        <Typography>
+                                            {filmTitle}
+                                        </Typography>
+                                        {`${date}, ${time}`}
+                                        <Typography>
+                                            {cinemaName}
+                                        </Typography>
+                                        <Typography>
+                                            {`${hallNumber} hall`}
+                                        </Typography>
+                                        <Typography>
+                                            {`${seat} seat, ${row} row`}
+                                        </Typography>
+                                        <Typography>
+                                            {`${price} BYN`}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            })
+                        }
+                    </Stack>
 
-                        </CardContent>
-                    </Card>
                 })
             }
-
+            <Button variant="contained" onClick={handleClick}>Pay now</Button>
         </Stack>
     );
 };
-
+// localStorage.clear()
 export default Basket;

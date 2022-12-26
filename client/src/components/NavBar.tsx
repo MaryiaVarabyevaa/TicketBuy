@@ -19,6 +19,7 @@ import {styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import {toggleBasketAction} from "../store/reducers/basketReducer";
 import DrawerComponent from "./DrawerComponent";
+import CardForm from "../pages/paymentPage/CardForm";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -170,9 +171,12 @@ const NavBar = ({dashboard} : IProps) => {
                        )}
                </Toolbar>
            </AppBar>
-           {
-               toggle && <DrawerComponent />
-           }
+           {/*{*/}
+           {/*    toggle && <DrawerComponent />*/}
+           {/*}*/}
+           {/*{*/}
+           {/*    payment && <CardForm />*/}
+           {/*}*/}
        </>
     );
 }

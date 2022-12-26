@@ -2,7 +2,8 @@ import {IBasketAction, IBasketActionTypes, IBasketState} from "../../types/baske
 import {IOrderAction, IOrderActionTypes} from "../../types/order";
 
 const defaultState: IBasketState = {
-    toggle: false
+    toggle: false,
+    payment: false,
 };
 
 export const basketReducer = (state=defaultState, action: IBasketAction) => {
@@ -13,11 +14,19 @@ export const basketReducer = (state=defaultState, action: IBasketAction) => {
                 ...state,
                 toggle: action.payload
             }
-        case IBasketActionTypes.RESTORE_FROM_STORAGE:
-            const toggle = localStorage.getItem('toggle') === 'true'? true : false;
+        case IBasketActionTypes.OPEN_PAYMENT:
+            localStorage.setItem('payment', action.payload);
             return {
                 ...state,
-                toggle
+                payment: action.payload
+            }
+        case IBasketActionTypes.RESTORE_FROM_STORAGE:
+            const toggle = localStorage.getItem('toggle') === 'true'? true : false;
+            const payment = localStorage.getItem('payment') === 'true'? true : false;
+            return {
+                ...state,
+                toggle,
+                payment,
             }
         default:
             return state;
@@ -25,9 +34,16 @@ export const basketReducer = (state=defaultState, action: IBasketAction) => {
 }
 
 
-export const toggleBasketAction = (payload: any): IOrderAction => {
+export const toggleBasketAction = (payload: boolean): IOrderAction => {
     return {
         type: IBasketActionTypes.TOGGLE,
+        payload: payload
+    }
+}
+
+export const openPaymentAction = (payload: boolean): IOrderAction => {
+    return {
+        type: IBasketActionTypes.OPEN_PAYMENT,
         payload: payload
     }
 }

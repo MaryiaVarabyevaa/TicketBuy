@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import Box from "@mui/material/Box";
-import {TextField, Typography} from "@mui/material";
+import {Rating, TextField, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import {useParams} from "react-router-dom";
@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {IFullReviewInfo} from "../../types/review";
 import {getUserById} from "../../http/userAPI";
 import {useSelector} from "react-redux";
+import Tooltip from "@mui/material/Tooltip";
 
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -24,6 +25,7 @@ const Reviews = () => {
     const [value, setValue] = useState('');
     const [comments, setComments] = useState<IFullReviewInfo[]>([]);
     const [isDeleted, setIsDeleted] = useState(false);
+    const [newRating, setNewRating] = useState<number | null>(null);
     const [isAdded, setIsAdded] = useState(false);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const isModerator = useSelector((state: IRootState) => state.user.isModerator);
@@ -112,6 +114,34 @@ const Reviews = () => {
             {
                ( (isAuth && !hasComment) || isEdited) &&
                 <Box>
+                    <Stack
+                        direction="row"
+                        spacing={1}
+                        sx={{mb: 2}}
+                    >
+                        <Typography variant="h6">
+                            Your rating
+                        </Typography>
+                        <Tooltip title={isAuth? 'Put your rating' : 'Register to rate'}>
+                            <Box sx={{display: 'flex'}}>
+                                <Rating
+                                    name="simple-controlled"
+                                    value={newRating}
+                                    // readOnly={newRating? true : false}
+                                    max={10}
+                                    onChange={(event, newValue) => {
+                                        setNewRating(newValue);
+                                    }}
+                                    sx={{
+                                        alignItems: 'center'
+                                    }}
+                                />
+                                {
+                                    newRating && <Box sx={{ ml: 2, alignSelf: 'center' }}>{`${newRating} points`}</Box>
+                                }
+                            </Box>
+                        </Tooltip>
+                    </Stack>
                     <TextField
                         placeholder="Enter a comment"
                         id="review"

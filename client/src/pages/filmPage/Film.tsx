@@ -26,7 +26,6 @@ interface IRootState {
 
 const Film = () => {
     const [film, setFilm] = useState<any>({});
-    const [newRating, setNewRating] = useState<number | null>(0);
     const [listOfGenre, setListOfGenre] = useState<string[]>([]);
     const [isOpenSelectSession, setIsOpenSelectSession] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
@@ -123,29 +122,6 @@ const Film = () => {
                                             <Box sx={{ ml: 2, alignSelf: 'center' }}>{film.rating}</Box>
                                         </Box>
                                     </Box>
-                                    {
-                                        isAuth &&  <Box
-                                            sx={{display: 'flex', flexDirection: 'column'}}
-                                        >
-                                            <Typography variant="h6" gutterBottom>
-                                                Your rating
-                                            </Typography>
-                                            <Tooltip title={isAuth? 'Put your rating' : 'Register to rate'}>
-                                                <Box sx={{display: 'flex'}}>
-                                                    <Rating
-                                                        name="simple-controlled"
-                                                        value={newRating}
-                                                        readOnly={newRating? true : false}
-                                                        max={10}
-                                                        onChange={(event, newValue) => {
-                                                            setNewRating(newValue);
-                                                        }}
-                                                    />
-                                                    <Box sx={{ ml: 2, alignSelf: 'center' }}>{newRating}</Box>
-                                                </Box>
-                                            </Tooltip>
-                                        </Box>
-                                    }
                                     <Box
                                         sx={{display: 'flex', flexDirection: 'column'}}
                                     >

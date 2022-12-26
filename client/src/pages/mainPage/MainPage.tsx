@@ -24,7 +24,7 @@ import NavBar from "../../components/NavBar";
 import {IFilm} from "../../types/film";
 import {getFilm, getSortedFilms} from "../../http/filmAPI";
 import Footer from "../../components/Footer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -43,6 +43,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import DrawerComponent from "../../components/DrawerComponent";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -81,6 +82,12 @@ const findDuplicates = (arr: number[]) => arr.filter((item: number, index: numbe
 
 export const theme = createTheme({});
 
+interface IRootState {
+    user: any,
+    order: any,
+    basket: any
+}
+
 const MainPage = () => {
     const [sortValue, setSortValue] = useState('');
     const [value, setValue] = useState(0);
@@ -96,6 +103,7 @@ const MainPage = () => {
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
     const [personName, setPersonName] = React.useState<string[]>([]);
+    const toggle = useSelector((state: IRootState) => state.basket.toggle);
 
     const getFilms = async() => {
         const sortedFilms = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
@@ -435,6 +443,9 @@ const MainPage = () => {
                 </Container>
             </main>
             <Footer />
+            {/*{*/}
+            {/*    toggle && <DrawerComponent />*/}
+            {/*}*/}
         </ThemeProvider>
     )
 }
