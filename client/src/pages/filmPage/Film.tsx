@@ -47,7 +47,6 @@ const Film = () => {
     const getTotalRating = async () => {
        if (id) {
            const rating = await getRating(+id);
-           console.log(rating);
            setRating(rating);
        }
     }

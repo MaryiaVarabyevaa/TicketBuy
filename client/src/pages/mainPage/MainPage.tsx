@@ -8,7 +8,8 @@ import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {SelectChangeEvent} from '@mui/material/Select';
 import {
-    BottomNavigation, Button,
+    BottomNavigation,
+    Button,
     Checkbox,
     Chip,
     FormControl,
@@ -19,19 +20,16 @@ import {
     TextField
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {LOGIN_ROUTE} from "../../constants/routes";
 import NavBar from "../../components/NavBar";
 import {IFilm} from "../../types/film";
-import {getFilm, getSortedFilms} from "../../http/filmAPI";
+import {getSortedFilms} from "../../http/filmAPI";
 import Footer from "../../components/Footer";
-import {useDispatch, useSelector} from "react-redux";
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import StarIcon from "@mui/icons-material/Star";
 import {StarBorder} from "@mui/icons-material";
-
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import MenuItem from "@mui/material/MenuItem";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -43,7 +41,6 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import DrawerComponent from "../../components/DrawerComponent";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -103,7 +100,6 @@ const MainPage = () => {
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
     const [personName, setPersonName] = React.useState<string[]>([]);
-    const toggle = useSelector((state: IRootState) => state.basket.toggle);
 
     const getFilms = async() => {
         const sortedFilms = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
@@ -443,9 +439,6 @@ const MainPage = () => {
                 </Container>
             </main>
             <Footer />
-            {/*{*/}
-            {/*    toggle && <DrawerComponent />*/}
-            {/*}*/}
         </ThemeProvider>
     )
 }

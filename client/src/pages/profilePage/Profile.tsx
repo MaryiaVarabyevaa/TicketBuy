@@ -27,8 +27,6 @@ const Profile = () => {
     const [value, setValue] = React.useState(5);
     const [isError, setIsError] = useState(false);
     const [isUpdated, setIsUpdated] = useState(false);
-    const [alertVisibilitySuccess, setAlertVisibilitySuccess] = useState(false);
-    const [alertVisibilityError, setAlertVisibilityError] = useState(false);
     const [alertVisibility, setAlertVisibility] = useState({
         value: false,
         isSucceed: false,
@@ -132,7 +130,6 @@ const Profile = () => {
                isSucceed: false,
                title: 'Error',
                text: 'Enter the correct password!'
-
            })
        }
     }

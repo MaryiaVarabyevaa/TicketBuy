@@ -1,21 +1,21 @@
-import {IsArray, IsNotEmpty, IsNumber, IsString} from "class-validator";
+import {IsArray, IsEnum, IsJSON, IsNotEmpty, IsNumber, IsObject, IsString} from "class-validator";
 
 export class CreateOrderDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
     @IsNumber( {}, {
-        message: 'The order amount must be in numerical terms'
+        message: 'Price must be in numerical terms'
     })
-    readonly sum: number;
+    readonly price: number;
 
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @IsArray({
-        message: 'Enter the correct value'
+    @IsObject({
+        message: 'Enter the correct value',
     })
-    readonly seats: string;
+    readonly seats: object;
 
     @IsNotEmpty({
         message: 'Required to fill in'
@@ -38,6 +38,10 @@ export class CreateOrderDto {
     })
     @IsString({
         message: 'Status must be a string'
+    })
+    @IsEnum({
+        paid: 'paid',
+        refused: 'refused'
     })
     readonly status: string;
 }

@@ -3,16 +3,15 @@ import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css'
 import Box from "@mui/material/Box";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
-import {Button, Grid, Modal, TextField} from "@mui/material";
+import {Alert, AlertTitle, Button, Fade, Grid, Modal, TextField} from "@mui/material";
 import {cvcValidation, expiryValidation, nameValidation, numberValidation} from "./validation";
 import {useDispatch, useSelector} from "react-redux";
 import {getStatus} from "../../helpers/getStatus";
 import {OrderStatus} from "../../types/order";
 import {addOrder} from "../../http/orderAPI";
-import {clearOrderAction} from "../../store/reducers/orderReducer";
+import {clearOrderAction, getResultOfPayment, openPaymentAction} from "../../store/reducers/orderReducer";
 import {useNavigate} from "react-router-dom";
 import {MAIN_ROUTE} from "../../constants/routes";
-import {openPaymentAction} from "../../store/reducers/basketReducer";
 
 interface ICard {
     number: string;
@@ -38,14 +37,37 @@ const style = {
 };
 
 const CardForm = () => {
-    const payment = useSelector((state: IRootState) => state.basket.payment);
+    const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
+    const orders = useSelector((state: IRootState) => state.order.orders);
+    const payment = useSelector((state: IRootState) => state.order.payment);
+    const [open, setOpen] = useState(false);
     const [number, setNumber] = useState('');
     const [expiry, setExpiry] = useState('');
     const [focus, setFocus] = useState('');
     const [name, setName] = useState('');
     const [cvc, setCvc] = useState('');
+    const [alertVisibility, setAlertVisibility] = useState({
+        value: false,
+        isSucceed: false,
+        title: '',
+        text: ''
+    });
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const resetForm = () => {
+        reset({
+            number: '',
+            expiry: '',
+            name: '',
+            cvc: ''
+        });
+        setNumber('');
+        setName('');
+        setExpiry('');
+        setCvc('');
+        throw Error('Payment refused')
+    }
 
     const { handleSubmit, control, reset } = useForm<ICard>({
         mode: 'onSubmit',
@@ -63,38 +85,43 @@ const CardForm = () => {
     const onSubmit: SubmitHandler<ICard> = async (data)=> {
        try {
            const status = getStatus();
-
-           if (status) {
-               // const newOrder = await addOrder({
-               //     userId: +currentUserId,
-               //     sessionId: +order.sessionId,
-               //     seats: [],
-               //     sum: 30,
-               //     status: OrderStatus.paid
-               // })
-               dispatch(clearOrderAction())
-               navigate(MAIN_ROUTE)
-           } else {
-               reset({
-                   number: '',
-                   expiry: '',
-                   name: '',
-                   cvc: ''
-               });
-               setNumber('');
-               setName('');
-               setExpiry('');
-               setCvc('');
-                throw Error('Payment refused')
+            orders.map(({seats, sessionId}: any) => {
+               seats[0].map(async ({seat, row, price}: any) => {
+                   const newOrder = await addOrder({
+                       userId: +currentUserId,
+                       sessionId,
+                       seats: {seat, row},
+                       price: +price,
+                       status: status? OrderStatus.paid : OrderStatus.refused,
+                   })
+               })
+            })
+           if (!status) {
+                throw new Error('Payment failed');
+               resetForm();
            }
+           if (status) {
+               dispatch(openPaymentAction(false));
+               dispatch(clearOrderAction());
+               dispatch(getResultOfPayment(true));
+           }
+
        } catch (err) {
-           console.log(err)
+           const message = (err as Error).message;
+           setAlertVisibility({
+               ...alertVisibility,
+               value: true,
+               isSucceed: false,
+               title: 'Error',
+               text: message
+           })
        }
     }
 
     const handleClose = () => {
         dispatch(openPaymentAction(false));
     }
+
 
     return (
         <Modal
@@ -118,6 +145,22 @@ const CardForm = () => {
                         // @ts-ignore
                         focused={focus}
                     />
+                    { alertVisibility.value &&
+                        <Fade
+                            in={alertVisibility.value}
+                            timeout={{ enter: 1000, exit: 1000 }}
+                            addEndListener={() => {
+                                setTimeout(() => {
+                                    setAlertVisibility({...alertVisibility, value: false})
+                                }, 2000);
+                            }}
+                        >
+                            <Alert severity={alertVisibility.isSucceed ?  "success" : "error"} variant="standard" className="alert" sx={{ mb: 3 }}>
+                                <AlertTitle>{alertVisibility.title}</AlertTitle>
+                                {alertVisibility.text}
+                            </Alert>
+                        </Fade>
+                    }
                     <Box component="form" sx={{alignSelf: 'center', display: 'flex', flexDirection: 'column', gap: '20px', width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
                         <Grid container spacing={2} sx={{flexDirection: 'column', alignItems: 'center'}}>
                             <Grid item xs={12} sm={8} sx={{width: '100%'}}>
@@ -218,7 +261,7 @@ const CardForm = () => {
                                 />
                             </Grid>
                         </Grid>
-                        <Button type='submit' sx={{width: '150px', alignSelf: 'center'}} variant="contained">
+                        <Button type='submit' sx={{width: '150px', alignSelf: 'center'}} variant="contained" >
                             pay
                         </Button>
                     </Box>
@@ -227,6 +270,5 @@ const CardForm = () => {
         </Modal>
     );
 };
-//
 // localStorage.clear()
 export default CardForm;

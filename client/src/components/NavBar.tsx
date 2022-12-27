@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import {useDispatch, useSelector} from "react-redux";
 import LoginIcon from '@mui/icons-material/Login';
-import {ADMIN_PANEL_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../constants/routes";
+import {ADMIN_PANEL_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../constants/routes";
 import {useNavigate} from "react-router-dom";
 import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
@@ -17,9 +17,7 @@ import Box from "@mui/material/Box";
 import Badge, {BadgeProps} from '@mui/material/Badge';
 import {styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {toggleBasketAction} from "../store/reducers/basketReducer";
-import DrawerComponent from "./DrawerComponent";
-import CardForm from "../pages/paymentPage/CardForm";
+import {addOrderAction, addSeatsAction, getResultOfPayment, openPaymentAction} from "../store/reducers/orderReducer";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -42,30 +40,26 @@ interface IProps {
 }
 
 const NavBar = ({dashboard} : IProps) => {
-    const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [variant, setVariant] = useState<"dot" | "standard">("standard");
+    const [isClickedToBasket, setIsClickedToBasket] = useState(false);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const isAdmin = useSelector((state: IRootState) => state.user.isAdmin);
-    const toggle = useSelector((state: IRootState) => state.basket.toggle);
-    const seats = useSelector((state: IRootState) => state.order.seats);
-    const continueVal = useSelector((state: IRootState) => state.order.continue);
     const payment = useSelector((state: IRootState) => state.order.payment);
+    const orders = useSelector((state: IRootState) => state.order.orders);
+    const continueVal = useSelector((state: IRootState) => state.order.continue);
     const isModerator = useSelector((state: IRootState) => state.user.isModerator);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() =>{
-       if (seats.length !== 0) {
+       if (orders.length !== 0) {
             setVariant('dot');
        } else {
            setVariant('standard');
        }
     },[continueVal])
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAuth(event.target.checked);
-    };
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -92,14 +86,18 @@ const NavBar = ({dashboard} : IProps) => {
     const handleClick = () => {
         navigate(LOGIN_ROUTE);
     }
-    const handleClickBasket = () => {
-       dispatch(toggleBasketAction(!toggle))
-    }
 
     const handleNavigateToMainPage = () => {
-        navigate(MAIN_ROUTE)
+        dispatch(getResultOfPayment(false));
+        setIsClickedToBasket(false);
         setAnchorEl(null);
+        navigate(MAIN_ROUTE);
     };
+
+    const handleClickBasket = () => {
+        setIsClickedToBasket(true);
+        navigate(BASKET_ROUTE);
+    }
 
     return (
        <>
@@ -113,7 +111,7 @@ const NavBar = ({dashboard} : IProps) => {
                                display: 'inline-flex',
                                cursor: 'pointer',
                            }}
-                           onClick={() => navigate(MAIN_ROUTE)}
+                           onClick={handleNavigateToMainPage}
                        >
                            TicketBuy
                        </Typography>
@@ -161,7 +159,13 @@ const NavBar = ({dashboard} : IProps) => {
                                            ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
                                        }
                                        {
-                                           dashboard &&  <MenuItem onClick={handleNavigateToMainPage}>Main page</MenuItem>
+                                           (dashboard
+                                               // || isClickedToBasket
+                                           ) &&  <MenuItem
+                                               onClick={handleNavigateToMainPage}
+                                           >
+                                               Main page
+                                           </MenuItem>
                                        }
                                        <MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
                                        <MenuItem onClick={handleCloseLogOut}>Log out</MenuItem>
@@ -171,12 +175,6 @@ const NavBar = ({dashboard} : IProps) => {
                        )}
                </Toolbar>
            </AppBar>
-           {/*{*/}
-           {/*    toggle && <DrawerComponent />*/}
-           {/*}*/}
-           {/*{*/}
-           {/*    payment && <CardForm />*/}
-           {/*}*/}
        </>
     );
 }

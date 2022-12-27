@@ -17,21 +17,20 @@ const style = {
     transform: 'translate(-50%, -50%)',
     bgcolor: 'background.paper',
     pt: 3,
-    pb: 3
+    pb: 3,
 };
 
 interface IRootState {
-    order: any
+    order: any;
 }
 
 const Sessions = ({setIsClicked, isClicked}: any) => {
     const {id} = useParams();
     const [sessions, setSessions] = useState<any>([]);
     const [price, setPrice] = useState<number | null>(null);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const continueVal = useSelector((state: IRootState) => state.order.continue);
     const payment = useSelector((state: IRootState) => state.order.payment);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const getSessions = async () => {
@@ -63,17 +62,17 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
     }
 
     const handleClose = () => {
-        setOpen(false);
         dispatch(clearContinueOrPaymentValues({
             continue: false,
             payment: false
-        }))
+        }));
+        setOpen(false);
     };
 
     const handleClick = (id: number, price: number) => {
         setIsClicked(!isClicked);
-        setOpen(true);
-        setPrice(price)
+        setPrice(price);
+        setOpen(true)
         dispatch(addSessionAction(id));
     }
 

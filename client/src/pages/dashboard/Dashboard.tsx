@@ -23,7 +23,7 @@ import NavBar from "../../components/NavBar";
 import {Drawer, DrawerHeader} from "./Drawer";
 
 
-export default function DashBoard() {
+function DashBoard() {
     const [open, setOpen] = useState(false);
     const [isClickedUsers, setIsClickedUsers] = useState(true);
     const [isClickedCinema, setIsClickedCinema] = useState(false);
@@ -121,3 +121,5 @@ export default function DashBoard() {
         </Box>
     );
 }
+
+export default DashBoard;

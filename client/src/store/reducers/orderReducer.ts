@@ -6,6 +6,7 @@ const defaultState: IOrderState = {
     continue: false,
     payment: false,
     orders: [],
+    isSucceedPayment: false
 };
 
 export const orderReducer = (state = defaultState, action: IOrderAction) => {
@@ -63,6 +64,7 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
             const continueValue = localStorage.getItem('continue') === 'true' ? true : false;
             const payment = localStorage.getItem('payment') === 'true' ? true : false;
             const orders = JSON.parse(localStorage.getItem('orders') as string);
+            const isSucceedPayment = localStorage.getItem('isSucceedPayment') === 'true' ? true : false;
             return {
                 ...state,
                 seats: seats? seats: [],
@@ -70,14 +72,29 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 orders: orders? orders : [],
                 continue: continueValue,
                 payment,
+                isSucceedPayment
             };
         case IOrderActionTypes.CLEAR_ORDER:
             localStorage.removeItem('seats');
             localStorage.removeItem('sessionId');
+            localStorage.removeItem('orders');
             return {
                 ...state,
+                orders: [],
                 seats: [],
                 sessionId: null
+            }
+        case IOrderActionTypes.OPEN_PAYMENT:
+            localStorage.setItem('payment', action.payload);
+            return {
+                ...state,
+                payment: action.payload
+            }
+        case IOrderActionTypes.IS_SUCCEED_PAYMENT:
+            localStorage.setItem('isSucceedPayment', action.payload);
+            return {
+                ...state,
+                isSucceedPayment: action.payload,
             }
         default:
             return state;
@@ -117,4 +134,16 @@ export const addOrderAction = (): IOrderAction => {
     }
 }
 
-// localStorage.clear()
+export const openPaymentAction = (payload: any): IOrderAction => {
+    return {
+        type: IOrderActionTypes.OPEN_PAYMENT,
+        payload: payload
+    }
+}
+
+export const getResultOfPayment = (payload: any): IOrderAction => {
+    return {
+        type: IOrderActionTypes.IS_SUCCEED_PAYMENT,
+        payload: payload
+    }
+}

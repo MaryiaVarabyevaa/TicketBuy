@@ -32,7 +32,7 @@ export class Order extends Model<Order, OrderCreationAttrs> {
         type: DataType.INTEGER,
         allowNull: false
     })
-    sum: number;
+    price: number;
 
     @Column({
         type: DataType.JSONB,

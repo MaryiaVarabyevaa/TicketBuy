@@ -4,23 +4,22 @@ import {
     AlertTitle,
     Box,
     Button,
-    Chip,
     Container,
     createTheme,
     CssBaseline,
-    Fade, Modal,
+    Fade,
+    Modal,
     Typography
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
-import AppBar from "@mui/material/AppBar";
 import {getSeats} from "../../http/sessionAPI";
 import {useNavigate} from "react-router-dom";
-import {BASKET_ROUTE} from "../../constants/routes";
 import {ISeat} from "../../types/order";
 import {useDispatch, useSelector} from "react-redux";
-import {addOrderAction, addSeatsAction} from "../../store/reducers/orderReducer";
+import {addOrderAction, addSeatsAction, openPaymentAction} from "../../store/reducers/orderReducer";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import {BASKET_ROUTE} from "../../constants/routes";
 
 
 const style = {
@@ -32,7 +31,8 @@ const style = {
 };
 
 interface IRootState {
-    order: any
+    order: any;
+    basket: any;
 }
 
 const theme = createTheme();
@@ -57,7 +57,6 @@ const LandingPage = ({price}: {price: number}) => {
             setSeats(seats);
         }
     };
-
 
     useEffect(()=>{
         getLandingPlace();
@@ -111,121 +110,123 @@ const LandingPage = ({price}: {price: number}) => {
         }
     };
 
-    const handleContinue = () => {
+    const handleClickContinueOrPay = (isContinued: boolean) => {
         dispatch(addSeatsAction({
             seats: seatsInfo.map((seat) => {
                 seat['price'] = price;
                 return seat;
             }),
-            continue: true,
+            continue: isContinued,
             payment: false,
         }));
         dispatch(addOrderAction());
+
+        if (!isContinued) {
+            navigate(BASKET_ROUTE);
+        }
     }
 
     return (
-        <>
-            <Container component="main" sx={{padding: '0px'}}>
-                <CssBaseline />
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                        padding: '0px'
-                    }}
-                >
-                    <Typography variant="h3">Screen</Typography>
-                    { alertVisibility.value &&
-                        <Modal
-                            open={alertVisibility.value}
-                            aria-labelledby="parent-modal-title"
-                            aria-describedby="parent-modal-description"
+        <Container component="main" sx={{padding: '0px'}} >
+            <CssBaseline />
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '10px',
+                    padding: '0px',
+                }}
+            >
+                <Typography variant="h3">Screen</Typography>
+                { alertVisibility.value &&
+                    <Modal
+                        open={alertVisibility.value}
+                        aria-labelledby="parent-modal-title"
+                        aria-describedby="parent-modal-description"
+                    >
+                        <Fade
+                            in={alertVisibility.value}
+                            timeout={{ enter: 1000, exit: 1000 }}
+                            addEndListener={() => {
+                                setTimeout(() => {
+                                    setAlertVisibility({...alertVisibility, value: false});
+                                }, 1500);
+                            }}
                         >
-                            <Fade
-                                in={alertVisibility.value}
-                                timeout={{ enter: 1000, exit: 1000 }}
-                                addEndListener={() => {
-                                    setTimeout(() => {
-                                        setAlertVisibility({...alertVisibility, value: false});
-                                    }, 1500);
-                                }}
-                            >
-                                <Alert severity={alertVisibility.isSucceed ?  "success" : "error"} variant="standard" className="alert" sx={{ mb: 3, ...style }}>
-                                    <AlertTitle>{alertVisibility.title}</AlertTitle>
-                                    {alertVisibility.text}
-                                </Alert>
-                            </Fade>
-                        </Modal>
-                    }
-                    <Stack sx={{bgcolor: 'grey', p: 1.5, borderRadius: '40px'}}>
-                        {
-                            seats.map((seat, index) => {
-                                return <Stack direction="row" spacing={1} key={index} >
-                                    <Typography variant="h5" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
-                                    <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
-                                        {
-                                            seat.map((item: any, indexNum: number) => {
-                                                return <Box
-                                                    key={indexNum}
-                                                    className={`${item? 'taken-place': 'free-place'}`}
-                                                    onClick={(event) => handleClick(event, {seat: indexNum + 1, row: index + 1})}
-                                                    sx={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        bgcolor: `${item? '#332f2c' : '#34495E'}`,
-                                                        color: `${item? '#332f2c' : '#34495E'}`,
-                                                        width: '20px',
-                                                        height: '20px',
-                                                        borderRadius: '10px',
-                                                        cursor: `${item? 'auto' : 'pointer'}`,
-                                                        fontSize: '0.5rem',
-                                                        '&:hover': {
-                                                            background: `${item? '#332f2c' : 'white'}`,
-                                                            border: `${item? 'none' : '3px solid #34495E'}`,
-                                                            color: `${item? '#332f2c' : '#34495E'}`,
-                                                        }
-                                                    }}
-                                                >
-                                                    {indexNum + 1}
-                                                </Box>;
-                                            })
-                                        }
-                                    </Stack>
-                                    <Typography variant="h5"  sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
-                                </Stack>
-                            })
-                        }
-                    </Stack>
+                            <Alert severity={alertVisibility.isSucceed ?  "success" : "error"} variant="standard" className="alert" sx={{ mb: 3, ...style }}>
+                                <AlertTitle>{alertVisibility.title}</AlertTitle>
+                                {alertVisibility.text}
+                            </Alert>
+                        </Fade>
+                    </Modal>
+                }
+                <Stack sx={{bgcolor: 'grey', p: 1.5, borderRadius: '40px'}}>
                     {
-                        seatsInfo.length !== 0 && <Stack spacing={1} sx={{alignItems: 'center'}}>
-                            <Stack direction="row" spacing={1}>
-                                {
-                                    seatsInfo.map(({seat, row}) => {
-                                        return <Card>
-                                            <CardContent>
-                                                <Typography sx={{textAlign: 'center'}}>
-                                                    {`${seat} seat, ${row} row`}
-                                                </Typography>
-                                                <Typography sx={{textAlign: 'center'}}>{price} BYN</Typography>
-                                            </CardContent>
-                                        </Card>
-                                    })
-                                }
+                        seats.map((seat, index) => {
+                            return <Stack direction="row" spacing={1} key={index} >
+                                <Typography variant="h5" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
+                                <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
+                                    {
+                                        seat.map((item: any, indexNum: number) => {
+                                            return <Box
+                                                key={indexNum}
+                                                className={`${item? 'taken-place': 'free-place'}`}
+                                                onClick={(event) => handleClick(event, {seat: indexNum + 1, row: index + 1})}
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    bgcolor: `${item? '#332f2c' : '#34495E'}`,
+                                                    color: `${item? '#332f2c' : '#34495E'}`,
+                                                    width: '20px',
+                                                    height: '20px',
+                                                    borderRadius: '10px',
+                                                    cursor: `${item? 'auto' : 'pointer'}`,
+                                                    fontSize: '0.5rem',
+                                                    '&:hover': {
+                                                        background: `${item? '#332f2c' : 'white'}`,
+                                                        border: `${item? 'none' : '3px solid #34495E'}`,
+                                                        color: `${item? '#332f2c' : '#34495E'}`,
+                                                    }
+                                                }}
+                                            >
+                                                {indexNum + 1}
+                                            </Box>;
+                                        })
+                                    }
+                                </Stack>
+                                <Typography variant="h5"  sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
                             </Stack>
-                           <Stack direction='row' spacing={2}>
-                               <Button size="small" variant="contained" sx={{width: '150px'}} onClick={handleContinue}>Continue</Button>
-                               <Button size="small" variant="contained" sx={{width: '150px'}}>Pay now</Button>
-                           </Stack>
-                        </Stack>
+                        })
                     }
-                </Box>
-            </Container>
-        </>
+                </Stack>
+                {
+                    seatsInfo.length !== 0 && <Stack spacing={1} sx={{alignItems: 'center'}}>
+                        <Stack direction="row" spacing={1}>
+                            {
+                                seatsInfo.map(({seat, row}) => {
+                                    return <Card>
+                                        <CardContent>
+                                            <Typography sx={{textAlign: 'center'}}>
+                                                {`${seat} seat, ${row} row`}
+                                            </Typography>
+                                            <Typography sx={{textAlign: 'center'}}>{price} BYN</Typography>
+                                        </CardContent>
+                                    </Card>
+                                })
+                            }
+                        </Stack>
+                        <Stack direction='row' spacing={2}>
+                            <Button size="small" variant="contained" sx={{width: '150px'}} onClick={() => handleClickContinueOrPay(true)}>Continue</Button>
+                            <Button size="small" variant="contained" sx={{width: '150px'}} onClick={() => handleClickContinueOrPay(false)}>Pay now</Button>
+                        </Stack>
+                    </Stack>
+                }
+            </Box>
+        </Container>
     );
 };
-
+// localStorage.clear()
 export default LandingPage;

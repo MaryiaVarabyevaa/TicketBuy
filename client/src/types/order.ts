@@ -5,6 +5,8 @@ export enum IOrderActionTypes {
     CLEAR_ORDER='CLEAR_ORDER',
     CLEAR_CONTINUE_OR_PAYMENT_VALUES='CLEAR_CONTINUE_OR_PAYMENT_VALUES',
     ADD_ORDER='ADD_ORDER',
+    OPEN_PAYMENT='OPEN_PAYMENT',
+    IS_SUCCEED_PAYMENT='IS_SUCCEED_PAYMENT',
 }
 
 export interface IOrderState {
@@ -13,6 +15,7 @@ export interface IOrderState {
     continue?: boolean;
     payment?: boolean;
     orders: any[];
+    isSucceedPayment: boolean;
 }
 
 export interface IOrderAction {
@@ -26,10 +29,18 @@ export interface ISeat {
     price?: number
 }
 
-export interface IOrder extends IOrderState{
+// export interface IOrder extends IOrderState{
+//     userId: number;
+//     sum: number;
+//     status: string;
+// }
+
+export interface IOrder {
     userId: number;
-    sum: number;
-    status: string;
+    sessionId: number;
+    status: OrderStatus;
+    price: number;
+    seats: ISeat
 }
 
 export enum OrderStatus {
