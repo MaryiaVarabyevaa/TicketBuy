@@ -29,6 +29,12 @@ export class Comment extends Model<Comment, CommentCreationAttrs> {
     })
     text: string;
 
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    rating: number;
+
     @ForeignKey(() => Film)
     @Column({
         type: DataType.INTEGER,

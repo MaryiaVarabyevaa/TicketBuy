@@ -61,13 +61,40 @@ export class CommentsService {
     }
 
     async updateComment(commentDto: CreateCommentDto) {
-        const {userId, filmId, text} = commentDto;
-        const updateComment = await this.commentRepository.update({text}, {
+        const {userId, filmId, text, rating} = commentDto;
+        const updateComment = await this.commentRepository.update({text, rating}, {
             where: {
                 userId,
                 filmId
             }
         });
         return updateComment;
+    }
+
+    async getRating(filmId: number) {
+        let totalRating = 0;
+        const ratings = await this.commentRepository.findAll({
+            where: {
+                filmId,
+            },
+            attributes: ['rating']
+        });
+
+        if (!ratings) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.OK,
+                    error: 'There is no such film in the system',
+                },
+                HttpStatus.OK,
+            );
+        }
+
+        ratings.map(({rating}) => {
+            totalRating += rating
+        })
+
+        return totalRating / ratings.length;
+
     }
 }

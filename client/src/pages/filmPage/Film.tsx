@@ -17,6 +17,7 @@ import {useSelector} from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import Sessions from "./Sessions";
 import {LOGIN_ROUTE} from "../../constants/routes";
+import {getRating} from "../../http/commentsAPI";
 
 interface IRootState {
     user: any;
@@ -28,6 +29,7 @@ const Film = () => {
     const [film, setFilm] = useState<any>({});
     const [listOfGenre, setListOfGenre] = useState<string[]>([]);
     const [isOpenSelectSession, setIsOpenSelectSession] = useState(false);
+    const [rating, setRating] = useState<null | number>(null);
     const [isClicked, setIsClicked] = useState(false);
     const isAuth = useSelector((state: IRootState) => state.user.isAuth);
     const navigate = useNavigate();
@@ -42,8 +44,17 @@ const Film = () => {
         }
     }
 
-    useEffect(()=>{
+    const getTotalRating = async () => {
+       if (id) {
+           const rating = await getRating(+id);
+           console.log(rating);
+           setRating(rating);
+       }
+    }
+
+    useEffect(() => {
         getFilmInfo();
+        getTotalRating();
     },[])
 
     const handleSelect = () => {
@@ -103,25 +114,28 @@ const Film = () => {
                                     divider={<Divider orientation="vertical" flexItem />}
                                     spacing={2}
                                 >
-                                    <Box
-                                        sx={{display: 'flex', flexDirection: 'column'}}
-                                    >
-                                        <Typography variant="h6" gutterBottom>
-                                            Film rating
-                                        </Typography>
-                                        <Box sx={{display: 'flex'}}>
-                                            <Rating
-                                                name="text-feedback"
-                                                value={film.rating/10}
-                                                readOnly
-                                                max={1}
-                                                icon={<StarIcon fontSize="inherit" />}
-                                                precision={0.1}
-                                                emptyIcon={<StarBorder fontSize="inherit" />}
-                                            />
-                                            <Box sx={{ ml: 2, alignSelf: 'center' }}>{film.rating}</Box>
+                                    {
+                                          (typeof rating === 'number' && rating) &&
+                                            <Box
+                                                sx={{display: 'flex', flexDirection: 'column'}}
+                                             >
+                                            <Typography variant="h6" gutterBottom>
+                                                Film rating
+                                            </Typography>
+                                            <Box sx={{display: 'flex'}}>
+                                                <Rating
+                                                    name="text-feedback"
+                                                    value={rating/10}
+                                                    readOnly
+                                                    max={1}
+                                                    icon={<StarIcon fontSize="inherit" />}
+                                                    precision={0.1}
+                                                    emptyIcon={<StarBorder fontSize="inherit" />}
+                                                />
+                                                <Box sx={{ ml: 2, alignSelf: 'center' }}>{rating}</Box>
+                                            </Box>
                                         </Box>
-                                    </Box>
+                                    }
                                     <Box
                                         sx={{display: 'flex', flexDirection: 'column'}}
                                     >

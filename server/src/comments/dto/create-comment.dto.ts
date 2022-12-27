@@ -13,6 +13,14 @@ export class CreateCommentDto {
         message: 'Required to fill in'
     })
     @IsNumber( {}, {
+        message: 'Rating id must be a number'
+    })
+    readonly rating: number;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
+    @IsNumber( {}, {
         message: 'Film id must be a number'
     })
     readonly filmId: number;

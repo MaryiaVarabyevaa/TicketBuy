@@ -33,6 +33,11 @@ export class CommentsController {
         return this.commentService.checkComment(req.body.userId, req.body.filmId);
     }
 
+    @Post('get-rating')
+    getRating(@Request() req) {
+        return this.commentService.getRating(req.body.filmId);
+    }
+
     @Post('update')
     async updateSessionInfo(@Body() commentDto: CreateCommentDto) {
         return this.commentService.updateComment(commentDto);

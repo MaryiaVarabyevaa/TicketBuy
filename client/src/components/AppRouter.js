@@ -11,13 +11,12 @@ import Basket from "../pages/paymentPage/Basket";
 
 
 export const AppRouter = () => {
-    const toggle = useSelector((state) => state.basket.toggle);
+    // const toggle = useSelector((state) => state.basket.toggle);
 
     return <Routes>
-        {
-            toggle && <Route path='/basket' element={<Basket />}/>
-        }
-        <Route path={MAIN_ROUTE} element={<MainPage />}/>
+        <Route // path={MAIN_ROUTE}
+            index
+            element={<MainPage />}/>
         <Route path={LOGIN_ROUTE} element={<LoginPage />}/>
         <Route path={PROFILE_ROUTE} element={<Profile />}/>
         <Route path={FILM_ROUTE} element={<Film />}/>

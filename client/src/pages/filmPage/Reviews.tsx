@@ -56,17 +56,17 @@ const Reviews = () => {
                    review["date"] = `${day} ${months[month]} ${year}, ${hours}:${minutes}`;
                })
            )
-
            setComments(reviews);
        }
     }
 
     const handleSubmit = async () => {
-        if (id && currentUserId) {
+        if (id && currentUserId && newRating) {
             const comment = await addComment({
                 text: value,
                 userId: +currentUserId,
-                filmId: +id
+                filmId: +id,
+                rating: newRating
             });
             setIsAdded(!isAdded);
         }
@@ -89,14 +89,15 @@ const Reviews = () => {
         checkCommentInfo();
     },[isAdded, isDeleted])
 
-    const handleEdit = (text: string) => {
+    const handleEdit = (text: string, rating: number) => {
         setIsEdited(!isEdited);
         setCommentText(text);
+        setNewRating(rating);
 
     }
     const handleUpdateComment = async () => {
-        if (id) {
-            const newComment = await updateComment(+id, currentUserId, commentText);
+        if (id && newRating) {
+            const newComment = await updateComment(+id, currentUserId, commentText, newRating);
             setIsAdded(!isAdded);
             setIsEdited(!isEdited);
         }
@@ -163,10 +164,11 @@ const Reviews = () => {
                     </Button>
                 </Box>
             }
+
             <Stack spacing={2}>
                 {
                     (comments.length !== 0) && comments.map((comment: IFullReviewInfo) => {
-                        const {text, fullName, date, id, userId} = comment;
+                        const {text, fullName, date, id, userId, rating} = comment;
                         return <Box sx={{bgcolor: '#f2f2f2', p: 1}} key={id}>
                             <Box sx={{display: "flex", justifyContent: 'space-between'}}>
                                 <Box sx={{display: "flex", gap: '10px', alignItems: "center"}}>
@@ -185,7 +187,7 @@ const Reviews = () => {
                                 {
                                     (hasComment && userId === currentUserId && !isEdited) &&
                                     <Box sx={{alignSelf: 'center'}}>
-                                        <IconButton sx={{p: 0}} disableRipple  onClick={() => handleEdit(text)}>
+                                        <IconButton sx={{p: 0}} disableRipple  onClick={() => handleEdit(text, rating)}>
                                             <EditIcon fontSize="small" color="disabled"/>
                                         </IconButton>
                                     </Box>
