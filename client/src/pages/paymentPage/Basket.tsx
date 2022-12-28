@@ -7,7 +7,7 @@ import {getHallNumber} from "../../http/hallsAPI";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import {Alert, Button, Container, Typography} from "@mui/material";
+import {Alert, Button, CardActions, Container, Typography} from "@mui/material";
 import {getMonth} from "../../helpers/getMonth";
 import NavBar from "../../components/NavBar";
 import Box from "@mui/material/Box";
@@ -17,7 +17,9 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import {useNavigate} from "react-router-dom";
 import {MAIN_ROUTE} from "../../constants/routes";
 import CardForm from "./CardForm";
-import {getResultOfPayment, openPaymentAction} from "../../store/reducers/orderReducer";
+import {getResultOfPayment, openPaymentAction, updateOrdersInfo} from "../../store/reducers/orderReducer";
+import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from "@mui/material/IconButton";
 
 interface IRootState {
     order: any;
@@ -34,32 +36,34 @@ const Basket = () => {
     const navigate = useNavigate();
 
     const getSessionInfo = async() => {
-        let arr = orders.map(async ({sessionId, seats}: any) => {
-            const session = await getSessionInfoById(+sessionId);
-            const film = await getFilmById(session.filmId);
-            const cinema = await getCinemaInfoById([session.cinemaId]);
-            const hall = await getHallNumber(session.hallId);
 
-            const info = {
-                sessionId,
-                filmTitle: film[0].title,
-                cinemaName: cinema[0].name,
-                hallNumber: hall.hallNumber,
-                price: session.price,
-                date: `${session.date.slice(8)} ${getMonth(+(session.date.slice(5, 7)))} ${session.date.slice(0, 4)}`,
-                time: session.time.slice(0, 5),
-                seats: Object.values(seats),
-            }
-           return info;
-        });
+        if (orders.length !== 0) {
+            let arr = orders.map(async ({sessionId, seats}: any) => {
+                const session = await getSessionInfoById(+sessionId);
+                const film = await getFilmById(session.filmId);
+                const cinema = await getCinemaInfoById([session.cinemaId]);
+                const hall = await getHallNumber(session.hallId);
 
-      Promise.all(arr).then((res) => setAllOrders(res));
-    }
-    useEffect(() =>{
-        setAllOrders([]);
-        if (orders !== 0) {
-            getSessionInfo();
+                const info = {
+                    sessionId,
+                    filmTitle: film[0].title,
+                    cinemaName: cinema[0].name,
+                    hallNumber: hall.hallNumber,
+                    price: session.price,
+                    date: `${session.date.slice(8)} ${getMonth(+(session.date.slice(5, 7)))} ${session.date.slice(0, 4)}`,
+                    time: session.time.slice(0, 5),
+                    seats: seats
+                };
+                return info;
+            });
+
+            Promise.all(arr).then((res) => setAllOrders(res));
         }
+    }
+
+    console.log(orders);
+    useEffect(() =>{
+        getSessionInfo();
     }, [])
 
     useEffect(() => {
@@ -75,14 +79,19 @@ const Basket = () => {
         navigate(MAIN_ROUTE);
     }
 
+    const handleClickDelete = (index: number) => {
+        // const orders = allOrders.filter((order, orderIndex) => orderIndex !== index);
+        // setAllOrders(orders);
+        dispatch(updateOrdersInfo(index));
+    }
 
     return (
       <>
-          <Box sx={{ height: '85vh',  display: 'flex', alignItems: 'center', flexDirection: 'column', pt: 8, gap: '20px'}}>
+          <Box sx={{ height: '85vh',  display: 'flex', alignItems: 'center', flexDirection: 'column', pt: 8, gap: '20px', justifyContent: 'center'}}>
               <CssBaseline />
               <NavBar dashboard={true} />
-              <Container sx={{display: 'flex', flexDirection: 'column', maxHeight: '430px',overflowY:' scroll'}}>
-                  <Stack sx={{ padding: 5}} spacing={2}>
+              <Container maxWidth='xl' sx={{display: 'flex', flexDirection: 'column',}}>
+                  <Stack sx={{ padding: 5, flexWrap: 'wrap', gap: '20px', alignSelf: 'center'}} direction="row">
                       {
                           allOrders.length === 0?
                               <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '20px'}}>
@@ -109,35 +118,38 @@ const Basket = () => {
                                   >
                                       Go back to the selection
                                   </Button>
-                              </Box> : allOrders.length !== 0 && allOrders.map((order) => {
+                              </Box> :
+                              allOrders.length !== 0 && allOrders.map((order, index) => {
                                   const {sessionId, filmTitle, cinemaName, hallNumber, date, time, seats, price} = order;
-                                  return <Stack key={sessionId} spacing={2}>
-                                      {
-                                          seats[0].map((item: any, index: any) => {
-                                              const {seat, row} = item;
-                                              return <Card key={index}>
-                                                  <CardContent>
-                                                      <Typography>
-                                                          {filmTitle}
-                                                      </Typography>
-                                                      {`${date}, ${time}`}
-                                                      <Typography>
-                                                          {cinemaName}
-                                                      </Typography>
-                                                      <Typography>
-                                                          {`${hallNumber} hall`}
-                                                      </Typography>
-                                                      <Typography>
-                                                          {`${seat} seat, ${row} row`}
-                                                      </Typography>
-                                                      <Typography>
-                                                          {`${price} BYN`}
-                                                      </Typography>
-                                                  </CardContent>
-                                              </Card>
-                                          })
-                                      }
-                                  </Stack>
+                                  const {seat, row} = seats;
+                                  return  <Card key={sessionId} sx={{width: '300px'}}>
+                                      <Stack direction="row" sx={{justifyContent: 'space-between'}}>
+                                          <CardContent>
+                                              <Typography>
+                                                  {filmTitle}
+                                              </Typography>
+                                              {`${date}, ${time}`}
+                                              <Typography>
+                                                  {cinemaName}
+                                              </Typography>
+                                              <Typography>
+                                                  {`${hallNumber} hall`}
+                                              </Typography>
+                                              <Typography>
+                                                  {`${seat} seat, ${row} row`}
+                                              </Typography>
+                                              <Typography>
+                                                  {`${price} BYN`}
+                                              </Typography>
+                                          </CardContent>
+                                          <CardActions>
+                                              <IconButton sx={{alignSelf: 'flex-start'}} onClick={() => handleClickDelete(index)}>
+                                                  <ClearIcon />
+                                              </IconButton>
+                                          </CardActions>
+
+                                      </Stack>
+                                  </Card>
                               })
                       }
                   </Stack>

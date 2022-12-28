@@ -40,21 +40,27 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 payment: action.payload.payment
             }
         case IOrderActionTypes.ADD_ORDER:
-            const order = {
-                sessionId: state.sessionId,
-                seats: state.seats
-            }
+            const allOrders: any[] = [];
+            const allSeats: any = state.seats[0];
+            allSeats.map((seat: any) => {
+                const order = {
+                    sessionId: state.sessionId,
+                    seats: seat
+                }
+                allOrders.push(order);
+            })
+
             if (state.orders.length === 0) {
-                localStorage.setItem('orders', JSON.stringify([order]));
+                localStorage.setItem('orders', JSON.stringify([allOrders]));
             } else {
-                localStorage.setItem('orders', JSON.stringify([...state.orders, order]));
+                localStorage.setItem('orders', JSON.stringify([...state.orders, ...allOrders]));
             }
             localStorage.setItem('seats', JSON.stringify([]));
             localStorage.setItem('sessionId', 'null');
 
             return {
                 ...state,
-                orders: [...state.orders, order],
+                orders: [...state.orders, ...allOrders],
                 sessionId: null,
                 seats: []
             };
@@ -95,6 +101,13 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
             return {
                 ...state,
                 isSucceedPayment: action.payload,
+            }
+        case IOrderActionTypes.UPDATE_ORDERS_INFO:
+            state.orders.splice(action.payload, 1)
+            localStorage.setItem('orders', JSON.stringify([state.orders]));
+            return {
+                ...state,
+                orders: state.orders
             }
         default:
             return state;
@@ -147,3 +160,12 @@ export const getResultOfPayment = (payload: any): IOrderAction => {
         payload: payload
     }
 }
+
+export const updateOrdersInfo = (payload: any): IOrderAction => {
+    return {
+        type: IOrderActionTypes.UPDATE_ORDERS_INFO,
+        payload: payload
+    }
+}
+
+// localStorage.clear()

@@ -1,6 +1,23 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from "react-redux";
-import {Alert, AlertTitle, BottomNavigation, Button, Container, Fade, Grid, TextField, Typography} from "@mui/material";
+import {
+    Alert,
+    AlertTitle,
+    BottomNavigation,
+    Button,
+    Container,
+    Fade,
+    Grid,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
@@ -13,7 +30,18 @@ import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form"
 import {emailValidation, firstNameValidation, passwordValidation} from "../loginPage/validation";
 import Footer from "../../components/Footer";
 import {checkUser, getUser, getUserById, updatePassword, updateUserInfo} from "../../http/userAPI";
-import {IEditPersonInfo, IUpdateUserPassword} from "../../types/user";
+import {IUpdateUserPassword} from "../../types/user";
+import {getOrderById} from "../../http/orderAPI";
+import {getSessionInfoById} from "../../http/sessionAPI";
+import {getFilmById} from "../../http/filmAPI";
+import {getCinemaInfoById} from "../../http/cinemaAPI";
+import {getHallNumber} from "../../http/hallsAPI";
+import {getMonth} from "../../helpers/getMonth";
+import Stack from "@mui/material/Stack";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import {useReactToPrint} from "react-to-print";
+
 
 interface IRootState {
     user: any
@@ -27,6 +55,8 @@ const Profile = () => {
     const [value, setValue] = React.useState(5);
     const [isError, setIsError] = useState(false);
     const [isUpdated, setIsUpdated] = useState(false);
+    const [orders, setOrders] = useState<any[]>([]);
+    const componentRef = useRef();
     const [alertVisibility, setAlertVisibility] = useState({
         value: false,
         isSucceed: false,
@@ -40,8 +70,42 @@ const Profile = () => {
        setFirstName(firstName);
        setLastName(lastName);
        setEmail(email);
-
        reset(user);
+    }
+
+    const handlePrint = useReactToPrint({
+        // @ts-ignore
+        content: () => componentRef.current,
+        // content: () => componentRef.current,
+        documentTitle: 'Purchase history',
+    });
+
+
+    console.log(componentRef)
+
+    const getOrders = async () => {
+        const orders = await getOrderById(currentUserId);
+        const fullOrdersInfo = orders.map( async (order: any) => {
+            const {createdAt, seats, sessionId} = order;
+            const session = await getSessionInfoById(+sessionId);
+            const film = await getFilmById(session.filmId);
+            const cinema = await getCinemaInfoById([session.cinemaId]);
+            const hall = await getHallNumber(session.hallId);
+
+            const info = {
+                filmTitle: film[0].title,
+                cinemaName: cinema[0].name,
+                hallNumber: hall.hallNumber,
+                price: session.price,
+                date: `${session.date.slice(8)} ${getMonth(+(session.date.slice(5, 7)))} ${session.date.slice(0, 4)}`,
+                time: session.time.slice(0, 5),
+                seats: seats,
+                purchaseDate: `${createdAt.slice(8, 10)} ${getMonth(+(createdAt.slice(5, 7)))} ${createdAt.slice(0, 4)}`,
+            }
+
+            return info;
+        })
+        Promise.all(fullOrdersInfo).then((res) => setOrders(res));
     }
 
     const { handleSubmit, control, reset } = useForm({
@@ -55,6 +119,7 @@ const Profile = () => {
 
     useEffect(()=>{
         getUserInfo();
+        getOrders();
     },[])
 
     useEffect(()=>{
@@ -136,7 +201,7 @@ const Profile = () => {
 
     return (
        <>
-           <Box sx={{ height: '85vh',  display: 'flex', alignItems: 'center', bgcolor: 'grey'}}>
+           <Box sx={{display: 'flex', alignItems: 'center', pt: 15, pb: 5}}>
                <CssBaseline />
                <NavBar dashboard={true} />
                <Container maxWidth="sm" sx={{display: 'flex', flexDirection: 'column', bgcolor: 'white'}}>
@@ -355,6 +420,54 @@ const Profile = () => {
                                   </Button>
                           </Grid>
                           </Grid>
+                       </Box>
+                   }
+                   {
+                       value === 2 && <Box sx={{maxHeight: '480px', overflowY: 'scroll'}}>
+                           {
+                               orders.length !== 0 && <TableContainer component={Paper}>
+                                   <Table stickyHeader={true} aria-label="sticky table">
+                                       <TableHead>
+                                           <TableRow>
+                                               <TableCell align="center">Date of purchase</TableCell>
+                                               <TableCell align="center">Ticket Information</TableCell>
+                                               <TableCell align="center">Actions</TableCell>
+                                           </TableRow>
+                                       </TableHead>
+                                       <TableBody>
+                                           {
+                                               orders.map((order) => {
+                                                   const {purchaseDate, filmTitle, cinemaName, date, time, hallNumber, seats, price} = order;
+                                                   const {seat, row} = seats;
+                                                   // @ts-ignore
+                                                   return <TableRow>
+                                                       <TableCell align="center" sx={{borderBottom: "none"}}>
+                                                           {purchaseDate}
+                                                       </TableCell>
+                                                       <TableCell sx={{borderBottom: "none"}} ref={componentRef}>
+                                                           <Card>
+                                                               <Stack>
+                                                                   <CardContent>
+                                                                       <Typography>{filmTitle}</Typography>
+                                                                       <Typography>{`${date}, ${time}`}</Typography>
+                                                                       <Typography>{cinemaName}</Typography>
+                                                                       <Typography>{`${hallNumber} hall`}</Typography>
+                                                                       <Typography>{`${seat} seat, ${row} row`}</Typography>
+                                                                       <Typography>{`${price} BYN`}</Typography>
+                                                                   </CardContent>
+                                                               </Stack>
+                                                           </Card>
+                                                       </TableCell>
+                                                       <TableCell align="center" sx={{borderBottom: "none"}}>
+                                                           <Button variant="outlined" onClick={handlePrint}>Print</Button>
+                                                       </TableCell>
+                                                   </TableRow>
+                                               })
+                                           }
+                                       </TableBody>
+                                   </Table>
+                               </TableContainer>
+                           }
                        </Box>
                    }
                </Container>

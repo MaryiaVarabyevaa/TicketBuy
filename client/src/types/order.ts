@@ -7,6 +7,7 @@ export enum IOrderActionTypes {
     ADD_ORDER='ADD_ORDER',
     OPEN_PAYMENT='OPEN_PAYMENT',
     IS_SUCCEED_PAYMENT='IS_SUCCEED_PAYMENT',
+    UPDATE_ORDERS_INFO='UPDATE_ORDERS_INFO',
 }
 
 export interface IOrderState {

@@ -85,16 +85,15 @@ const CardForm = () => {
     const onSubmit: SubmitHandler<ICard> = async (data)=> {
        try {
            const status = getStatus();
-            orders.map(({seats, sessionId}: any) => {
-               seats[0].map(async ({seat, row, price}: any) => {
-                   const newOrder = await addOrder({
-                       userId: +currentUserId,
-                       sessionId,
-                       seats: {seat, row},
-                       price: +price,
-                       status: status? OrderStatus.paid : OrderStatus.refused,
-                   })
-               })
+            orders.map(async ({seats, sessionId}: any) => {
+                const {seat, row, price} = seats
+                const newOrder = await addOrder({
+                    userId: +currentUserId,
+                    sessionId,
+                    seats: {seat, row},
+                    price: +price,
+                    status: status ? OrderStatus.paid : OrderStatus.refused,
+                })
             })
            if (!status) {
                 throw new Error('Payment failed');
