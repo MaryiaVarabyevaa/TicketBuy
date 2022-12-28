@@ -150,6 +150,20 @@ let SessionsService = class SessionsService {
         }
         return session;
     }
+    async takeSeats(id, place) {
+        const allSeats = await this.sessionRepository.findOne({
+            attributes: ['id', 'seats'],
+            where: {
+                id,
+            }
+        });
+        const { seat, row } = place;
+        allSeats.dataValues.seats[row - 1][seat - 1] = true;
+        allSeats.changed('seats', true);
+        await allSeats.save();
+        console.log(allSeats.dataValues.seats);
+        return allSeats.dataValues.seats;
+    }
 };
 SessionsService = __decorate([
     (0, common_1.Injectable)(),

@@ -39,7 +39,7 @@ interface IProps {
     dashboard: boolean
 }
 
-const NavBar = ({dashboard} : IProps) => {
+const NavBar = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [variant, setVariant] = useState<"dot" | "standard">("standard");
     const [isClickedToBasket, setIsClickedToBasket] = useState(false);
@@ -101,7 +101,7 @@ const NavBar = ({dashboard} : IProps) => {
 
     return (
        <>
-           <AppBar position={`${dashboard? "fixed" : "static"}`}>
+           <AppBar position="static">
                <Toolbar>
                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'center', pl: '48px'}}>
                        <Typography
@@ -156,12 +156,16 @@ const NavBar = ({dashboard} : IProps) => {
                                        onClose={handleClose}
                                    >
                                        {
-                                           ((isAdmin || isModerator) && !dashboard) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
+                                           ((isAdmin || isModerator)
+                                               // && !dashboard
+                                           ) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
                                        }
                                        {
-                                           (dashboard
-                                               // || isClickedToBasket
-                                           ) &&  <MenuItem
+                                           // (
+                                           //     dashboard
+                                           //     // || isClickedToBasket
+                                           // ) &&
+                                           <MenuItem
                                                onClick={handleNavigateToMainPage}
                                            >
                                                Main page

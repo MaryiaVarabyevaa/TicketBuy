@@ -151,21 +151,21 @@ export class SessionsService {
         return session;
     }
 
-    // async takeSeats() {
-        // const takenSeats = await this.sessionRepository.update({seats}, {
-        //     where: {
-        //         id
-        //     }
-        // });
-        //
-        // return takenSeats;
+    async takeSeats(id: number, place: {seat: number, row: number}) {
+        const allSeats = await this.sessionRepository.findOne({
+            attributes: ['id' ,'seats'],
+            where: {
+                id,
+            }
+        });
+        // const allSeats = dataValues.seats;
+        const {seat, row} = place;
 
-    //     const seats = await this.sessionRepository.update({
-    //         seats: Sequelize.fn("JSON_SET", Sequelize.col('seats'), `[0][1] = false`, `[0][1] = true`)
-    //
-    //     }, {
-    //         where: {id: 2}
-    //     })
-    //     return seats;
-    // }
+        // @ts-ignore
+        allSeats.dataValues.seats[row - 1][seat - 1] = true;
+        allSeats.changed('seats', true);
+        await allSeats.save();
+        console.log(allSeats.dataValues.seats)
+        return allSeats.dataValues.seats;
+    }
 }

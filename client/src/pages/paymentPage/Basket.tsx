@@ -89,7 +89,7 @@ const Basket = () => {
       <>
           <Box sx={{ height: '85vh',  display: 'flex', alignItems: 'center', flexDirection: 'column', pt: 8, gap: '20px', justifyContent: 'center'}}>
               <CssBaseline />
-              <NavBar dashboard={true} />
+              <NavBar />
               <Container maxWidth='xl' sx={{display: 'flex', flexDirection: 'column',}}>
                   <Stack sx={{ padding: 5, flexWrap: 'wrap', gap: '20px', alignSelf: 'center'}} direction="row">
                       {

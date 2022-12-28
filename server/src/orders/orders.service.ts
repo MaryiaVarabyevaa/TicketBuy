@@ -11,4 +11,15 @@ export class OrdersService {
         const order = await this.orderRepository.create(dto);
         return order;
     }
+
+    async getOrdersByUserId(userId: number) {
+        const orders = await  this.orderRepository.findAll({
+            where: {
+                userId,
+                status: 'paid'
+            }
+        });
+
+        return orders;
+    }
 }

@@ -76,12 +76,8 @@ const Profile = () => {
     const handlePrint = useReactToPrint({
         // @ts-ignore
         content: () => componentRef.current,
-        // content: () => componentRef.current,
         documentTitle: 'Purchase history',
     });
-
-
-    console.log(componentRef)
 
     const getOrders = async () => {
         const orders = await getOrderById(currentUserId);
@@ -201,9 +197,9 @@ const Profile = () => {
 
     return (
        <>
-           <Box sx={{display: 'flex', alignItems: 'center', pt: 15, pb: 5}}>
-               <CssBaseline />
-               <NavBar dashboard={true} />
+           <NavBar/>
+           <CssBaseline />
+           <Box sx={{display: 'flex', alignItems: 'center', pt: 15, pb: 5, height: '71vh'}}>
                <Container maxWidth="sm" sx={{display: 'flex', flexDirection: 'column', bgcolor: 'white'}}>
                    <Box sx={{alignSelf: 'center', display: 'flex', justifyContent: 'space-between', gap: '20px'}}>
                        <AccountCircleIcon sx={{ fontSize: 140 }} />

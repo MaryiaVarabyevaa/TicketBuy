@@ -12,6 +12,7 @@ import {addOrder} from "../../http/orderAPI";
 import {clearOrderAction, getResultOfPayment, openPaymentAction} from "../../store/reducers/orderReducer";
 import {useNavigate} from "react-router-dom";
 import {MAIN_ROUTE} from "../../constants/routes";
+import {takeSeat} from "../../http/sessionAPI";
 
 interface ICard {
     number: string;
@@ -93,8 +94,13 @@ const CardForm = () => {
                     seats: {seat, row},
                     price: +price,
                     status: status ? OrderStatus.paid : OrderStatus.refused,
-                })
+                });
+                if (status) {
+                    const takeSeats = await takeSeat(sessionId, {row, seat});
+                }
             })
+
+
            if (!status) {
                 throw new Error('Payment failed');
                resetForm();

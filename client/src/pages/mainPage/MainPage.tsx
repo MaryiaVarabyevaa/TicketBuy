@@ -184,6 +184,10 @@ const MainPage = () => {
 
            })
            const filmsId = await findSessionsByCinemaId(cinemaId);
+           console.log(filmsId)
+           if (filmsId.length === 0) {
+               throw Error('There were no suitable events');
+           }
            let id: number[] = [];
            filmsId.map((item: any) => {
                const {filmId} = item;
@@ -255,7 +259,7 @@ const MainPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-              <NavBar dashboard={false}/>
+              <NavBar/>
             <main>
                 <Box
                     sx={{

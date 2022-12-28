@@ -2,12 +2,13 @@ import * as React from 'react';
 import {useState} from 'react';
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {
+    Alert, AlertTitle,
     Avatar,
     Box,
     Button,
     Container,
     createTheme,
-    CssBaseline,
+    CssBaseline, Fade,
     Grid,
     Link,
     TextField,
@@ -30,8 +31,14 @@ const LoginPage = () => {
     const [isAuth, setIsAuth] = useState(true);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [alertVisibility, setAlertVisibility] = useState({
+        value: false,
+        isSucceed: false,
+        title: '',
+        text: ''
+    });
 
-    const { handleSubmit, control } = useForm<ILoginForm>({
+    const { handleSubmit, control, reset } = useForm<ILoginForm>({
         mode: 'onChange',
         defaultValues: {
             firstName: '',
@@ -45,19 +52,41 @@ const LoginPage = () => {
     });
 
     const onSubmit: SubmitHandler<ILoginForm> = async (data)=> {
-        let response;
-        if(isAuth) {
-            response = await login(data);
-            const user = await getUser(data.email);
-            dispatch(logInAction(user))
+        try {
+            let response;
+            if(isAuth) {
+                response = await login(data);
+                const user = await getUser(data.email);
+                dispatch(logInAction(user))
+            }
+            else {
+                response = await registration(data);
+                // @ts-ignore
+                dispatch(addUserAction({...data, id: +response.sub}));
+            }
+            navigate(MAIN_ROUTE);
+        } catch (err) {
+            // @ts-ignore
+            const message = err.response.data.error;
+            setAlertVisibility({
+                ...alertVisibility,
+                value: true,
+                isSucceed: false,
+                title: 'Error',
+                text: message
+            });
+
+            if (message !== 'Invalid email or password') {
+                setIsAuth(false);
+
+            }
+            reset({
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+            });
         }
-        else {
-           response = await registration(data);
-           console.log(response)
-           // @ts-ignore
-            dispatch(addUserAction({...data, id: +response.sub}));
-        }
-        navigate(MAIN_ROUTE);
     }
 
     const onClick = () => {
@@ -87,6 +116,22 @@ const LoginPage = () => {
                             isAuth? 'Sign in' : 'Sign up'
                         }
                     </Typography>
+                    { alertVisibility.value &&
+                        <Fade
+                            in={alertVisibility.value}
+                            timeout={{ enter: 1000, exit: 1000 }}
+                            addEndListener={() => {
+                                setTimeout(() => {
+                                    setAlertVisibility({...alertVisibility, value: false})
+                                }, 2000);
+                            }}
+                        >
+                            <Alert severity={alertVisibility.isSucceed ?  "success" : "error"} variant="standard" className="alert" sx={{ mb: 3 }}>
+                                <AlertTitle>{alertVisibility.title}</AlertTitle>
+                                {alertVisibility.text}
+                            </Alert>
+                        </Fade>
+                    }
                     <Box component="form"  onSubmit={handleSubmit(onSubmit)}  sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             {

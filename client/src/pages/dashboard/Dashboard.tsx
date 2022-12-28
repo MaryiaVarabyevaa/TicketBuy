@@ -66,59 +66,60 @@ function DashBoard() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }} >
+        <>
             <CssBaseline />
-            <NavBar dashboard={true} />
-            <Drawer variant="permanent" open={open} >
-                <DrawerHeader >
-                    <IconButton onClick={handleDrawerClose}>
-                        {
-                            open? <ChevronLeftIcon /> : <ChevronRightIcon />
-                        }
-                    </IconButton>
-                </DrawerHeader>
-                <Divider />
-                <List>
-                    {list.map(item  => (
-                        <ListItem key={item.title} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: 'center',
-                                    px: 2.5,
-                                }}
-                                onClick={() => {
-                                    item.title === 'List of users' ? setIsClicked(true, false, false, false) :
-                                        item.title === 'List of cinema' ? setIsClicked(false, true, false, false) : item.title === 'List of films'?
-                                            setIsClicked(false, false, true, false) : setIsClicked(false, false, false, true)
-                                }}
-                            >
-                                <ListItemIcon
+            <NavBar/>
+            <Box sx={{ display: 'flex' }} >
+                <Drawer variant="permanent" open={open} >
+                    <DrawerHeader >
+                        <IconButton onClick={handleDrawerClose}>
+                            {
+                                open? <ChevronLeftIcon /> : <ChevronRightIcon />
+                            }
+                        </IconButton>
+                    </DrawerHeader>
+                    <Divider />
+                    <List>
+                        {list.map(item  => (
+                            <ListItem key={item.title} disablePadding sx={{ display: 'block' }}>
+                                <ListItemButton
                                     sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
+                                        minHeight: 48,
                                         justifyContent: 'center',
+                                        px: 2.5,
+                                    }}
+                                    onClick={() => {
+                                        item.title === 'List of users' ? setIsClicked(true, false, false, false) :
+                                            item.title === 'List of cinema' ? setIsClicked(false, true, false, false) : item.title === 'List of films'?
+                                                setIsClicked(false, false, true, false) : setIsClicked(false, false, false, true)
                                     }}
                                 >
-                                    {
-                                        item.icon
-                                    }
-                                </ListItemIcon>
-                                <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-            </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
-                {
-                    isClickedUsers? <UserDataTable /> : isClickedCinema?
-                        <CinemaDataTable /> : isClickedFilms? <FilmDataTable /> : <SessionDataTable />
-                }
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 3 : 'auto',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        {
+                                            item.icon
+                                        }
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Divider />
+                </Drawer>
+                <Box component="main" sx={{ flexGrow: 1, }}>
+                    {
+                        isClickedUsers? <UserDataTable /> : isClickedCinema?
+                            <CinemaDataTable /> : isClickedFilms? <FilmDataTable /> : <SessionDataTable />
+                    }
+                </Box>
             </Box>
-        </Box>
+        </>
     );
 }
 

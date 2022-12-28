@@ -48,6 +48,9 @@ let SessionsController = class SessionsController {
     getSessionsByDate(req) {
         return this.sessionService.getSessionsByDate(req.body.date);
     }
+    takeSeats(req) {
+        return this.sessionService.takeSeats(req.body.id, req.body.place);
+    }
     getSessionById(req) {
         return this.sessionService.getSessionInfoById(req.body.id);
     }
@@ -117,6 +120,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "getSessionsByDate", null);
+__decorate([
+    (0, common_1.Post)('take-seats'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "takeSeats", null);
 __decorate([
     (0, common_1.Post)('get-info'),
     __param(0, (0, common_1.Request)()),

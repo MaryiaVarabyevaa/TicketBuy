@@ -74,3 +74,8 @@ export const getSessionInfoById = async (id: number) => {
     const { data } = await $host.post('sessions/get-info', {id});
     return data;
 }
+
+export const takeSeat = async (id: number, place: {seat: number, row: number}) => {
+    const { data } = await $host.post('sessions/take-seats', {id, place});
+    return data;
+}

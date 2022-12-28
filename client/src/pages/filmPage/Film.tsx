@@ -68,7 +68,7 @@ const Film = () => {
             {
                 !!(Object.entries(film).length !== 0) &&
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '32px' }} >
-                    <NavBar dashboard={false}/>
+                    <NavBar />
                     <Container maxWidth="lg">
                         <Card sx={{height: '100%', display: 'flex', justifyContent: 'center', gap: '32px', boxShadow: 'none'}} >
                             <CardMedia
