@@ -65,6 +65,17 @@ export class AuthService {
 
     async registration(newUser: CreateUserDto) {
         const {firstName, lastName ,email, password } = newUser;
+        const checkedUser = await this.usersService.checkUserInSystem(firstName, lastName, email);
+        if (checkedUser) {
+            let comparedPassword = bcrypt.compareSync(password, checkedUser.dataValues.password);
+            if (comparedPassword) {
+                const token = await this.login({
+                    email: checkedUser.dataValues.email,
+                    id: checkedUser.dataValues.id,
+                });
+                return token;
+            }
+        }
         const user = await this.usersService.findOne(email);
         if (user) {
             throw new HttpException(
@@ -75,6 +86,7 @@ export class AuthService {
                 HttpStatus.UNAUTHORIZED,
             );
         }
+
 
         const hashPassword = await bcrypt.hash(password, 5);
         const savedUser = await this.usersService.create({

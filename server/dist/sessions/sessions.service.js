@@ -161,7 +161,6 @@ let SessionsService = class SessionsService {
         allSeats.dataValues.seats[row - 1][seat - 1] = true;
         allSeats.changed('seats', true);
         await allSeats.save();
-        console.log(allSeats.dataValues.seats);
         return allSeats.dataValues.seats;
     }
 };

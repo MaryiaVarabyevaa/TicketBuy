@@ -158,14 +158,13 @@ export class SessionsService {
                 id,
             }
         });
-        // const allSeats = dataValues.seats;
         const {seat, row} = place;
 
         // @ts-ignore
         allSeats.dataValues.seats[row - 1][seat - 1] = true;
         allSeats.changed('seats', true);
         await allSeats.save();
-        console.log(allSeats.dataValues.seats)
+
         return allSeats.dataValues.seats;
     }
 }

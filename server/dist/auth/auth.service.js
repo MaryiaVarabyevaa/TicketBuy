@@ -71,6 +71,17 @@ let AuthService = class AuthService {
     }
     async registration(newUser) {
         const { firstName, lastName, email, password } = newUser;
+        const checkedUser = await this.usersService.checkUserInSystem(firstName, lastName, email);
+        if (checkedUser) {
+            let comparedPassword = bcrypt.compareSync(password, checkedUser.dataValues.password);
+            if (comparedPassword) {
+                const token = await this.login({
+                    email: checkedUser.dataValues.email,
+                    id: checkedUser.dataValues.id,
+                });
+                return token;
+            }
+        }
         const user = await this.usersService.findOne(email);
         if (user) {
             throw new common_1.HttpException({

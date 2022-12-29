@@ -95,11 +95,7 @@ const CardForm = () => {
                     price: +price,
                     status: status ? OrderStatus.paid : OrderStatus.refused,
                 });
-                if (status) {
-                    const takeSeats = await takeSeat(sessionId, {row, seat});
-                }
             })
-
 
            if (!status) {
                 throw new Error('Payment failed');
@@ -109,6 +105,12 @@ const CardForm = () => {
                dispatch(openPaymentAction(false));
                dispatch(clearOrderAction());
                dispatch(getResultOfPayment(true));
+
+               for (const order of orders) {
+                   const {sessionId, seats} = order;
+                   const {seat, row} = seats;
+                   const takeSeats = await takeSeat(sessionId, {row, seat});
+               }
            }
 
        } catch (err) {

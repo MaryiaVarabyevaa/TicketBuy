@@ -13,4 +13,5 @@ export declare class UsersService {
     updatePassword(email: string, password: string): Promise<[affectedCount: number]>;
     changeRole(id: number): Promise<void>;
     updateUserInfo(userDto: UpdateUserDto): Promise<void>;
+    checkUserInSystem(firstName: string, lastName: string, email: string): Promise<User>;
 }

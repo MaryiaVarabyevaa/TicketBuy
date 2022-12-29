@@ -99,6 +99,14 @@ let UsersService = class UsersService {
             }
         });
     }
+    async checkUserInSystem(firstName, lastName, email) {
+        const user = await this.userRepository.findOne({ where: {
+                firstName,
+                lastName,
+                email
+            } });
+        return user;
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),

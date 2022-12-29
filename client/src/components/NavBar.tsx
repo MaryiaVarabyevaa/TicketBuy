@@ -17,7 +17,13 @@ import Box from "@mui/material/Box";
 import Badge, {BadgeProps} from '@mui/material/Badge';
 import {styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {addOrderAction, addSeatsAction, getResultOfPayment, openPaymentAction} from "../store/reducers/orderReducer";
+import {
+    addOrderAction,
+    addSeatsAction,
+    clearOrderAction,
+    getResultOfPayment,
+    openPaymentAction
+} from "../store/reducers/orderReducer";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -79,6 +85,7 @@ const NavBar = () => {
 
     const handleCloseLogOut = () => {
         dispatch(logOutAction());
+        dispatch(clearOrderAction())
         navigate(MAIN_ROUTE);
         setAnchorEl(null);
     };

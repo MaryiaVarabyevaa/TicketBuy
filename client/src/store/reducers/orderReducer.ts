@@ -51,7 +51,7 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
             })
 
             if (state.orders.length === 0) {
-                localStorage.setItem('orders', JSON.stringify([allOrders]));
+                localStorage.setItem('orders', JSON.stringify([...allOrders]));
             } else {
                 localStorage.setItem('orders', JSON.stringify([...state.orders, ...allOrders]));
             }

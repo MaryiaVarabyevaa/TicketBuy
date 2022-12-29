@@ -16,7 +16,7 @@ import {getSeats} from "../../http/sessionAPI";
 import {useNavigate} from "react-router-dom";
 import {ISeat} from "../../types/order";
 import {useDispatch, useSelector} from "react-redux";
-import {addOrderAction, addSeatsAction, openPaymentAction} from "../../store/reducers/orderReducer";
+import {addOrderAction, addSeatsAction} from "../../store/reducers/orderReducer";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {BASKET_ROUTE} from "../../constants/routes";
@@ -32,13 +32,12 @@ const style = {
 
 interface IRootState {
     order: any;
-    basket: any;
 }
 
 const theme = createTheme();
 
 const LandingPage = ({price}: {price: number}) => {
-
+    const orders = useSelector((state: IRootState) => state.order.orders);
     const [seatsInfo, setSeatsInfo] = useState<ISeat[]>([]);
     const [seats, setSeats] = useState<any[]>([]);
     const sessionId = useSelector((state: IRootState) => state.order.sessionId);
@@ -83,6 +82,7 @@ const LandingPage = ({price}: {price: number}) => {
             }
 
             if ( seatsInfo.length < 5 && !elem.classList.contains('clicked')) {
+                console.log(obj);
                 elem.style.background = 'white';
                 elem.style.color = '#34495E';
                 setSeatsInfo([...seatsInfo, obj]);
@@ -110,7 +110,7 @@ const LandingPage = ({price}: {price: number}) => {
         }
     };
 
-    const handleClickContinueOrPay = (isContinued: boolean) => {
+    const handleClickContinueOrPay = (event: any, isContinued: boolean) => {
         dispatch(addSeatsAction({
             seats: seatsInfo.map((seat) => {
                 seat['price'] = price;
@@ -120,12 +120,10 @@ const LandingPage = ({price}: {price: number}) => {
             payment: false,
         }));
         dispatch(addOrderAction());
-
         if (!isContinued) {
             navigate(BASKET_ROUTE);
         }
     }
-
     return (
         <Container component="main" sx={{padding: '0px'}} >
             <CssBaseline />
@@ -169,7 +167,15 @@ const LandingPage = ({price}: {price: number}) => {
                                 <Typography variant="h5" sx={{color: 'white', display: 'flex', width: '50px', justifyContent: 'center'}}>{index + 1}</Typography>
                                 <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
                                     {
-                                        seat.map((item: any, indexNum: number) => {
+                                        seat.map((item: boolean, indexNum: number) => {
+                                            if (orders && orders.length !== 0) {
+                                                orders.map(({seats}: any) => {
+                                                    const {seat, row} = seats;
+                                                    if (seat === indexNum + 1 && row === index + 1) {
+                                                            item = true;
+                                                    }
+                                                })
+                                            }
                                             return <Box
                                                 key={indexNum}
                                                 className={`${item? 'taken-place': 'free-place'}`}
@@ -219,8 +225,8 @@ const LandingPage = ({price}: {price: number}) => {
                             }
                         </Stack>
                         <Stack direction='row' spacing={2}>
-                            <Button size="small" variant="contained" sx={{width: '150px'}} onClick={() => handleClickContinueOrPay(true)}>Continue</Button>
-                            <Button size="small" variant="contained" sx={{width: '150px'}} onClick={() => handleClickContinueOrPay(false)}>Pay now</Button>
+                            <Button size="small" variant="contained" sx={{width: '150px'}} onClick={(event) => handleClickContinueOrPay(event, true)}>Continue</Button>
+                            <Button size="small" variant="contained" sx={{width: '150px'}} onClick={(event) => handleClickContinueOrPay(event, false)}>Pay now</Button>
                         </Stack>
                     </Stack>
                 }

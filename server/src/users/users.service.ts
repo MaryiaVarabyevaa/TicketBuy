@@ -99,4 +99,13 @@ export class UsersService {
         });
     }
 
+    async checkUserInSystem(firstName: string, lastName: string, email: string) {
+        const user = await this.userRepository.findOne({where: {
+                firstName,
+                lastName,
+                email
+            }});
+        return user;
+    }
+
 }
