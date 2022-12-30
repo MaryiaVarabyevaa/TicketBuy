@@ -70,7 +70,10 @@ let FilmsService = class FilmsService {
             const films = await this.filmRepository.findAll({
                 order: [
                     ['imdbRating', value]
-                ]
+                ],
+                where: {
+                    id: filmsId
+                }
             });
             return films;
         }
@@ -94,6 +97,7 @@ let FilmsService = class FilmsService {
                     genre: {
                         [sequelize_2.Op.match]: sequelize_2.Sequelize.fn('to_tsquery', args)
                     },
+                    id: filmsId
                 },
                 order: [
                     ['imdbRating', value]
