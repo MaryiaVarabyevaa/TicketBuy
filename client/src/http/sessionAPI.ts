@@ -57,6 +57,11 @@ export const getAllSessions = async () => {
     return data;
 }
 
+export const getCurrentFilmsFromSessions = async () => {
+    const { data } = await $host.get('sessions/current');
+    return data;
+}
+
 export const getSeats = async (id: number) => {
     const { data } = await $host.post('sessions/get-seats', {id});
     return data;

@@ -9,6 +9,7 @@ export declare class SessionsController {
     deleteSession(req: any): Promise<void>;
     getSeats(req: any): Promise<import("./sessions.entity").Session>;
     getAll(): Promise<import("./sessions.entity").Session[]>;
+    getCurrentFilmsFromSessions(): Promise<any[]>;
     findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     findCinemaIdByFilmId(req: any): Promise<any[]>;
     getSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;

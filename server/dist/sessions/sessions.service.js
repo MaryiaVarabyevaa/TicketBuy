@@ -28,6 +28,11 @@ const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const sessions_entity_1 = require("./sessions.entity");
 const sequelize_2 = require("sequelize");
+const date = new Date();
+const year = date.getFullYear();
+const month = date.getMonth();
+const day = date.getDate();
+const fullDate = `${year}-${month + 1}-${day}`;
 let SessionsService = class SessionsService {
     constructor(sessionRepository) {
         this.sessionRepository = sessionRepository;
@@ -39,6 +44,21 @@ let SessionsService = class SessionsService {
     async getAllSessions() {
         const sessions = await this.sessionRepository.findAll();
         return sessions;
+    }
+    async getCurrentFilmsFromSessions() {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                date: {
+                    [sequelize_2.Op.gte]: fullDate
+                }
+            },
+            attributes: [[sequelize_2.default.fn('DISTINCT', sequelize_2.default.col('filmId')), 'filmId']],
+        });
+        const filmsId = [];
+        sessions.map(({ filmId }) => {
+            filmsId.push(filmId);
+        });
+        return filmsId;
     }
     async getSessionsByDate(date) {
         const sessions = await this.sessionRepository.findAll({
@@ -132,11 +152,6 @@ let SessionsService = class SessionsService {
         }
     }
     async getSessionsByFilmId(filmId) {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
-        const fullDate = `${year}-${month + 1}-${day}`;
         const session = await this.sessionRepository.findAll({
             where: {
                 filmId,

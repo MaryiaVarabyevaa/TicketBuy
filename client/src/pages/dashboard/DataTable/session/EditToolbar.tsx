@@ -13,7 +13,7 @@ import {GetHallsById} from "../../../../http/hallsAPI";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {validationFields, validationPrice} from "./validation";
 import {IHalls} from "../../../../types/halls";
-import {addSession} from "../../../../http/sessionAPI";
+import {addSession, getCurrentFilmsFromSessions} from "../../../../http/sessionAPI";
 import {IFilm} from "../../../../types/film";
 
 
@@ -93,6 +93,7 @@ export function EditToolbar(props: any) {
     const getData = async () => {
         const films = await getAllFilms();
         const cinema = await getAllCinema();
+
 
         cinema.map((item: ICinema) => {
             item["fullName"] = `${item.name} (${item.city}, ${item.street}, ${item.buildingNumber})`;

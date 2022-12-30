@@ -5,6 +5,12 @@ import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
 import sequelize, {fn, Op, Sequelize} from "sequelize";
 
+const date = new Date();
+const year = date.getFullYear();
+const month = date.getMonth();
+const day = date.getDate();
+const fullDate = `${year}-${month + 1}-${day}`;
+
 @Injectable()
 export class SessionsService {
     constructor(@InjectModel(Session) private sessionRepository: typeof Session) {}
@@ -13,11 +19,28 @@ export class SessionsService {
         const session = await this.sessionRepository.create(dto);
         return session;
     }
+
     async getAllSessions() {
         const sessions = await this.sessionRepository.findAll();
         return sessions;
     }
 
+    async getCurrentFilmsFromSessions() {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                date: {
+                    [Op.gte]: fullDate
+                }
+            },
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('filmId')), 'filmId']],
+        });
+
+        const filmsId = [];
+        sessions.map(({filmId}) => {
+            filmsId.push(filmId);
+        })
+        return filmsId;
+    }
 
     async getSessionsByDate(date: string) {
         const sessions = await this.sessionRepository.findAll({
@@ -25,7 +48,7 @@ export class SessionsService {
                 date
             },
             attributes: [[sequelize.fn('DISTINCT', sequelize.col('filmId')), 'filmId']],
-        })
+        });
         return sessions;
     }
 
@@ -36,7 +59,6 @@ export class SessionsService {
             },
             attributes: [[sequelize.fn('DISTINCT', sequelize.col('filmId')), 'filmId']],
         });
-
         return sessions;
     }
 
@@ -80,7 +102,6 @@ export class SessionsService {
 
         return session;
     }
-
 
     async findCinemaIdByFilmId(filmId: number) {
         const sessions = await this.sessionRepository.findAll({
@@ -126,11 +147,6 @@ export class SessionsService {
     }
 
     async getSessionsByFilmId(filmId: number) {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const day = date.getDate();
-        const fullDate = `${year}-${month + 1}-${day}`;
         const session = await this.sessionRepository.findAll({
             where: {
                 filmId,
@@ -145,7 +161,6 @@ export class SessionsService {
         });
         return session
     }
-
 
     async getSeats(id: number) {
         const session = await this.sessionRepository.findOne({

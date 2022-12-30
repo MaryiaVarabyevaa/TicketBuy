@@ -24,7 +24,8 @@ SessionsModule = __decorate([
         controllers: [sessions_controller_1.SessionsController],
         imports: [
             sequelize_1.SequelizeModule.forFeature([sessions_entity_1.Session, cinema_entity_1.Cinema, films_entity_1.Film, halls_entity_1.Halls, orders_entity_1.Order])
-        ]
+        ],
+        exports: [sessions_service_1.SessionsService]
     })
 ], SessionsModule);
 exports.SessionsModule = SessionsModule;

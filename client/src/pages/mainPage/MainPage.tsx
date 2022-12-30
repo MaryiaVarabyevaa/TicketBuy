@@ -36,7 +36,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ListItemText from "@mui/material/ListItemText";
 import {getAllCinema} from "../../http/cinemaAPI";
-import {findSessionsByCinemaId, getSessionsByDate} from "../../http/sessionAPI";
+import {findSessionsByCinemaId, getCurrentFilmsFromSessions, getSessionsByDate} from "../../http/sessionAPI";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
@@ -102,7 +102,8 @@ const MainPage = () => {
     const [personName, setPersonName] = React.useState<string[]>([]);
 
     const getFilms = async() => {
-        const sortedFilms = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
+        const filmsId = await getCurrentFilmsFromSessions();
+        const sortedFilms = await getSortedFilms(genre, filmsId, sortRatingBy) as unknown as IFilm[];
         setFilms(sortedFilms);
     };
 

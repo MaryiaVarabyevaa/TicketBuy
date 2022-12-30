@@ -4,10 +4,25 @@ import {Film} from "./films.entity";
 import {CreateFilmsDto} from "./dto/create-films.dto";
 import {UpdateFilmDto} from "./dto/update-films.dto";
 import {Op, Sequelize} from "sequelize";
+import {SessionsService} from "../sessions/sessions.service";
+
+function intersect(a: number[], b: number[]){
+    let new_arr = [];
+    for(let elemA of a){
+        for(let elemB of b){
+            if(elemB == elemA){
+                new_arr.push(elemA)
+            }}
+    }
+    return new_arr;
+};
 
 @Injectable()
 export class FilmsService {
-    constructor(@InjectModel(Film) private filmRepository: typeof Film) {}
+    constructor(
+        @InjectModel(Film) private filmRepository: typeof Film,
+        private sessionsService: SessionsService,
+    ) {}
 
     async addFilm(filmDto: CreateFilmsDto) {
         const film = await this.filmRepository.findOne({where: {title: filmDto.title}})
@@ -31,7 +46,9 @@ export class FilmsService {
         return films;
     }
 
-    async sortedFilms (genre: string[], id: number[], value: string) {
+    async sortFilms (genre: string[], id: number[], value: string) {
+        const filmsId = await this.sessionsService.getCurrentFilmsFromSessions();
+        const currentId = intersect(filmsId, id);
         if (genre.length === 0 && id.length === 0) {
             const films = await this.filmRepository.findAll({
                 order: [
@@ -47,7 +64,7 @@ export class FilmsService {
                     ['imdbRating', value]
                 ],
                 where: {
-                    id
+                    id: currentId
                 }
             });
             return films;
@@ -78,7 +95,7 @@ export class FilmsService {
 
             const films = await this.filmRepository.findAll({
                 where: {
-                    id,
+                    id: currentId,
                     genre: {
                         [Op.match]: Sequelize.fn('to_tsquery', args)
                     },
@@ -92,7 +109,6 @@ export class FilmsService {
     }
 
     async getFilmsById(id: number[]) {
-
         const films = await this.filmRepository.findAll({
             where: {
                 id

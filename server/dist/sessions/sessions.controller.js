@@ -36,6 +36,9 @@ let SessionsController = class SessionsController {
     getAll() {
         return this.sessionService.getAllSessions();
     }
+    getCurrentFilmsFromSessions() {
+        return this.sessionService.getCurrentFilmsFromSessions();
+    }
     findSessionsByCinemaId(req) {
         return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
     }
@@ -92,6 +95,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Get)('current'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getCurrentFilmsFromSessions", null);
 __decorate([
     (0, common_1.Post)('get_by_cinemaId'),
     __param(0, (0, common_1.Request)()),

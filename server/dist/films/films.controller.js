@@ -34,7 +34,7 @@ let FilmsController = class FilmsController {
         return this.filmService.getFilmsById(req.body.id);
     }
     async getSortedFilms(req) {
-        return this.filmService.sortedFilms(req.body.genre, req.body.id, req.body.value);
+        return this.filmService.sortFilms(req.body.genre, req.body.id, req.body.value);
     }
     getAll() {
         return this.filmService.getAllFilms();

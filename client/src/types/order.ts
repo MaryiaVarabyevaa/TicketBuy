@@ -31,12 +31,6 @@ export interface ISeat {
     currency?: string;
 }
 
-// export interface IOrder extends IOrderState{
-//     userId: number;
-//     sum: number;
-//     status: string;
-// }
-
 export interface IOrder {
     userId: number;
     sessionId: number;

@@ -28,9 +28,23 @@ const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const films_entity_1 = require("./films.entity");
 const sequelize_2 = require("sequelize");
+const sessions_service_1 = require("../sessions/sessions.service");
+function intersect(a, b) {
+    let new_arr = [];
+    for (let elemA of a) {
+        for (let elemB of b) {
+            if (elemB == elemA) {
+                new_arr.push(elemA);
+            }
+        }
+    }
+    return new_arr;
+}
+;
 let FilmsService = class FilmsService {
-    constructor(filmRepository) {
+    constructor(filmRepository, sessionsService) {
         this.filmRepository = filmRepository;
+        this.sessionsService = sessionsService;
     }
     async addFilm(filmDto) {
         const film = await this.filmRepository.findOne({ where: { title: filmDto.title } });
@@ -49,7 +63,9 @@ let FilmsService = class FilmsService {
         });
         return films;
     }
-    async sortedFilms(genre, id, value) {
+    async sortFilms(genre, id, value) {
+        const filmsId = await this.sessionsService.getCurrentFilmsFromSessions();
+        const currentId = intersect(filmsId, id);
         if (genre.length === 0 && id.length === 0) {
             const films = await this.filmRepository.findAll({
                 order: [
@@ -64,7 +80,7 @@ let FilmsService = class FilmsService {
                     ['imdbRating', value]
                 ],
                 where: {
-                    id
+                    id: currentId
                 }
             });
             return films;
@@ -91,7 +107,7 @@ let FilmsService = class FilmsService {
             }).join(' | ');
             const films = await this.filmRepository.findAll({
                 where: {
-                    id,
+                    id: currentId,
                     genre: {
                         [sequelize_2.Op.match]: sequelize_2.Sequelize.fn('to_tsquery', args)
                     },
@@ -155,7 +171,7 @@ let FilmsService = class FilmsService {
 FilmsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, sequelize_1.InjectModel)(films_entity_1.Film)),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [Object, sessions_service_1.SessionsService])
 ], FilmsService);
 exports.FilmsService = FilmsService;
 //# sourceMappingURL=films.service.js.map

@@ -21,7 +21,6 @@ export class FilmsController {
         return this.filmService.updateFilmInfo(cinemaDto);
     }
 
-
     @Post('get-by-id')
     async getFilmsById(@Request() req) {
         return this.filmService.getFilmsById(
@@ -31,7 +30,7 @@ export class FilmsController {
 
     @Post('sort')
     async getSortedFilms(@Request() req) {
-        return this.filmService.sortedFilms(
+        return this.filmService.sortFilms(
             req.body.genre,
             req.body.id,
             req.body.value

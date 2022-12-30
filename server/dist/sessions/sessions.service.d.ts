@@ -6,6 +6,7 @@ export declare class SessionsService {
     constructor(sessionRepository: typeof Session);
     addSession(dto: CreateSessionDto): Promise<Session>;
     getAllSessions(): Promise<Session[]>;
+    getCurrentFilmsFromSessions(): Promise<any[]>;
     getSessionsByDate(date: string): Promise<Session[]>;
     findSessionsByCinemaId(cinemaId: number[]): Promise<Session[]>;
     getSessionsByCinemaId(cinemaId: number): Promise<Session[]>;

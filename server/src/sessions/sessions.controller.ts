@@ -32,6 +32,11 @@ export class SessionsController {
         return this.sessionService.getAllSessions();
     }
 
+    @Get('current')
+    getCurrentFilmsFromSessions() {
+        return this.sessionService.getCurrentFilmsFromSessions();
+    }
+
     @Post('get_by_cinemaId')
     findSessionsByCinemaId(@Request() req) {
         return this.sessionService.findSessionsByCinemaId(req.body.cinemaId);
