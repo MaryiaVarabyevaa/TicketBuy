@@ -36,7 +36,7 @@ interface IRootState {
 
 const theme = createTheme();
 
-const LandingPage = ({price}: {price: number}) => {
+const LandingPage = ({price, currency}: {price: number, currency: string}) => {
     const orders = useSelector((state: IRootState) => state.order.orders);
     const [seatsInfo, setSeatsInfo] = useState<ISeat[]>([]);
     const [seats, setSeats] = useState<any[]>([]);
@@ -114,6 +114,7 @@ const LandingPage = ({price}: {price: number}) => {
         dispatch(addSeatsAction({
             seats: seatsInfo.map((seat) => {
                 seat['price'] = price;
+                seat['currency'] = currency;
                 return seat;
             }),
             continue: isContinued,
@@ -218,7 +219,7 @@ const LandingPage = ({price}: {price: number}) => {
                                             <Typography sx={{textAlign: 'center'}}>
                                                 {`${seat} seat, ${row} row`}
                                             </Typography>
-                                            <Typography sx={{textAlign: 'center'}}>{price} BYN</Typography>
+                                            <Typography sx={{textAlign: 'center'}}>{`${price} ${currency}`}</Typography>
                                         </CardContent>
                                     </Card>
                                 })

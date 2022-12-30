@@ -87,12 +87,13 @@ const CardForm = () => {
        try {
            const status = getStatus();
             orders.map(async ({seats, sessionId}: any) => {
-                const {seat, row, price} = seats
+                const {seat, row, price, currency} = seats
                 const newOrder = await addOrder({
                     userId: +currentUserId,
                     sessionId,
                     seats: {seat, row},
-                    price: +price,
+                    price,
+                    currency,
                     status: status ? OrderStatus.paid : OrderStatus.refused,
                 });
             })

@@ -28,6 +28,7 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
     const {id} = useParams();
     const [sessions, setSessions] = useState<any>([]);
     const [price, setPrice] = useState<number | null>(null);
+    const [currency, setCurrency] = useState('');
     const [open, setOpen] = useState(false);
     const continueVal = useSelector((state: IRootState) => state.order.continue);
     const payment = useSelector((state: IRootState) => state.order.payment);
@@ -69,9 +70,10 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
         setOpen(false);
     };
 
-    const handleClick = (id: number, price: number) => {
+    const handleClick = (id: number, price: number, currency: string) => {
         setIsClicked(!isClicked);
         setPrice(price);
+        setCurrency(currency);
         setOpen(true)
         dispatch(addSessionAction(id));
     }
@@ -119,8 +121,8 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
                                         {
                                             // @ts-ignore
                                             itemValue.map((item) => {
-                                                const {time, id, price, filmId} = item;
-                                                return <Button onClick={() => handleClick(id, price)} key={id}>{time.slice(0, 5)}</Button>
+                                                const {time, id, price, currency} = item;
+                                                return <Button onClick={() => handleClick(id, price, currency)} key={id}>{time.slice(0, 5)}</Button>
                                             })
                                         }
                                     </Stack>
@@ -139,7 +141,7 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
                     aria-describedby="parent-modal-description"
                 >
                     <Box sx={{ ...style }}>
-                        <LandingPage price={price}/>
+                        <LandingPage price={price} currency={currency}/>
                     </Box>
                 </Modal>
             }

@@ -4,7 +4,7 @@ import {Session} from "../sessions/sessions.entity";
 
 interface OrderCreationAttrs {
     status: string;
-    price: number;
+    price: string;
     currency: string;
     seats: string;
     userId: number;
@@ -38,10 +38,10 @@ export class Order extends Model<Order, OrderCreationAttrs> {
     currency: string;
 
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.STRING,
         allowNull: false
     })
-    price: number;
+    price: string;
 
     @Column({
         type: DataType.JSONB,

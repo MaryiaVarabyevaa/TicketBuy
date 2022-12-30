@@ -27,7 +27,8 @@ export interface IOrderAction {
 export interface ISeat {
     seat: number;
     row: number;
-    price?: number
+    price?: number;
+    currency?: string;
 }
 
 // export interface IOrder extends IOrderState{
@@ -40,7 +41,8 @@ export interface IOrder {
     userId: number;
     sessionId: number;
     status: OrderStatus;
-    price: number;
+    price: string;
+    currency: string;
     seats: ISeat
 }
 

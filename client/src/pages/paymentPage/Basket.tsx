@@ -51,6 +51,7 @@ const Basket = () => {
                     cinemaName: cinema[0].name,
                     hallNumber: hall.hallNumber,
                     price: session.price,
+                    currency: session.currency,
                     date: `${session.date.slice(8)} ${getMonth(+(session.date.slice(5, 7)))} ${session.date.slice(0, 4)}`,
                     time: session.time.slice(0, 5),
                     seats: seats
@@ -127,7 +128,7 @@ const Basket = () => {
                                   </Button>
                               </Box> :
                               allOrders.length !== 0 && allOrders.map((order, index) => {
-                                  const {sessionId, filmTitle, cinemaName, hallNumber, date, time, seats, price} = order;
+                                  const { sessionId, filmTitle, cinemaName, hallNumber, date, time, seats, price, currency } = order;
                                   const {seat, row} = seats;
                                   return  <Card key={sessionId} sx={{width: '300px'}}>
                                       <Stack direction="row" sx={{justifyContent: 'space-between'}}>
@@ -146,7 +147,7 @@ const Basket = () => {
                                                   {`${seat} seat, ${row} row`}
                                               </Typography>
                                               <Typography>
-                                                  {`${price} BYN`}
+                                                  {`${price} ${currency}`}
                                               </Typography>
                                           </CardContent>
                                           <CardActions>

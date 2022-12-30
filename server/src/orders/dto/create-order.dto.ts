@@ -4,10 +4,8 @@ export class CreateOrderDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
-    @IsNumber( {}, {
-        message: 'Price must be in numerical terms'
-    })
-    readonly price: number;
+    @IsString()
+    readonly price: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'
