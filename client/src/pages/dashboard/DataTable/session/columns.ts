@@ -1,10 +1,8 @@
 import {GridColumns} from "@mui/x-data-grid";
-import {
-    datePreProcessEditCellProps,
-    hallNumberPreProcessEditCellProps,
-    pricePreProcessEditCellProps, timePreProcessEditCellProps
-} from "./validation";
+import {datePreProcessEditCellProps, pricePreProcessEditCellProps, timePreProcessEditCellProps} from "./validation";
 import {renderEditCell} from "../CellEditInputCell";
+
+const currency = ['BYN', 'USD', 'RUB', 'EUR', 'CHY'];
 
 export const columns: GridColumns = [
     {
@@ -12,8 +10,16 @@ export const columns: GridColumns = [
         headerName: 'Price',
         width: 100,
         editable: true,
-        preProcessEditCellProps: pricePreProcessEditCellProps,
-        renderEditCell: renderEditCell,
+        // preProcessEditCellProps: pricePreProcessEditCellProps,
+        // renderEditCell: renderEditCell,
+    },
+    {
+        field: 'currency',
+        headerName: 'Currency',
+        width: 100,
+        editable: true,
+        type: 'singleSelect',
+        valueOptions: currency
     },
     {
         field: 'date',

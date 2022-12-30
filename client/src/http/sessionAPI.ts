@@ -9,6 +9,7 @@ interface ISessionUpdate {
     date: string;
     time: string;
     price: string;
+    currency: string;
 }
 
 interface ISession {
@@ -18,6 +19,7 @@ interface ISession {
     date: string;
     time: string;
     price: string;
+    currency: string;
 }
 
 export const addSession = async (session: ISession) => {

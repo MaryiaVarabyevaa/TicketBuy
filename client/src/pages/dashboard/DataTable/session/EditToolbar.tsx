@@ -33,6 +33,8 @@ const style = {
 };
 
 
+const currency = ['BYN', 'USD', 'RUB', 'EUR', 'CHY'];
+
 export function EditToolbar(props: any) {
     const { isClicked , setIsClicked } = props;
     const [open, setOpen] = React.useState(false);
@@ -46,6 +48,7 @@ export function EditToolbar(props: any) {
         mode: 'onChange',
         defaultValues: {
             price: '',
+            currency: '',
             date: '',
             time: '',
             hall: '',
@@ -59,7 +62,7 @@ export function EditToolbar(props: any) {
     });
 
     const onSubmit: SubmitHandler<any> = async (data)=> {
-        const {cinema, hall, film, price, time, date} = data;
+        const {cinema, hall, film, price, time, date, currency} = data;
         let cinemaId = 0;
         let hallId = 0;
         let filmId = 0;
@@ -81,7 +84,7 @@ export function EditToolbar(props: any) {
             }
         })
 
-        await addSession({ filmId, cinemaId, price, date, time, hallId });
+        await addSession({ filmId, cinemaId, price, date, time, hallId, currency });
         setIsClicked(!isClicked);
         setOpen(false);
     }
@@ -244,6 +247,33 @@ export function EditToolbar(props: any) {
                                     error={!!errors.price?.message}
                                     helperText={ errors.price?.message as string }
                                 />
+                            )}
+                        />
+                        <Controller
+                            control={ control }
+                            name='currency'
+                            rules={validationFields}
+                            render={({
+                                         field: {onChange, value}
+                                     }) => (
+                                <TextField
+                                    id="outlined-select-currency"
+                                    select
+                                    fullWidth
+                                    label="Currency"
+                                    required
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!!errors.currency?.message}
+                                    helperText={ errors.currency?.message as string }
+                                >
+                                    {currency.map((cur, index) => {
+                                            return <MenuItem key={index} value={cur}>
+                                                {cur}
+                                            </MenuItem>
+                                        }
+                                    )}
+                                </TextField>
                             )}
                         />
                         <Controller

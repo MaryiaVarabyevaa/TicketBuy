@@ -3,6 +3,7 @@ export interface ISession{
     filmId: number;
     cinemaId: number;
     price: string;
+    currency: string;
     date: string;
     time: string;
     filmTitle?: string;

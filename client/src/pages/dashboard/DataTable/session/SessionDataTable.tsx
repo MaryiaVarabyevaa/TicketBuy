@@ -4,13 +4,12 @@ import {
     DataGrid,
     GridActionsCellItem,
     GridColumns,
-    GridEventListener, GridRenderCellParams,
+    GridEventListener,
     GridRowId,
     GridRowModel,
     GridRowModes,
     GridRowModesModel,
-    GridRowParams,
-    GridValueGetterParams
+    GridRowParams
 } from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
@@ -28,6 +27,8 @@ import {IFilm} from "../../../../types/film";
 import {getAllHalls} from "../../../../http/hallsAPI";
 import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
+import {pricePreProcessEditCellProps} from "./validation";
+import {renderEditCell} from "../CellEditInputCell";
 
 const SessionDataTable = () => {
     const [rows, setRows] = useState<ISession[]>([]);
@@ -60,12 +61,6 @@ const SessionDataTable = () => {
                     session['cinemaName'] = `${item.name} (${item.city}, ${item.street}, ${item.buildingNumber})`;
                 }
             })
-
-            // halls.map((hall: IHalls) => {
-            //     if (session.cinemaId === hall.cinemaId) {
-            //         session['hallNumber'] = hall.number;
-            //     }
-            // })
         })
 
         cinema.map((cinemaInfo: ICinema) => {
@@ -120,7 +115,7 @@ const SessionDataTable = () => {
         const updatedRow = { ...newRow };
         let cinemaId: number = 0;
         let filmId: number = 0;
-        let {id, filmTitle, cinemaName, price, date, time, hallId} = updatedRow;
+        let { id, filmTitle, cinemaName, price, date, time, hallId, currency } = updatedRow;
         cinema.map((item) => {
             const name = `${item.name} (${item.city}, ${item.street}, ${item.buildingNumber})`
             if (name === cinemaName) {
@@ -134,16 +129,13 @@ const SessionDataTable = () => {
         })
 
         if ('isNew' in updatedRow) {
-            await addSession({ filmId, cinemaId, price, date, time, hallId: +hallId });
+            await addSession({ filmId, cinemaId, price, date, time, hallId: +hallId, currency });
         } else {
-            await updateSessionInfo({id, filmId, cinemaId, date, time, price, hallId: +hallId});
+            await updateSessionInfo({ id, filmId, cinemaId, date, time, price, hallId: +hallId, currency });
         }
         setIsClicked(!isClicked);
         return updatedRow;
     };
-    function getFullName(params: GridValueGetterParams) {
-        return `${params.row.cinemaName}`;
-    }
 
     const otherColumns: GridColumns = [
         {
