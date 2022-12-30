@@ -7,10 +7,13 @@ import {Order} from "../orders/orders.entity";
 
 // todo: закончить объект для создания
 interface sessionCreationAttrs {
-    email: string;
-    password: string;
-    name: string;
-    surname: string;
+    date: string;
+    time: string;
+    price: string;
+    currency: string;
+    filmId: number;
+    hallId: number;
+    cinemaId: number;
 }
 
 @Table({
@@ -18,7 +21,7 @@ interface sessionCreationAttrs {
     timestamps: true,
     paranoid: true,
 })
-export class Session extends Model<Session, CreateSessionDto > {
+export class Session extends Model<Session, sessionCreationAttrs > {
     @Column({
         type: DataType.INTEGER,
         unique: true,
@@ -44,6 +47,12 @@ export class Session extends Model<Session, CreateSessionDto > {
         allowNull: false
     })
     price: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    currency: string;
 
     @Column({
         type: DataType.JSONB,

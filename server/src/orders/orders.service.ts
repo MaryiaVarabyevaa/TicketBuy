@@ -7,8 +7,8 @@ import {CreateOrderDto} from "./dto/create-order.dto";
 export class OrdersService {
     constructor(@InjectModel(Order) private orderRepository: typeof Order) {}
 
-    async addOrder(dto: CreateOrderDto) {
-        const order = await this.orderRepository.create(dto);
+    async addOrder(orderDto: CreateOrderDto) {
+        const order = await this.orderRepository.create(orderDto);
         return order;
     }
 

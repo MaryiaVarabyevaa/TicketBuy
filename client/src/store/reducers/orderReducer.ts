@@ -75,7 +75,7 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 ...state,
                 seats: seats? seats: [],
                 sessionId: sessionId !== 'null'? sessionId : null,
-                orders: orders? orders : [],
+                orders: orders? [...orders] : [],
                 continue: continueValue,
                 payment,
                 isSucceedPayment
@@ -103,8 +103,12 @@ export const orderReducer = (state = defaultState, action: IOrderAction) => {
                 isSucceedPayment: action.payload,
             }
         case IOrderActionTypes.UPDATE_ORDERS_INFO:
-            state.orders.splice(action.payload, 1)
-            localStorage.setItem('orders', JSON.stringify([state.orders]));
+            state.orders.splice(action.payload, 1);
+            if (state) {
+                localStorage.setItem('orders', JSON.stringify(state.orders));
+            } else {
+                localStorage.setItem('orders', JSON.stringify([]));
+            }
             return {
                 ...state,
                 orders: state.orders

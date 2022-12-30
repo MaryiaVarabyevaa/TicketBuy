@@ -1,13 +1,22 @@
 import { Model } from 'sequelize-typescript';
-import { CreateSessionDto } from "./dto/create-session.dto";
 import { Cinema } from "../cinema/cinema.entity";
 import { Film } from "../films/films.entity";
 import { Order } from "../orders/orders.entity";
-export declare class Session extends Model<Session, CreateSessionDto> {
+interface sessionCreationAttrs {
+    date: string;
+    time: string;
+    price: string;
+    currency: string;
+    filmId: number;
+    hallId: number;
+    cinemaId: number;
+}
+export declare class Session extends Model<Session, sessionCreationAttrs> {
     id: number;
     date: string;
     time: string;
     price: string;
+    currency: string;
     seats: string;
     filmId: number;
     filmTitle: Film;
@@ -17,3 +26,4 @@ export declare class Session extends Model<Session, CreateSessionDto> {
     hallNumber: Cinema;
     orders: Order[];
 }
+export {};

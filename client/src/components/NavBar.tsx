@@ -45,7 +45,7 @@ interface IProps {
     dashboard: boolean
 }
 
-const NavBar = () => {
+const NavBar = (isMainPage: {isMainPage: boolean}) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [variant, setVariant] = useState<"dot" | "standard">("standard");
     const [isClickedToBasket, setIsClickedToBasket] = useState(false);
@@ -164,14 +164,11 @@ const NavBar = () => {
                                    >
                                        {
                                            ((isAdmin || isModerator)
-                                               // && !dashboard
+                                              && !isMainPage
                                            ) &&  <MenuItem onClick={handleCloseDashboard}>Dashboard</MenuItem>
                                        }
                                        {
-                                           // (
-                                           //     dashboard
-                                           //     // || isClickedToBasket
-                                           // ) &&
+                                           !isMainPage &&
                                            <MenuItem
                                                onClick={handleNavigateToMainPage}
                                            >

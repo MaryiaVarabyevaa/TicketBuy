@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateSessionDto = void 0;
 const class_validator_1 = require("class-validator");
+const sequelize_typescript_1 = require("sequelize-typescript");
 class CreateSessionDto {
 }
 __decorate([
@@ -34,6 +35,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateSessionDto.prototype, "price", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false
+    }),
+    __metadata("design:type", String)
+], CreateSessionDto.prototype, "currency", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({
         message: 'Required to fill in'

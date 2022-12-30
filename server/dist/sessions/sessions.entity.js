@@ -49,6 +49,13 @@ __decorate([
 ], Session.prototype, "price", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING,
+        allowNull: false
+    }),
+    __metadata("design:type", String)
+], Session.prototype, "currency", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.JSONB,
         defaultValue: [
             [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],

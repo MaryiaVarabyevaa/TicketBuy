@@ -3,9 +3,12 @@ import {User} from "../users/users.entity";
 import {Session} from "../sessions/sessions.entity";
 
 interface OrderCreationAttrs {
-    title: string;
-    description: string;
-    url: string;
+    status: string;
+    price: number;
+    currency: string;
+    seats: string;
+    userId: number;
+    sessionId: number;
 }
 
 @Table({
@@ -27,6 +30,12 @@ export class Order extends Model<Order, OrderCreationAttrs> {
         allowNull: false,
     })
     status: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    currency: string;
 
     @Column({
         type: DataType.INTEGER,

@@ -96,7 +96,7 @@ const MainPage = () => {
     const [sortRatingBy, setSortRatingBy] = useState('DESC');
     const [idFromDate, setIdFromDate] = useState<number[]>([]);
     const [idFromCinema, setIdFromCinema] = useState<number[]>([]);
-    const [id, setId] = useState<number[]>([]);
+    const [id, setId] = useState<number[] | []>([]);
     const [films, setFilms] = useState<IFilm[]>([]);
     const navigate = useNavigate();
     const [personName, setPersonName] = React.useState<string[]>([]);
@@ -170,7 +170,8 @@ const MainPage = () => {
            );
 
            let cinemaId: number[] = [];
-           let duplicates;
+           let duplicates: number[] | [];
+           let filmsId;
            cinema.map((item, index) => {
                const {name, id} = item;
 
@@ -183,21 +184,24 @@ const MainPage = () => {
                }
 
            })
-           const filmsId = await findSessionsByCinemaId(cinemaId);
-           console.log(filmsId)
-           if (filmsId.length === 0) {
-               throw Error('There were no suitable events');
-           }
-           let id: number[] = [];
-           filmsId.map((item: any) => {
-               const {filmId} = item;
-               id.push(filmId);
-           })
-
-           if (idFromDate.length !== 0) {
-               duplicates = findDuplicates(id.concat(idFromCinema));
+           if (cinemaId.length === 0) {
+               duplicates = [];
            } else {
-               duplicates = id;
+               filmsId = await findSessionsByCinemaId(cinemaId);
+               if (filmsId.length === 0) {
+                   throw Error('There were no suitable events');
+               }
+               let id: number[] = [];
+               filmsId.map((item: any) => {
+                   const {filmId} = item;
+                   id.push(filmId);
+               })
+
+               if (idFromDate.length !== 0) {
+                   duplicates = findDuplicates(id.concat(idFromCinema));
+               } else {
+                   duplicates = id;
+               }
            }
 
            const films = await getSortedFilms(genre, duplicates, sortRatingBy) as unknown as IFilm[];
@@ -223,7 +227,6 @@ const MainPage = () => {
           setGenre(
               typeof value === 'string' ? value.split(',') : value,
           );
-
           const films = await getSortedFilms(value as string[], id, sortRatingBy) as unknown as IFilm[];
 
           if (films.length === 0) {
@@ -259,7 +262,7 @@ const MainPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-              <NavBar/>
+              <NavBar isMainPage={true}/>
             <main>
                 <Box
                     sx={{

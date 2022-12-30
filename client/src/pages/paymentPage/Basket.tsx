@@ -32,6 +32,7 @@ const Basket = () => {
     const payment = useSelector((state: IRootState) => state.order.payment);
     const isSucceedPayment = useSelector((state: IRootState) => state.order.isSucceedPayment);
     const [allOrders, setAllOrders] = useState<any[]>([]);
+    const [isDeleted, setIsDeleted] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -56,19 +57,26 @@ const Basket = () => {
                 };
                 return info;
             });
-
             Promise.all(arr).then((res) => setAllOrders(res));
         }
     }
 
-    console.log(orders);
+
     useEffect(() =>{
         getSessionInfo();
     }, [])
 
     useEffect(() => {
+        getSessionInfo();
+    }, [orders])
+
+    useEffect(() => {
         setAllOrders([]);
     }, [isSucceedPayment])
+
+    useEffect(()=>{
+        getSessionInfo();
+    }, [isDeleted]);
 
     const handleClick = () => {
        dispatch(openPaymentAction(true));
@@ -80,15 +88,14 @@ const Basket = () => {
     }
 
     const handleClickDelete = (index: number) => {
-        // const orders = allOrders.filter((order, orderIndex) => orderIndex !== index);
-        // setAllOrders(orders);
         dispatch(updateOrdersInfo(index));
+        setIsDeleted(!isDeleted);
     }
 
     return (
       <>
           <CssBaseline />
-          <NavBar />
+          <NavBar isMainPage={false}/>
           <Box sx={{ height: '85vh',  display: 'flex', alignItems: 'center', flexDirection: 'column', pt: 8, gap: '20px', justifyContent: 'center'}}>
               <Container maxWidth='xl' sx={{display: 'flex', flexDirection: 'column',}}>
                   <Stack sx={{ padding: 5, flexWrap: 'wrap', gap: '20px', alignSelf: 'center'}} direction="row">

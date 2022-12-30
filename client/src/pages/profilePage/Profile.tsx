@@ -49,7 +49,7 @@ interface IRootState {
 
 const Profile = () => {
     const currentUserId = useSelector((state: IRootState) => state.user.currentUserId);
-    const [firstName, setFirstName] = useState(null);
+    const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [value, setValue] = React.useState(5);
@@ -65,12 +65,13 @@ const Profile = () => {
     });
 
     const getUserInfo = async () => {
-       const user = await getUserById(currentUserId);
-       const { firstName, lastName, email } = user;
-       setFirstName(firstName);
-       setLastName(lastName);
-       setEmail(email);
-       reset(user);
+        const user = await getUserById(currentUserId);
+        console.log(user);
+        const { firstName, lastName, email } = user;
+        setFirstName(firstName);
+        setLastName(lastName);
+        setEmail(email);
+        reset(user);
     }
 
     const handlePrint = useReactToPrint({
@@ -114,13 +115,17 @@ const Profile = () => {
     });
 
     useEffect(()=>{
-        getUserInfo();
-        getOrders();
-    },[])
+        if (currentUserId) {
+            getUserInfo();
+            getOrders();
+        }
+    }, [])
 
     useEffect(()=>{
-        getUserInfo();
-    },[isUpdated])
+        if (currentUserId) {
+            getUserInfo();
+        }
+    },[isUpdated, currentUserId])
 
     const {
         handleSubmit: handleSubmitPassword,
@@ -142,7 +147,7 @@ const Profile = () => {
 
     const onSubmit: SubmitHandler<any> = async (data)=> {
        if (!isError) {
-           const updatedUser = await updateUserInfo({...data, id: currentUserId });
+           const updatedUser = await updateUserInfo({...data, id: +currentUserId });
            setIsUpdated(!isUpdated);
            setValue(5);
            setAlertVisibility({
@@ -197,7 +202,7 @@ const Profile = () => {
 
     return (
        <>
-           <NavBar/>
+           <NavBar isMainPage={false} />
            <CssBaseline />
            <Box sx={{display: 'flex', alignItems: 'center', pt: 15, pb: 5, height: '71vh'}}>
                <Container maxWidth="sm" sx={{display: 'flex', flexDirection: 'column', bgcolor: 'white'}}>
@@ -206,12 +211,12 @@ const Profile = () => {
                        <Box sx={{ alignSelf: 'center'}}>
                            <Typography variant="h4" gutterBottom>
                                {
-                                firstName && firstName + ' ' + lastName
+                                    firstName + ' ' + lastName
                                }
                            </Typography>
                            <Typography variant="h5" gutterBottom>
                                {
-                                   email && email
+                                   email
                                }
                            </Typography>
                        </Box>
@@ -233,7 +238,7 @@ const Profile = () => {
                        isError && <Alert severity="error">User with this email already exists in the system!</Alert>
                    }
                    { alertVisibility.value &&
-                        <Fade
+                       <Fade
                            in={alertVisibility.value}
                            timeout={{ enter: 1000, exit: 1000 }}
                            addEndListener={() => {
@@ -340,82 +345,82 @@ const Profile = () => {
                    }
                    {
                        value === 1 && <Box component="form"  sx={{ mt: 3 }} onSubmit={handleSubmitPassword(onSubmitPassword)}>
-                          <Grid container spacing={2} sx={{justifyContent: 'center'}}>
-                              <Grid item xs={12} sm={7}>
-                                  <Controller
-                                      control={ passwordControl }
-                                      name='password'
-                                      rules={ passwordValidation }
-                                      render={({
-                                                   field: {onChange, value}
-                                               }) => (
-                                          <TextField
-                                              fullWidth
-                                              id="password"
-                                              label="Password"
-                                              type="password"
-                                              autoFocus
-                                              onChange={onChange}
-                                              value={value}
-                                              error={!!passwordErrors.password?.message}
-                                              helperText={ passwordErrors.password?.message }
-                                          />
-                                      )}
-                                  />
-                              </Grid>
-                              <Grid item xs={12} sm={7}>
-                                  <Controller
-                                      control={ passwordControl }
-                                      name='newPassword'
-                                      rules={ passwordValidation }
-                                      render={({
-                                                   field: {onChange, value}
-                                               }) => (
-                                          <TextField
-                                              fullWidth
-                                              id="newPassword"
-                                              label="New password"
-                                              type="password"
-                                              onChange={onChange}
-                                              value={value}
-                                              error={!!passwordErrors.newPassword?.message}
-                                              helperText={ passwordErrors.newPassword?.message }
-                                          />
-                                      )}
-                                  />
-                              </Grid>
-                              <Grid item xs={12} sm={7}>
-                                  <Controller
-                                      control={ passwordControl }
-                                      name='repeatedNewPassword'
-                                      rules={ passwordValidation }
-                                      render={({
-                                                   field: {onChange, value}
-                                               }) => (
-                                          <TextField
-                                              fullWidth
-                                              id="repeatedNewPassword"
-                                              label="Repeat new password"
-                                              type="password"
-                                              onChange={onChange}
-                                              value={value}
-                                              error={!!passwordErrors.repeatedNewPassword?.message}
-                                              helperText={ passwordErrors.repeatedNewPassword?.message }
-                                          />
-                                      )}
-                                  />
-                              </Grid>
-                              <Grid item xs={12} sm={7}>
-                                  <Button
-                                      type="submit"
-                                      fullWidth
-                                      variant="contained"
-                                      sx={{ mt: 3, mb: 2 }}
-                                  >
-                                      update password
-                                  </Button>
-                          </Grid>
-                          </Grid>
+                           <Grid container spacing={2} sx={{justifyContent: 'center'}}>
+                               <Grid item xs={12} sm={7}>
+                                   <Controller
+                                       control={ passwordControl }
+                                       name='password'
+                                       rules={ passwordValidation }
+                                       render={({
+                                                    field: {onChange, value}
+                                                }) => (
+                                           <TextField
+                                               fullWidth
+                                               id="password"
+                                               label="Password"
+                                               type="password"
+                                               autoFocus
+                                               onChange={onChange}
+                                               value={value}
+                                               error={!!passwordErrors.password?.message}
+                                               helperText={ passwordErrors.password?.message }
+                                           />
+                                       )}
+                                   />
+                               </Grid>
+                               <Grid item xs={12} sm={7}>
+                                   <Controller
+                                       control={ passwordControl }
+                                       name='newPassword'
+                                       rules={ passwordValidation }
+                                       render={({
+                                                    field: {onChange, value}
+                                                }) => (
+                                           <TextField
+                                               fullWidth
+                                               id="newPassword"
+                                               label="New password"
+                                               type="password"
+                                               onChange={onChange}
+                                               value={value}
+                                               error={!!passwordErrors.newPassword?.message}
+                                               helperText={ passwordErrors.newPassword?.message }
+                                           />
+                                       )}
+                                   />
+                               </Grid>
+                               <Grid item xs={12} sm={7}>
+                                   <Controller
+                                       control={ passwordControl }
+                                       name='repeatedNewPassword'
+                                       rules={ passwordValidation }
+                                       render={({
+                                                    field: {onChange, value}
+                                                }) => (
+                                           <TextField
+                                               fullWidth
+                                               id="repeatedNewPassword"
+                                               label="Repeat new password"
+                                               type="password"
+                                               onChange={onChange}
+                                               value={value}
+                                               error={!!passwordErrors.repeatedNewPassword?.message}
+                                               helperText={ passwordErrors.repeatedNewPassword?.message }
+                                           />
+                                       )}
+                                   />
+                               </Grid>
+                               <Grid item xs={12} sm={7}>
+                                   <Button
+                                       type="submit"
+                                       fullWidth
+                                       variant="contained"
+                                       sx={{ mt: 3, mb: 2 }}
+                                   >
+                                       update password
+                                   </Button>
+                               </Grid>
+                           </Grid>
                        </Box>
                    }
                    {
@@ -468,7 +473,7 @@ const Profile = () => {
                    }
                </Container>
            </Box>
-           <Footer />
+           {/*<Footer />*/}
        </>
     );
 };

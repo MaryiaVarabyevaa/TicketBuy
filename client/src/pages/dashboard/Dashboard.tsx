@@ -68,7 +68,7 @@ function DashBoard() {
     return (
         <>
             <CssBaseline />
-            <NavBar/>
+            <NavBar isMainPage={false}/>
             <Box sx={{ display: 'flex' }} >
                 <Drawer variant="permanent" open={open} >
                     <DrawerHeader >

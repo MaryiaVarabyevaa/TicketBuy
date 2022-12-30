@@ -1,4 +1,5 @@
 import {IsDateString, IsNotEmpty, IsNumber, Matches} from "class-validator";
+import {Column, DataType} from "sequelize-typescript";
 
 export class UpdateSessionDto {
 
@@ -33,6 +34,12 @@ export class UpdateSessionDto {
         message: 'Enter the correct value'
     })
     readonly price: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false
+    })
+    currency: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'

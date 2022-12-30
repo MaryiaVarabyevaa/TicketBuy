@@ -12,10 +12,18 @@ export class CreateOrderDto {
     @IsNotEmpty({
         message: 'Required to fill in'
     })
+    @IsString({
+        message: 'Currency must be a string'
+    })
+    readonly currency: string;
+
+    @IsNotEmpty({
+        message: 'Required to fill in'
+    })
     @IsObject({
         message: 'Enter the correct value',
     })
-    readonly seats: object;
+    readonly seats: string;
 
     @IsNotEmpty({
         message: 'Required to fill in'
