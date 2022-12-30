@@ -132,7 +132,19 @@ let SessionsService = class SessionsService {
         }
     }
     async getSessionsByFilmId(filmId) {
-        const session = await this.sessionRepository.findAll({ where: { filmId } });
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+        const fullDate = `${year}-${month + 1}-${day}`;
+        const session = await this.sessionRepository.findAll({
+            where: {
+                filmId,
+                date: {
+                    [sequelize_2.Op.gte]: fullDate
+                }
+            }
+        });
         return session;
     }
     async getSeats(id) {

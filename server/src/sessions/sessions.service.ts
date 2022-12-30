@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
-import sequelize, {fn, Sequelize} from "sequelize";
+import sequelize, {fn, Op, Sequelize} from "sequelize";
 
 @Injectable()
 export class SessionsService {
@@ -126,7 +126,19 @@ export class SessionsService {
     }
 
     async getSessionsByFilmId(filmId: number) {
-        const session = await this.sessionRepository.findAll({where: {filmId}});
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const day = date.getDate();
+        const fullDate = `${year}-${month + 1}-${day}`;
+        const session = await this.sessionRepository.findAll({
+            where: {
+                filmId,
+                date: {
+                    [Op.gte]: fullDate
+                }
+            }
+        });
         return session
     }
 
