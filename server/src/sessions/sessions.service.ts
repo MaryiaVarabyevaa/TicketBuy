@@ -137,7 +137,11 @@ export class SessionsService {
                 date: {
                     [Op.gte]: fullDate
                 }
-            }
+
+            },
+            order: [
+                ['date', 'ASC']
+            ],
         });
         return session
     }

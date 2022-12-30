@@ -143,7 +143,10 @@ let SessionsService = class SessionsService {
                 date: {
                     [sequelize_2.Op.gte]: fullDate
                 }
-            }
+            },
+            order: [
+                ['date', 'ASC']
+            ],
         });
         return session;
     }
