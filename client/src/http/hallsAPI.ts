@@ -32,6 +32,11 @@ export const deleteHall = async (cinemaId: GridRowId, hallNumber: number) => {
     return data;
 }
 
+export const getCertainHall = async (cinemaId: number, hallNumber: number) => {
+    const { data } = await $host.post('halls/get-certain', {cinemaId, hallNumber});
+    return data;
+}
+
 
 export const deleteAllHalls = async (cinemaId: GridRowId) => {
     const { data } = await $host.post('halls/delete', {cinemaId});

@@ -65,6 +65,19 @@ export class SessionsService {
         return sessions;
     }
 
+    async getSessionsByHallId(hallId: number) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                hallId,
+                date: {
+                    [Op.gte]: fullDate
+                }
+            },
+            attributes: { exclude: ['seats' , 'deletedAt', 'createdAt', 'updatedAt'] }
+        });
+        return sessions;
+    }
+
     async findSessionsByCinemaId(cinemaId: number[]) {
         const sessions = await this.sessionRepository.findAll({
             where: {

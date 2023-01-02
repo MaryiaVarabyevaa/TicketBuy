@@ -13,6 +13,7 @@ export declare class SessionsController {
     findSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
     findCinemaIdByFilmId(req: any): Promise<any[]>;
     getSessionsByCinemaId(req: any): Promise<import("./sessions.entity").Session[]>;
+    getSessionsByHallId(req: any): Promise<import("./sessions.entity").Session[]>;
     getSessionsByDate(req: any): Promise<import("./sessions.entity").Session[]>;
     takeSeats(req: any): Promise<string>;
     getSessionsByFilmId(id: number): Promise<import("./sessions.entity").Session[]>;

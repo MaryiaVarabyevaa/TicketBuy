@@ -196,7 +196,6 @@ const CinemaDataTable = () => {
         }
     ];
 
-    console.log(sessionsNum)
     return (
         <>
             <>

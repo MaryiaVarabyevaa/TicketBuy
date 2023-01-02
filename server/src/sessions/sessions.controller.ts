@@ -52,6 +52,11 @@ export class SessionsController {
         return this.sessionService.getSessionsByCinemaId(req.body.cinemaId);
     }
 
+    @Post('get-by-hallId')
+    getSessionsByHallId(@Request() req) {
+        return this.sessionService.getSessionsByHallId(req.body.hallId);
+    }
+
     @Post('get_by_date')
     getSessionsByDate(@Request() req) {
         return this.sessionService.getSessionsByDate(req.body.date);

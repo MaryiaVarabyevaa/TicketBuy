@@ -81,6 +81,18 @@ let SessionsService = class SessionsService {
         });
         return sessions;
     }
+    async getSessionsByHallId(hallId) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                hallId,
+                date: {
+                    [sequelize_2.Op.gte]: fullDate
+                }
+            },
+            attributes: { exclude: ['seats', 'deletedAt', 'createdAt', 'updatedAt'] }
+        });
+        return sessions;
+    }
     async findSessionsByCinemaId(cinemaId) {
         const sessions = await this.sessionRepository.findAll({
             where: {

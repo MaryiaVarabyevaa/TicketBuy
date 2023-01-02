@@ -37,6 +37,10 @@ export const getSessionsByCinemaId = async (cinemaId: number) => {
     return data;
 }
 
+export const getSessionsByHallId = async (hallId: number) => {
+    const { data } = await $host.post('sessions/get-by-hallId', {hallId});
+    return data;
+}
 
 export const getSessionsByFilmId = async (filmId: number) => {
     const { data } = await $host.get('sessions/' + filmId);
