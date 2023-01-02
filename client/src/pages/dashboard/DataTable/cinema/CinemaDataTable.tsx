@@ -15,7 +15,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
-import {Chip, Typography} from "@mui/material";
+import {Button, Chip, Modal, Typography} from "@mui/material";
 import {deleteCinema, getAllCinema, updateCinemaInfo} from "../../../../http/cinemaAPI";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {ICinema, INewCinema} from "../../../../types/cinema";
@@ -26,11 +26,27 @@ import {renderChipEditInputCell} from "./ChipEditInputCell";
 import {typePreProcessEditCellProps} from "./validation";
 import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
+import {getSessionsByCinemaId} from "../../../../http/sessionAPI";
+
+const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 
 const CinemaDataTable = () => {
     const [rows, setRows] = useState<ICinema[]>([]);
+    const [sessionsNum, setSessionsNum] = useState<number | null>(null);
+    const [cinemaId, setCinemaId] = useState<number | null>(null);
     const [isClicked, setIsClicked] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [click, setClick] = useState(false);
 
@@ -76,13 +92,26 @@ const CinemaDataTable = () => {
     };
 
     const handleDeleteClick = (id: GridRowId) => async () => {
-       setIsClicked(!isClicked);
-       await deleteCinema(id);
-       await deleteAllHalls(id);
+        const sessionsInfo = await getSessionsByCinemaId(+id);
+        if (sessionsInfo.length !== 0) {
+            setSessionsNum(sessionsInfo.length);
+        }
+
+        setOpenModal(true);
+        setCinemaId(+id);
     };
 
+    const handleModalDeleteClick = async () => {
+        if (cinemaId) {
+            await deleteCinema(cinemaId);
+            await deleteAllHalls(cinemaId);
+            setIsClicked(!isClicked);
+            setOpenModal(false);
+        }
+    }
 
     const handleCancelClick = (id: GridRowId) => () => {
+
         setRowModesModel({
             ...rowModesModel,
             [id]: {mode: GridRowModes.View, ignoreModifications: true},
@@ -110,7 +139,6 @@ const CinemaDataTable = () => {
             width: 500,
             editable: true,
             preProcessEditCellProps: typePreProcessEditCellProps,
-            //todo: добавить поле с эффектом
             renderEditCell: renderChipEditInputCell,
             renderCell: (params: GridRenderCellParams) => {
                 const types = params.value;
@@ -168,8 +196,31 @@ const CinemaDataTable = () => {
         }
     ];
 
+    console.log(sessionsNum)
     return (
         <>
+            <>
+                <Modal
+                    open={openModal}
+                    onClose={() => setOpenModal(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        {
+                           sessionsNum && <Typography id="modal-modal-title" variant="h6" component="h2">
+                                {
+                                    `In the near future, ${sessionsNum} ${sessionsNum >= 2? "sessions" : "session"} will be held in this cinema`
+                                }
+                            </Typography>
+                        }
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Are you sure you want to delete this cinema?
+                        </Typography>
+                        <Button onClick={handleModalDeleteClick}>Delete</Button>
+                    </Box>
+                </Modal>
+            </>
             <Box
                 sx={{
                     height: 422,

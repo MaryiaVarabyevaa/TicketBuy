@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Session} from "./sessions.entity";
 import {CreateSessionDto} from "./dto/create-session.dto";
 import {UpdateSessionDto} from "./dto/update-session.dto";
-import sequelize, {fn, Op, Sequelize} from "sequelize";
+import sequelize, {Op} from "sequelize";
 
 const date = new Date();
 const year = date.getFullYear();
@@ -52,33 +52,25 @@ export class SessionsService {
         return sessions;
     }
 
+    async getSessionsByCinemaId(cinemaId: number) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId,
+                date: {
+                    [Op.gte]: fullDate
+                }
+            },
+            attributes: { exclude: ['seats' , 'deletedAt', 'createdAt', 'updatedAt'] }
+        });
+        return sessions;
+    }
+
     async findSessionsByCinemaId(cinemaId: number[]) {
         const sessions = await this.sessionRepository.findAll({
             where: {
                 cinemaId
             },
             attributes: [[sequelize.fn('DISTINCT', sequelize.col('filmId')), 'filmId']],
-        });
-        return sessions;
-    }
-
-    async getSessionsByCinemaId(cinemaId: number) {
-        const sessions = await this.sessionRepository.findAll({
-            where: {
-                cinemaId
-            },
-            attributes: {
-                include: [
-                    [
-                        sequelize.literal(`(
-                    SELECT COUNT(*)
-                    FROM session
-                    GROUP BY date
-                )`),
-                        'laughReactionsCount'
-                    ]
-                ]
-            }
         });
         return sessions;
     }

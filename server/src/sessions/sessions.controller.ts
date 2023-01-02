@@ -47,7 +47,7 @@ export class SessionsController {
         return this.sessionService.findCinemaIdByFilmId(req.body.filmId);
     }
 
-    @Post('get_info')
+    @Post('get-by-cinemaId')
     getSessionsByCinemaId(@Request() req) {
         return this.sessionService.getSessionsByCinemaId(req.body.cinemaId);
     }
@@ -62,10 +62,10 @@ export class SessionsController {
         return this.sessionService.takeSeats(req.body.id, req.body.place);
     }
 
-    @Post('get-info')
-    getSessionById(@Request() req) {
-        return this.sessionService.getSessionInfoById(req.body.id);
-    }
+    // @Post('get-info')
+    // getSessionById(@Request() req) {
+    //     return this.sessionService.getSessionInfoById(req.body.id);
+    // }
 
     @Get(':id')
     getSessionsByFilmId(

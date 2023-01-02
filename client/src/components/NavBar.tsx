@@ -8,22 +8,18 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import {useDispatch, useSelector} from "react-redux";
-import LoginIcon from '@mui/icons-material/Login';
 import {ADMIN_PANEL_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, PROFILE_ROUTE} from "../constants/routes";
 import {useNavigate} from "react-router-dom";
 import {logOutAction} from "../store/reducers/userReducer";
 import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Badge, {BadgeProps} from '@mui/material/Badge';
-import {styled} from '@mui/material/styles';
+import {createTheme, styled} from '@mui/material/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {
-    addOrderAction,
-    addSeatsAction,
-    clearOrderAction,
-    getResultOfPayment,
-    openPaymentAction
-} from "../store/reducers/orderReducer";
+import {clearOrderAction, getResultOfPayment} from "../store/reducers/orderReducer";
+import {ThemeProvider} from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import LoginIcon from '@mui/icons-material/Login';
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -44,6 +40,8 @@ interface IRootState {
 interface IProps {
     dashboard: boolean
 }
+
+const theme = createTheme({})
 
 const NavBar = (isMainPage: {isMainPage: boolean}) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -107,9 +105,10 @@ const NavBar = (isMainPage: {isMainPage: boolean}) => {
     }
 
     return (
-       <>
+       <ThemeProvider theme={theme}>
+           <CssBaseline />
            <AppBar position="static">
-               <Toolbar>
+               <Toolbar variant="dense">
                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'center', pl: '48px'}}>
                        <Typography
                            variant="h5"
@@ -183,8 +182,8 @@ const NavBar = (isMainPage: {isMainPage: boolean}) => {
                        )}
                </Toolbar>
            </AppBar>
-       </>
+       </ThemeProvider>
     );
 }
-// localStorage.clear()
+
 export default NavBar;

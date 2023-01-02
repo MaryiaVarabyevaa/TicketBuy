@@ -41,6 +41,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import {orange} from "@mui/material/colors";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -77,16 +78,16 @@ const names = [
 
 const findDuplicates = (arr: number[]) => arr.filter((item: number, index: number) => arr.indexOf(item) !== index);
 
-export const theme = createTheme({});
-
-interface IRootState {
-    user: any,
-    order: any,
-    basket: any
-}
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#896E69',
+            contrastText: '#FDFFFF',
+        },
+    },
+});
 
 const MainPage = () => {
-    const [sortValue, setSortValue] = useState('');
     const [value, setValue] = useState(0);
     const [cinema, setCinema] = useState([]);
     const [cinemaValue, setCinemaValue] = useState<string[]>([]);
@@ -102,8 +103,7 @@ const MainPage = () => {
     const [personName, setPersonName] = React.useState<string[]>([]);
 
     const getFilms = async() => {
-        const filmsId = await getCurrentFilmsFromSessions();
-        const sortedFilms = await getSortedFilms(genre, filmsId, sortRatingBy) as unknown as IFilm[];
+        const sortedFilms = await getSortedFilms(genre, id, sortRatingBy) as unknown as IFilm[];
         setFilms(sortedFilms);
     };
 

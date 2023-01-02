@@ -8,8 +8,8 @@ export declare class SessionsService {
     getAllSessions(): Promise<Session[]>;
     getCurrentFilmsFromSessions(): Promise<any[]>;
     getSessionsByDate(date: string): Promise<Session[]>;
-    findSessionsByCinemaId(cinemaId: number[]): Promise<Session[]>;
     getSessionsByCinemaId(cinemaId: number): Promise<Session[]>;
+    findSessionsByCinemaId(cinemaId: number[]): Promise<Session[]>;
     getSessionInfoById(id: number): Promise<Session>;
     findCinemaIdByFilmId(filmId: number): Promise<any[]>;
     updateSessionInfo(sessionDto: UpdateSessionDto): Promise<[affectedCount: number]>;

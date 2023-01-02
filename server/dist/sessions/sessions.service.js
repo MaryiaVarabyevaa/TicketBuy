@@ -69,32 +69,24 @@ let SessionsService = class SessionsService {
         });
         return sessions;
     }
+    async getSessionsByCinemaId(cinemaId) {
+        const sessions = await this.sessionRepository.findAll({
+            where: {
+                cinemaId,
+                date: {
+                    [sequelize_2.Op.gte]: fullDate
+                }
+            },
+            attributes: { exclude: ['seats', 'deletedAt', 'createdAt', 'updatedAt'] }
+        });
+        return sessions;
+    }
     async findSessionsByCinemaId(cinemaId) {
         const sessions = await this.sessionRepository.findAll({
             where: {
                 cinemaId
             },
             attributes: [[sequelize_2.default.fn('DISTINCT', sequelize_2.default.col('filmId')), 'filmId']],
-        });
-        return sessions;
-    }
-    async getSessionsByCinemaId(cinemaId) {
-        const sessions = await this.sessionRepository.findAll({
-            where: {
-                cinemaId
-            },
-            attributes: {
-                include: [
-                    [
-                        sequelize_2.default.literal(`(
-                    SELECT COUNT(*)
-                    FROM session
-                    GROUP BY date
-                )`),
-                        'laughReactionsCount'
-                    ]
-                ]
-            }
         });
         return sessions;
     }

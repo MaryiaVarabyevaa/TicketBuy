@@ -39,6 +39,7 @@ export class FilmsService {
         const newFilm = await this.filmRepository.create(filmDto);
         return newFilm;
     }
+
     async getAllFilms() {
         const films = await this.filmRepository.findAll({
             attributes: ['title', 'id', 'description', 'url', 'rating', 'genre', 'runtime', 'country', 'imdbRating']
@@ -49,6 +50,7 @@ export class FilmsService {
     async sortFilms (genre: string[], id: number[], value: string) {
         const filmsId = await this.sessionsService.getCurrentFilmsFromSessions();
         const currentId = intersect(filmsId, id);
+
         if (genre.length === 0 && id.length === 0) {
             const films = await this.filmRepository.findAll({
                 order: [

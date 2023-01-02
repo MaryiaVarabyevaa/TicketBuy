@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {getSessionsByFilmId} from "../../http/sessionAPI";
 import {getCinemaInfoById} from "../../http/cinemaAPI";
 import {getMonth} from "../../helpers/getMonth";
 import {useDispatch, useSelector} from "react-redux";
 import {addSessionAction, clearContinueOrPaymentValues} from "../../store/reducers/orderReducer";
-import {Button, Grid, Modal, Paper} from "@mui/material";
+import {Button, Grid, Modal} from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import LandingPage from "./LandingPage";
@@ -87,7 +87,7 @@ const Sessions = ({setIsClicked, isClicked}: any) => {
     },[continueVal, payment])
 
     return (
-        <Box component={Paper} sx={{minWidth: '600px'}}>
+        <Box sx={{minWidth: '600px'}}>
             {
                 sessions && Object.entries(sessions).map(([key, value], index) => {
                     return  <Grid
