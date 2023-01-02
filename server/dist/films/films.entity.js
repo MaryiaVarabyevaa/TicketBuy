@@ -82,7 +82,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Film.prototype, "rating", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => sessions_entity_1.Session),
+    (0, sequelize_typescript_1.HasMany)(() => sessions_entity_1.Session, { onDelete: 'CASCADE', hooks: true }),
     __metadata("design:type", Array)
 ], Film.prototype, "session", void 0);
 __decorate([
@@ -94,6 +94,21 @@ Film = __decorate([
         tableName: 'films',
         timestamps: true,
         paranoid: true,
+        hooks: {
+            beforeBulkDestroy(options) {
+                options.individualHooks = true;
+                return options;
+            },
+            afterDestroy: function (instance, options) {
+                const id = instance.dataValues.id;
+                sessions_entity_1.Session.destroy({
+                    where: {
+                        filmId: id,
+                    }
+                }).then(r => console.log(r));
+                console.log('after destroy');
+            },
+        }
     })
 ], Film);
 exports.Film = Film;

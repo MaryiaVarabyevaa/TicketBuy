@@ -13,6 +13,22 @@ interface FilmCreationAttrs {
     tableName: 'films',
     timestamps: true,
     paranoid: true,
+
+    hooks: {
+        beforeBulkDestroy(options): any {
+            options.individualHooks = true;
+            return options;
+        },
+        afterDestroy: function(instance, options) {
+            const id = instance.dataValues.id;
+            Session.destroy({
+                where: {
+                    filmId: id,
+                }
+            }).then(r => console.log(r));
+            console.log('after destroy');
+        },
+    }
 })
 export class Film extends Model<Film, FilmCreationAttrs> {
     @Column({
@@ -73,7 +89,7 @@ export class Film extends Model<Film, FilmCreationAttrs> {
     rating: number;
 
 
-    @HasMany(() => Session)
+    @HasMany(() => Session, { onDelete: 'CASCADE', hooks: true })
     session: Session[]
 
     @HasMany(() => Comment)
