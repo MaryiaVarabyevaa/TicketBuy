@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 
 const Footer = () => {
     return (
-        <Box sx={{ bgcolor: 'background.paper', p: 6, display: 'flex', justifyContent: 'center', gap: '3%', borderTop: '1px solid #896E69'}} component="footer">
+        <Box sx={{ bgcolor: 'background.paper', p: 6, display: 'flex', justifyContent: 'center', gap: '3%', borderTop: '1px solid #896E69', maxHeight: '60px'}} component="footer">
             <Link href="https://www.instagram.com/m_vorobyovaa" target='_blank'><InstagramIcon /></Link>
             <Link href="https://t.me/m_vorobyovaa" target='_blank'><TelegramIcon /></Link>
             <Link href="https://github.com/MaryiaVarabyevaa" target='_blank'><GitHubIcon /></Link>

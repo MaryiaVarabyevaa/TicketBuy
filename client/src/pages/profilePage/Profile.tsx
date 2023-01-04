@@ -28,7 +28,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import NavBar from "../../components/NavBar";
 import {Controller, SubmitHandler, useForm, useFormState} from "react-hook-form";
 import {emailValidation, firstNameValidation, passwordValidation} from "../loginPage/validation";
-import Footer from "../../components/Footer";
 import {checkUser, getUser, getUserById, updatePassword, updateUserInfo} from "../../http/userAPI";
 import {IUpdateUserPassword} from "../../types/user";
 import {getOrderById} from "../../http/orderAPI";
@@ -41,6 +40,10 @@ import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {useReactToPrint} from "react-to-print";
+import Footer from "../../components/Footer";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import {useNavigate} from "react-router-dom";
+import {MAIN_ROUTE} from "../../constants/routes";
 
 
 interface IRootState {
@@ -63,10 +66,10 @@ const Profile = () => {
         title: '',
         text: ''
     });
+    const navigate = useNavigate();
 
     const getUserInfo = async () => {
         const user = await getUserById(currentUserId);
-        console.log(user);
         const { firstName, lastName, email } = user;
         setFirstName(firstName);
         setLastName(lastName);
@@ -200,11 +203,14 @@ const Profile = () => {
        }
     }
 
+    const handleClickBack = () => {
+        navigate(MAIN_ROUTE);
+    }
     return (
        <>
            <NavBar isMainPage={false} />
            <CssBaseline />
-           <Box sx={{display: 'flex', alignItems: 'center', pt: 15, pb: 5, height: '71vh'}}>
+           <Box sx={{display: 'flex', pt: 5, pb: 5}}>
                <Container maxWidth="sm" sx={{display: 'flex', flexDirection: 'column', bgcolor: 'white'}}>
                    <Box sx={{alignSelf: 'center', display: 'flex', justifyContent: 'space-between', gap: '20px'}}>
                        <AccountCircleIcon sx={{ fontSize: 140 }} />
@@ -424,9 +430,30 @@ const Profile = () => {
                        </Box>
                    }
                    {
-                       value === 2 && <Box sx={{maxHeight: '480px', overflowY: 'scroll'}}>
+                       value === 2 && <Box
+                           // sx={{maxHeight: '480px', overflowY: 'scroll'}}
+                       >
                            {
-                               orders.length !== 0 && <TableContainer component={Paper}>
+                               orders.length === 0?
+                                  <Box sx={{p: 1}}>
+                                      <Grid container spacing={2} sx={{justifyContent: 'center'}}>
+                                          <ErrorOutlineIcon sx={{ fontSize: 140, color: '#D7DBDD' }}/>
+                                          <Typography variant='h4' sx={{color: '#8c2041'}}>There are no tickets here yet</Typography>
+                                          <Button
+                                              variant="contained"
+                                              sx={{
+                                                  bgcolor: '#D7DBDD',
+                                                  mt: 1,
+                                                  '&:hover': {
+                                                      bgcolor: '#A6ACAF',
+                                                  }
+                                              }}
+                                              onClick={handleClickBack}
+                                          >
+                                              Back to ticket selection
+                                          </Button>
+                                      </Grid>
+                                  </Box> : <TableContainer component={Paper}>
                                    <Table stickyHeader={true} aria-label="sticky table">
                                        <TableHead>
                                            <TableRow>
@@ -473,7 +500,7 @@ const Profile = () => {
                    }
                </Container>
            </Box>
-           {/*<Footer />*/}
+           <Footer />
        </>
     );
 };

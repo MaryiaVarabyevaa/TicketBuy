@@ -263,7 +263,7 @@ const MainPage = () => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-              <NavBar isMainPage={true}/>
+            <NavBar isMainPage={true}/>
             <main>
                 <Box
                     sx={{
