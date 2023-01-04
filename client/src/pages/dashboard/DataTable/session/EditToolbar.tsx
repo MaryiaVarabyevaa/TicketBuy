@@ -42,19 +42,20 @@ export function EditToolbar(props: any) {
     const [cinemas, setCinemas] = useState([]);
     const [cinemaValue, setCinemaValue] = useState('');
     const [halls, setHalls] = useState([]);
+    const [defaultObj, setDefaultObj] = useState({
+        price: '',
+        currency: '',
+        date: '',
+        time: '',
+        hall: '',
+        film: '',
+        cinema: ''
+    })
 
 
-    const { handleSubmit, control} = useForm<any>({
+    const { handleSubmit, control, reset} = useForm<any>({
         mode: 'onChange',
-        defaultValues: {
-            price: '',
-            currency: '',
-            date: '',
-            time: '',
-            hall: '',
-            film: '',
-            cinema: ''
-        }
+        defaultValues: defaultObj,
     });
 
     const {errors} = useFormState({
@@ -87,6 +88,7 @@ export function EditToolbar(props: any) {
         await addSession({ filmId, cinemaId, price, date, time, hallId, currency });
         setIsClicked(!isClicked);
         setOpen(false);
+        reset(defaultObj);
     }
 
 
