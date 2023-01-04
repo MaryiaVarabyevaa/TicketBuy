@@ -78,7 +78,6 @@ const CinemaDataTable = () => {
 
     useEffect(() => {
         getCinema();
-
     }, [])
 
 
@@ -251,7 +250,7 @@ const CinemaDataTable = () => {
                         onRowEditStop={handleRowEditStop}
                         disableSelectionOnClick
                         componentsProps={{
-                            toolbar: { setRows, setRowModesModel },
+                            toolbar: { isClicked , setIsClicked },
                         }}
                         components={{
                             Toolbar: EditToolbar,

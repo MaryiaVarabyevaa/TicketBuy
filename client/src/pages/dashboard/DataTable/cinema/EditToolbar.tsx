@@ -34,20 +34,21 @@ interface EditToolbarProps {
     ) => void;
 }
 
-export const EditToolbar = (props: EditToolbarProps) => {
-    const [isClicked, setIsClicked] = useState(false);
+export const EditToolbar = (props: any) => {
+    const { isClicked , setIsClicked } = props;
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState<MuiChipsInputChip[]>([])
+    const [defaultObj, setDefaultObj] = useState({
+        name: '',
+        city: '',
+        street: '',
+        type: [],
+        buildingNumber: '',
+    })
 
-    const { handleSubmit, control } = useForm<any>({
+    const { handleSubmit, control, reset } = useForm<any>({
         mode: 'onChange',
-        defaultValues: {
-            name: '',
-            city: '',
-            street: '',
-            type: [],
-            buildingNumber: 1,
-        }
+        defaultValues: defaultObj,
     });
 
     const {errors} = useFormState({
@@ -56,8 +57,8 @@ export const EditToolbar = (props: EditToolbarProps) => {
     const handleClose = () => setOpen(false);
 
     const handleClick = () => {
+        setOpen(true);
         setIsClicked(!isClicked);
-        setOpen(true)
     }
 
     const onSubmit: SubmitHandler<ICinema> = async (data)=> {
@@ -68,13 +69,10 @@ export const EditToolbar = (props: EditToolbarProps) => {
             type: type as string[],
             cinemaId: cinema.id
         });
-        setOpen(false)
+        reset(defaultObj);
+        setOpen(false);
+        setIsClicked(!isClicked);
     }
-
-    const handleChange = (newValue: MuiChipsInputChip[]) => {
-        setValue(newValue)
-    }
-
 
     // @ts-ignore
     return <GridToolbarContainer>
@@ -84,147 +82,144 @@ export const EditToolbar = (props: EditToolbarProps) => {
         >
             Add record
         </Button>
-        {
-            isClicked &&
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+        <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box
+                sx={style}
             >
-                <Box
-                    sx={style}
+                <Box component="form"
+                     onSubmit={handleSubmit(onSubmit)}
+                     sx={{ mt: 3 }}
                 >
-                    <Box component="form"
-                         onSubmit={handleSubmit(onSubmit)}
-                         sx={{ mt: 3 }}
-                    >
-                        <Stack spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <Controller
-                                    control={ control }
-                                    name='name'
-                                    rules={validation}
-                                    render={({
-                                                 field: {onChange, value}
-                                             }) => (
-                                        <TextField
-                                            fullWidth
-                                            id="name"
-                                            label="Name"
-                                            autoFocus
-                                            onChange={onChange}
-                                            value={value}
-                                            error={!!errors.name?.message}
-                                            helperText={ errors.name?.message as string }
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Controller
-                                    name="type"
-                                    control={ control }
-                                    rules={ validationChip }
-                                    render={({
-                                                 field: {onChange, value},
-                                             }) =>  (
-                                        <MuiChipsInput
-                                            label="Type of halls"
-                                            id='type'
-                                            fullWidth
-                                            value={value}
-                                            hideClearAll
-                                            onChange={onChange}
-                                            error={!!errors.type?.message}
-                                            helperText={ errors.type?.message as string }
-                                            validate={(chipValue) => {
-                                                return {
-                                                    isError: !(chipValue.match(/^[a-zA-Z ]+$/)),
-                                                    textError: 'The value can contain only latin alphabet'
-                                                }
-                                            }}
-                                        />
-                                    )}
-                                />
+                    <Stack spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <Controller
+                                control={ control }
+                                name='name'
+                                rules={validation}
+                                render={({
+                                             field: {onChange, value}
+                                         }) => (
+                                    <TextField
+                                        fullWidth
+                                        id="name"
+                                        label="Name"
+                                        autoFocus
+                                        onChange={onChange}
+                                        value={value}
+                                        error={!!errors.name?.message}
+                                        helperText={ errors.name?.message as string }
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Controller
+                                name="type"
+                                control={ control }
+                                rules={ validationChip }
+                                render={({
+                                             field: {onChange, value},
+                                         }) =>  (
+                                    <MuiChipsInput
+                                        label="Type of halls"
+                                        id='type'
+                                        fullWidth
+                                        value={value}
+                                        hideClearAll
+                                        onChange={onChange}
+                                        error={!!errors.type?.message}
+                                        helperText={ errors.type?.message as string }
+                                        validate={(chipValue) => {
+                                            return {
+                                                isError: !(chipValue.match(/^[a-zA-Z ]+$/)),
+                                                textError: 'The value can contain only latin alphabet'
+                                            }
+                                        }}
+                                    />
+                                )}
+                            />
 
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Controller
-                                    control={ control }
-                                    name='city'
-                                    rules={ validation }
-                                    render={({
-                                                 field: {onChange, value}
-                                             }) => (
-                                        <TextField
-                                            fullWidth
-                                            id="city"
-                                            label="City"
-                                            autoFocus
-                                            onChange={onChange}
-                                            value={value}
-                                            error={!!errors.city?.message}
-                                            helperText={ errors.city?.message as string }
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Controller
-                                    control={ control }
-                                    name='street'
-                                    rules={ validationStreet }
-                                    render={({
-                                                 field: {onChange, value}
-                                             }) => (
-                                        <TextField
-                                            fullWidth
-                                            id="street"
-                                            label="Street"
-                                            autoFocus
-                                            onChange={onChange}
-                                            value={value}
-                                            error={!!errors.street?.message}
-                                            helperText={ errors.street?.message as string}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Controller
-                                    control={ control }
-                                    name='buildingNumber'
-                                    rules={ validationNumber }
-                                    render={({
-                                                 field: {onChange, value}
-                                             }) => (
-                                        <TextField
-                                            fullWidth
-                                            id="buildingNumber"
-                                            label="Number of building"
-                                            autoFocus
-                                            onChange={onChange}
-                                            value={value}
-                                            error={!!errors.buildingNumber?.message}
-                                            helperText={ errors.buildingNumber?.message as string }
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                            >
-                                add
-                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Controller
+                                control={ control }
+                                name='city'
+                                rules={ validation }
+                                render={({
+                                             field: {onChange, value}
+                                         }) => (
+                                    <TextField
+                                        fullWidth
+                                        id="city"
+                                        label="City"
+                                        autoFocus
+                                        onChange={onChange}
+                                        value={value}
+                                        error={!!errors.city?.message}
+                                        helperText={ errors.city?.message as string }
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Controller
+                                control={ control }
+                                name='street'
+                                rules={ validationStreet }
+                                render={({
+                                             field: {onChange, value}
+                                         }) => (
+                                    <TextField
+                                        fullWidth
+                                        id="street"
+                                        label="Street"
+                                        autoFocus
+                                        onChange={onChange}
+                                        value={value}
+                                        error={!!errors.street?.message}
+                                        helperText={ errors.street?.message as string}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Controller
+                                control={ control }
+                                name='buildingNumber'
+                                rules={ validationNumber }
+                                render={({
+                                             field: {onChange, value}
+                                         }) => (
+                                    <TextField
+                                        fullWidth
+                                        id="buildingNumber"
+                                        label="Number of building"
+                                        autoFocus
+                                        onChange={onChange}
+                                        value={value}
+                                        error={!!errors.buildingNumber?.message}
+                                        helperText={ errors.buildingNumber?.message as string }
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            add
+                        </Button>
 
-                        </Stack>
-                    </Box>
+                    </Stack>
                 </Box>
-            </Modal>
-        }
+            </Box>
+        </Modal>
     </GridToolbarContainer>
 }

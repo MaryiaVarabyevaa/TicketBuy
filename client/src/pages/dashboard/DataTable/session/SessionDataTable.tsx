@@ -27,8 +27,6 @@ import {IFilm} from "../../../../types/film";
 import {getAllHalls} from "../../../../http/hallsAPI";
 import {columns} from "./columns";
 import {EditToolbar} from "./EditToolbar";
-import {pricePreProcessEditCellProps} from "./validation";
-import {renderEditCell} from "../CellEditInputCell";
 
 const style = {
     position: 'absolute' as 'absolute',
